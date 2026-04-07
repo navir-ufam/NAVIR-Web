@@ -1,24 +1,24 @@
-# NAVIR — Arquitetura Geral do Sistema
+# NAVIR - Arquitetura Geral do Sistema
 
-O NAVIR é composto por duas aplicações principais:
+O NAVIR e composto por duas aplicacoes principais:
 
-* Backend (API REST)
-* Frontend (Interface Web)
+- Backend (API REST em NestJS)
+- Frontend (Interface Web em React)
 
-A comunicação é feita via HTTP utilizando JSON.
+A comunicacao entre as camadas ocorre por HTTP/JSON.
 
 ---
 
-# Visão Geral
+# Visao Geral
 
 ```
-Frontend (React)
+Frontend (React + Vite)
         ↓
      REST API
         ↓
 Backend (NestJS)
         ↓
-     Database
+PostgreSQL
 ```
 
 ---
@@ -27,375 +27,186 @@ Backend (NestJS)
 
 ## Frontend
 
-Responsável por:
+Responsavel por:
 
-* Interface do usuário
-* Formulários
-* Dashboard
-* Visualização de dados
-* Autenticação
-* Consumo da API
-
-Tecnologias:
-
-* React
-* TypeScript
-* Vite
-* Context API
-* Hooks
-
----
+- Interface dos perfis (admin, professor, pesquisador)
+- Fluxos de cadastro e autenticacao
+- Gestao de perfil, projetos, dispositivos e solicitacoes
+- Dashboards e exportacao de relatorios
 
 ## Backend
 
-Responsável por:
+Responsavel por:
 
-* Regras de negócio
-* Autenticação
-* Classificação automática
-* Processamento de histórico
-* Controle de acesso
-* API REST
+- Regras de negocio e validacoes
+- Autenticacao e autorizacao por tipo de usuario
+- Processamento de historico escolar
+- Classificacao academica automatica
+- Integracao com persistencia e jobs (cron diario)
 
-Tecnologias:
+## Banco de Dados
 
-* NestJS
-* TypeScript
-* JWT
-* PostgreSQL
+Responsavel por:
 
----
-
-## Database
-
-Responsável por:
-
-* Persistência dos dados
-* Relacionamentos
-* Integridade
-* Histórico
-
-Banco recomendado:
-
-PostgreSQL
+- Persistencia relacional
+- Integridade e historico de atualizacoes
+- Consultas para dashboard e relatorios
 
 ---
 
-# Estrutura do Repositório
+# Estrutura do Repositorio
 
 ```
-navir/
- ├── backend/
- ├── frontend/
+NAVIR-Web/
+ ├── src/
+ │   ├── backend/
+ │   └── frontend/
  └── docs/
 ```
 
 ---
 
-# Fluxo de Autenticação
+# Fluxos Principais
+
+## Fluxo de Autenticacao
 
 ```
 Frontend
    ↓
-POST /auth/login
+POST /api/v1/auth/login
    ↓
-Backend valida usuário
+AuthService valida credenciais e estado
    ↓
-JWT Token
+JWT (quando permitido)
    ↓
-Frontend salva token
-   ↓
-Requests autenticadas
+Frontend persiste sessao
 ```
 
----
+Regra critica:
+- Usuario NEGADO nao autentica (403).
 
-# Fluxo de Cadastro
+## Fluxo de Cadastro
 
 ```
 Frontend Form
-     ↓
-POST /users
-     ↓
-UsersController
-     ↓
-UsersService
-     ↓
-Database
-     ↓
-StatusService
-     ↓
-Resposta API
-     ↓
-Frontend
-```
-
----
-
-# Fluxo de Atualização do Usuário
-
-```
-Frontend
    ↓
-PUT /users/:id
+POST /api/v1/usuarios
    ↓
 UsersService
+   ↓
+Database + notificacao interna
+```
+
+Comportamento por tipo:
+- Pesquisador/Professor: criados como PENDENTE (aguardam aprovacao).
+- Interessado: sem estado, salvo no banco de talentos, com mensagem de acompanhamento.
+
+## Fluxo de Atualizacao Academica
+
+```
+POST /api/v1/historico
+   ↓
+ParserHistorico
+   ↓
+DadosAcademicosService
    ↓
 UpdatesService
    ↓
-StatusService
-   ↓
-Database
+StatusAcademicoService
 ```
 
----
+## Fluxo de Classificacao Automatica
 
-# Fluxo de Classificação Automática
-
-Executado quando:
-
-* Login
-* Atualização
-* Envio de histórico
-* Cron diário
+Executado em:
+- login
+- envio de historico
+- atualizacao de lattes
+- cron diario
 
 ```
-StatusCron
+StatusScheduler
    ↓
 StatusService
    ↓
-AcademicService
-   ↓
-Update user status
-   ↓
-Database
+UsersRepository
 ```
 
----
+Regra de classificacao:
+- REGULAR: percentual concluido < 80%
+- FINALISTA: percentual concluido >= 80%
+- INATIVO: sem atualizacao por 6 meses (3 meses se disponivel)
+- EGRESSO: finalista sem atualizacao por 2 meses de inatividade ou marcacao manual
+- DESISTENTE: apenas marcacao manual
 
-# Fluxo de Cadastro de Projeto
+## Fluxo de Projetos e Disponibilidade
 
 ```
-Frontend
-   ↓
-POST /projects
-   ↓
-ProjectsController
+POST /api/v1/projetos
    ↓
 ProjectsService
    ↓
-Database
-```
-
----
-
-# Fluxo de Cadastro de Dispositivo WiFi
-
-```
-Frontend
+Status de projeto (ATIVO/FINALIZADO)
    ↓
-POST /devices
+Recalculo de disponibilidade do pesquisador
+```
+
+## Fluxo de Acesso ao Laboratorio
+
+```
+Pesquisador solicita acesso
    ↓
-DevicesService
+POST /api/v1/acesso-laboratorio/solicitacoes
    ↓
-Database
-```
-
----
-
-# Fluxo de Acesso ao Laboratório
-
-```
-Biometria
+Admin autoriza/bloqueia
    ↓
-Backend valida usuário
-   ↓
-Status acesso
-   ↓
-AUTORIZADO | BLOQUEADO
+Status: AUTORIZADO | BLOQUEADO
 ```
+
+Observacao:
+- O sistema nao armazena biometria, apenas status de autorizacao.
 
 ---
 
-# Fluxo de Dashboard
+# Dominios do Backend
 
-```
-Frontend Dashboard
-      ↓
-GET /dashboard
-      ↓
-DashboardService
-      ↓
-Database
-      ↓
-Métricas
-      ↓
-Frontend
-```
-
----
-
-# Fluxo de Relatórios
-
-```
-Frontend
-   ↓
-GET /reports
-   ↓
-ReportsService
-   ↓
-Database
-   ↓
-CSV / PDF
-   ↓
-Download
-```
+- auth
+- usuarios
+- perfis
+- dados-academicos
+- curriculos
+- historico
+- projetos
+- dispositivos
+- acesso-laboratorio
+- status-academico
+- dashboard
+- relatorios
+- notificacoes
 
 ---
 
-# Domínios do Sistema
+# Tipos de Usuario e Permissoes
 
-O backend é dividido por domínios:
-
-* Users
-* Auth
-* Academic
-* Projects
-* Devices
-* Biometric
-* Status
-* Updates
-* Dashboard
-* Reports
+- ADMIN: controle total, aprovacao/negacao, conversao de interessado, dashboard e relatorios.
+- PROFESSOR: visualizacao de orientandos, projetos e buscas por habilidades/disponibilidade.
+- PESQUISADOR: perfil, projetos, historico, lattes, dispositivos e solicitacao de acesso.
+- INTERESSADO: cadastro basico e atualizacao de historico/lattes para banco de talentos.
 
 ---
 
-# Relacionamentos Principais
+# Seguranca
 
-```
-User
- ├── Academic (1:1)
- ├── Projects (1:N)
- ├── Devices (1:N)
- ├── Update (1:1)
- └── Biometric (1:1)
-```
+- JWT para autenticacao.
+- Guards de role para permissao por tipo de usuario.
+- Guard de estado para bloquear acesso de usuario NEGADO.
 
 ---
 
-# Tipos de Usuário
+# Padroes de Integracao
 
-Administrador
-
-* Acesso total
-* Aprovar usuários
-* Converter interessado
-* Ver dashboard
-* Exportar relatórios
-
-Aluno NAVIR
-
-* Atualizar perfil
-* Enviar histórico
-* Projetos
-* Dispositivos
-* Biometria
-
-Interessado
-
-* Cadastro básico
-* Enviar histórico
-* Lattes
-* Banco de talentos
-
----
-
-# Status do Usuário
-
-Status usuário:
-
-* PENDENTE
-* ATIVO
-* BLOQUEADO
-* INATIVO
-* EGRESSO
-
-Status acadêmico:
-
-* REGULAR
-* FINALISTA
-* INATIVO
-* EGRESSO
-
----
-
-# Classificação Automática
-
-Regular
-
-```
-percentual < 80%
-```
-
-Finalista
-
-```
-percentual >= 80%
-```
-
-Inativo
-
-```
-sem atualização > 6 meses
-```
-
-Egresso
-
-```
-finalista + sem atualização > 12 meses
-```
-
----
-
-# Atualizações Obrigatórias
-
-Usuário deve atualizar:
-
-* Histórico escolar
-* Lattes
-
-Atualização válida:
-
-* Novo histórico enviado
-* Lattes atualizado
-
-Não conta:
-
-* Foto
-* Senha
-* Dispositivos
-
----
-
-# Segurança
-
-Autenticação:
-
-JWT
-
-Proteção de rotas:
-
-* Admin only
-* Aluno only
-* Auth required
-
----
-
-# Comunicação Frontend → Backend
-
-Formato:
-
-JSON
+- Contratos da API em JSON.
+- Versao de rota em /api/v1.
+- Eventos internos para notificacoes e processos assincronos.
 
 Exemplo:
 

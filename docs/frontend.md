@@ -1,25 +1,36 @@
-# NAVIR — Frontend Architecture
+# NAVIR - Frontend Architecture
 
-Frontend desenvolvido com:
+Frontend construido com:
 
-* React
-* TypeScript
-* Arquitetura por features
-* Services para API
-* Componentes reutilizáveis
+- React
+- TypeScript
+- Vite
+- Roteamento protegido por perfil
+- Consumo de API REST em /api/v1
 
 ---
 
-# Estrutura do Frontend
+# Objetivos do Frontend
+
+- Permitir cadastro de pesquisador, professor e interessado
+- Exibir fluxo de aprovacao para perfis pendentes
+- Entregar area interna para admin, professor e pesquisador
+- Tratar login de interessado com mensagem de oportunidade
+- Exibir dashboard e relatorios conforme permissao
+
+---
+
+# Estrutura Sugerida
 
 ```
 src/
+ ├── app/
  ├── pages/
  ├── components/
+ ├── features/
  ├── services/
  ├── hooks/
  ├── context/
- ├── layouts/
  ├── routes/
  ├── types/
  └── utils/
@@ -27,236 +38,123 @@ src/
 
 ---
 
-# Pages
-
-Cada página principal do sistema.
+# Paginas Principais
 
 ```
 pages/
- ├── login/
+ ├── auth/login/
+ ├── auth/cadastro/
+ ├── auth/interessado-feedback/
  ├── dashboard/
- ├── users/
- ├── profile/
- ├── projects/
- ├── devices/
- ├── reports/
- └── admin/
+ ├── usuarios/
+ ├── perfil/
+ ├── projetos/
+ ├── dispositivos/
+ ├── acesso-laboratorio/
+ └── relatorios/
 ```
 
 ---
 
-# Components
+# Rotas e Permissao
 
-Componentes reutilizáveis.
+Perfis internos:
+- ADMIN
+- PROFESSOR
+- PESQUISADOR
 
-```
-components/
- ├── ui/
- ├── forms/
- ├── tables/
- ├── modals/
- └── layout/
-```
-
-Exemplos:
-
-* Button
-* Input
-* Modal
-* Table
-* Card
+Regras de roteamento:
+- NEGADO: bloqueia acesso e mostra erro de autorizacao.
+- PENDENTE (pesquisador/professor): acesso limitado a tela de aguardando aprovacao.
+- INTERESSADO: sempre redireciona para pagina de mensagem de oportunidade.
 
 ---
 
 # Services
 
-Comunicação com API NestJS.
-
 ```
 services/
  ├── api.ts
  ├── auth.service.ts
- ├── users.service.ts
- ├── projects.service.ts
+ ├── usuarios.service.ts
+ ├── perfil.service.ts
+ ├── historico.service.ts
+ ├── curriculo.service.ts
+ ├── projetos.service.ts
+ ├── dispositivos.service.ts
+ ├── acessoLaboratorio.service.ts
  ├── dashboard.service.ts
- └── reports.service.ts
+ └── relatorios.service.ts
 ```
 
 ---
 
-# Hooks
+# Fluxos de Interface
 
-Hooks customizados.
-
-```
-hooks/
- ├── useAuth.ts
- ├── useUsers.ts
- ├── useProjects.ts
- └── useDashboard.ts
-```
-
----
-
-# Context
-
-Gerenciamento de estado global.
-
-```
-context/
- ├── AuthContext.tsx
- └── AppContext.tsx
-```
-
-Responsável por:
-
-* usuário logado
-* permissões
-* token JWT
-
----
-
-# Layouts
-
-Layouts da aplicação.
-
-```
-layouts/
- ├── MainLayout.tsx
- ├── AuthLayout.tsx
- └── AdminLayout.tsx
-```
-
----
-
-# Routes
-
-Configuração de rotas.
-
-```
-routes/
- ├── index.tsx
- ├── private.routes.tsx
- └── public.routes.tsx
-```
-
----
-
-# Types
-
-Tipagem TypeScript.
-
-```
-types/
- ├── user.ts
- ├── project.ts
- ├── academic.ts
- └── device.ts
-```
-
----
-
-# Utils
-
-Funções auxiliares.
-
-```
-utils/
- ├── formatDate.ts
- ├── calculateStatus.ts
- └── validators.ts
-```
-
----
-
-# Fluxo Frontend
-
-Login:
+## Login
 
 ```
 Login Page
    ↓
-Auth Service
+auth.service.login
    ↓
-API NestJS
+Se interessado -> pagina de feedback
+Se autorizado -> area interna por role
+```
+
+## Cadastro
+
+```
+Formulario de cadastro
    ↓
-JWT
+Escolha de tipo (pesquisador/professor/interessado)
    ↓
-Auth Context
+Valida campos obrigatorios por tipo
+   ↓
+POST /usuarios
+```
+
+## Atualizacao Academica
+
+```
+Upload de historico + atualizacao lattes
+   ↓
+services historico/curriculo
+   ↓
+refresh de status academico no contexto
 ```
 
 ---
 
-# Fluxo de Dados
+# Componentes-Chave
+
+- Tabela de usuarios com filtros por tipo, status e disponibilidade
+- Formulario de aprovacao/negacao com motivo obrigatorio para negacao
+- Cards de metrica para dashboard
+- Tabela de projetos com indicador de disponibilidade
+- Modulo de solicitacao e status de acesso ao laboratorio
+
+---
+
+# Tipos TypeScript Minimos
 
 ```
-Page
- ↓
-Hook
- ↓
-Service
- ↓
-API
- ↓
-Backend
+UserType = 'ADMIN' | 'PROFESSOR' | 'PESQUISADOR' | 'INTERESSADO'
+UserState = 'PENDENTE' | 'ACEITO' | 'NEGADO' | null
+AcademicStatus = 'REGULAR' | 'FINALISTA' | 'INATIVO' | 'EGRESSO' | 'DESISTENTE'
 ```
 
 ---
 
-# Estrutura por Feature (Opcional)
+# Integracao com Backend
 
-Alternativa mais escalável.
+Exemplos de endpoints consumidos:
 
-```
-features/
- ├── users/
- ├── projects/
- ├── dashboard/
- └── auth/
-```
-
-Exemplo:
-
-```
-users/
- ├── UsersPage.tsx
- ├── users.service.ts
- ├── users.hook.ts
- └── components/
-```
-
----
-
-# Comunicação com Backend
-
-Frontend chama API:
-
-```
-GET /users
-POST /projects
-PUT /users/:id
-DELETE /devices/:id
-```
-
----
-
-# Arquitetura Final
-
-Frontend:
-
-React
-Pages
-Components
-Services
-Hooks
-
-Backend:
-
-NestJS
-Modules
-Services
-Repositories
-
-Comunicação:
-
-Frontend → REST API → Backend → Database
+- POST /api/v1/auth/login
+- POST /api/v1/usuarios
+- PATCH /api/v1/usuarios/{id}/aprovacao
+- PATCH /api/v1/usuarios/{id}/converter-para-pesquisador
+- POST /api/v1/historico
+- PUT /api/v1/curriculo
+- GET /api/v1/dashboard
+- GET /api/v1/relatorios/export?formato=csv|pdf

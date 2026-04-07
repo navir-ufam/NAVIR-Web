@@ -1,422 +1,176 @@
-# NAVIR — Estrutura do Banco de Dados
-
-Banco relacional projetado para:
-
-* Usuários (alunos + interessados)
-* Dados acadêmicos
-* Projetos
-* Dispositivos WiFi
-* Biometria
-* Atualizações
-* Status automático
+# Modelo de Banco (Relacional)
 
 ---
 
-# Tabelas Principais
+# 1. Tabela: usuarios
 
-```
-users
-academic
-projects
-devices
-biometric
-updates
-```
+id (PK)
+nome
+email (UNIQUE)
+senha_hash
+tipo_usuario ENUM (ADMIN, PROFESSOR, PESQUISADOR, INTERESSADO)
+estado_usuario ENUM (PENDENTE, ACEITO, NEGADO) NULL
+status_academico ENUM (REGULAR, FINALISTA, INATIVO, EGRESSO, DESISTENTE) NULL
+aceite_termos BOOLEAN
+data_criacao
+data_atualizacao
 
----
-
-# Tabela: users
-
-Armazena usuários do sistema.
-
-Tipos:
-
-* Administrador
-* Aluno NAVIR
-* Interessado
-
-```
-users
-```
-
-Campos:
-
-* id (uuid)
-* nome
-* email
-* senha
-* foto
-* cpf
-* cidade_origem
-* tipo_usuario
-* status_usuario
-* status_academico
-* acesso_lab
-* aprovado
-* bloqueado
-* created_at
-* updated_at
+Regras:
+- INTERESSADO -> estado_usuario = NULL.
+- Apenas PESQUISADOR possui status_academico.
 
 ---
 
-# Enum: tipo_usuario
+# 2. Tabela: perfis
 
-```
-ADMIN
-ALUNO
-INTERESSADO
-```
-
----
-
-# Enum: status_usuario
-
-```
-PENDENTE
-ATIVO
-INATIVO
-BLOQUEADO
-EGRESSO
-```
+id (PK)
+usuario_id (FK usuarios.id)
+foto_url
+biografia
+cidade_origem
 
 ---
 
-# Enum: status_academico
-
-```
-REGULAR
-FINALISTA
-INATIVO
-EGRESSO
-```
-
----
-
-# Enum: acesso_lab
-
-```
-AUTORIZADO
-PENDENTE_BIOMETRIA
-BLOQUEADO
-INATIVO
-```
-
----
-
-# Tabela: academic
-
-Dados acadêmicos do usuário.
-
-Relacionamento:
-
-User 1:1 Academic
-
-```
-academic
-```
-
-Campos:
-
-* id
-* user_id (FK users)
-* curso
-* modalidade
-* matricula
-* periodo
-* coeficiente
-* carga_horaria_total
-* carga_horaria_concluida
-* percentual_concluido
-* universidade
-* cidade
-* estado
-* created_at
-* updated_at
-
----
-
-# Tabela: projects
-
-Usuário pode ter múltiplos projetos.
-
-Relacionamento:
-
-User 1:N Projects
-
-```
-projects
-```
-
-Campos:
-
-* id
-* user_id (FK users)
-* tipo_projeto
-* titulo
-* professor
-* data_inicio
-* data_fim
-* remunerado
-* status
-* created_at
-* updated_at
-
----
-
-# Enum: tipo_projeto
-
-```
-PIBIC
-P&D
-MESTRADO
-OUTRO
-```
-
----
-
-# Enum: status_projeto
-
-```
-ATIVO
-FINALIZADO
-PAUSADO
-```
-
----
-
-# Tabela: devices
-
-Dispositivos WiFi cadastrados.
-
-Relacionamento:
-
-User 1:N Devices
-
-```
-devices
-```
-
-Campos:
-
-* id
-* user_id (FK users)
-* nome_dispositivo
-* mac_address
-* tipo
-* ativo
-* created_at
-
----
-
-# Enum: tipo_dispositivo
-
-```
-NOTEBOOK
-CELULAR
-TABLET
-OUTRO
-```
-
----
-
-# Tabela: biometric
-
-Controle de acesso físico.
-
-Relacionamento:
-
-User 1:1 Biometric
-
-```
-biometric
-```
-
-Campos:
-
-* id
-* user_id (FK users)
-* biometria_hash
-* status_acesso
-* data_cadastro
-* atualizado_em
-
----
-
-# Enum: status_acesso
-
-```
-AUTORIZADO
-PENDENTE
-BLOQUEADO
-INATIVO
-```
-
----
-
-# Tabela: updates
-
-Controle de atualização obrigatória.
-
-Relacionamento:
-
-User 1:1 Updates
-
-```
-updates
-```
-
-Campos:
-
-* id
-* user_id (FK users)
-* data_ultima_atualizacao
-* data_ultimo_historico
-* data_ultima_atualizacao_lattes
-* link_lattes
-* created_at
-* updated_at
-
----
-
-# Relacionamentos
-
-```
-users
- ├── 1:1 academic
- ├── 1:N projects
- ├── 1:N devices
- ├── 1:1 biometric
- └── 1:1 updates
-```
-
----
-
-# Diagrama Lógico
-
-```
-users
-  |
-  ├── academic
-  |
-  ├── projects
-  |
-  ├── devices
-  |
-  ├── biometric
-  |
-  └── updates
-```
-
----
-
-# Regras Importantes
-
-Usuário pode ter vários projetos
-
-Usuário pode ter vários dispositivos
-
-Usuário possui apenas um registro acadêmico
-
-Usuário possui apenas um registro de biometria
-
-Usuário possui apenas um registro de atualização
-
----
-
-# Índices Recomendados
-
-users
-
-* email (unique)
-* cpf (unique)
-* status_usuario
-* tipo_usuario
-
-projects
-
-* user_id
-* status
-* tipo_projeto
-
-devices
-
-* user_id
-* mac_address (unique)
-
-academic
-
-* user_id (unique)
-
-updates
-
-* user_id (unique)
-
-biometric
-
-* user_id (unique)
-
----
-
-# Campos Calculados
-
-Não armazenar, calcular em runtime:
-
+# 3. Tabela: dados_academicos
+
+id (PK)
+usuario_id (FK usuarios.id)
+curso
+modalidade
+matricula
+periodo
+coeficiente
+carga_horaria_total
+carga_horaria_concluida
 percentual_concluido
 
-```
-percentual = carga_concluida / carga_total * 100
-```
+---
 
-status_academico
+# 4. Tabela: curriculos
 
-calculado pelo StatusService
+id (PK)
+usuario_id (FK usuarios.id)
+link_lattes
+data_atualizacao_lattes
 
 ---
 
-# Regras de Negócio no Banco
+# 5. Tabela: atualizacoes
 
-Finalista
+id (PK)
+usuario_id (FK usuarios.id)
+data_ultima_atualizacao
+data_ultimo_historico
+data_ultimo_lattes
 
-```
-percentual >= 80
-```
-
-Inativo
-
-```
-sem atualização > 6 meses
-```
-
-Egresso
-
-```
-finalista AND sem atualização > 12 meses
-```
+Uso:
+- Base para regras de INATIVO/EGRESSO.
 
 ---
 
-# Auditoria (Opcional Futuro)
+# 6. Tabela: projetos
 
-Tabelas extras:
+id (PK)
+usuario_id (FK usuarios.id)
+titulo
+tipo_projeto_id (FK tipos_projeto.id)
+agencia_id (FK agencias.id) NULL
+codigo_projeto NULL
+data_inicio
+data_fim
+professor_id (FK usuarios.id)
+remunerado BOOLEAN NULL
+status ENUM (ATIVO, FINALIZADO)
 
-```
-access_logs
-wifi_logs
-status_history
-project_history
-```
+Regras:
+- Para projeto independente, agencia_id e remunerado podem ser nulos.
+- codigo_projeto obrigatorio se tipo = PIBIC ou PIBIT.
 
 ---
 
-# Banco Recomendado
+# 7. Tabela: tipos_projeto
 
-PostgreSQL
+id (PK)
+nome
+sigla
+logo_url
 
-Compatível com:
+---
 
-* NestJS
-* Prisma
-* TypeORM
-* migrations
-* enums
-* JSON
+# 8. Tabela: agencias
+
+id (PK)
+nome
+sigla
+logo_url
+
+---
+
+# 9. Tabela: habilidades
+
+id (PK)
+nome
+
+---
+
+# 10. Tabela: usuario_habilidades
+
+usuario_id (FK usuarios.id)
+habilidade_id (FK habilidades.id)
+
+PK composta (usuario_id, habilidade_id)
+
+---
+
+# 11. Tabela: dispositivos
+
+id (PK)
+usuario_id (FK usuarios.id)
+nome
+mac_address UNIQUE
+tipo ENUM (NOTEBOOK, CELULAR, TABLET, OUTRO)
+status ENUM (PENDENTE, ATIVO, INATIVO)
+
+Regra:
+- Apenas PESQUISADOR pode cadastrar.
+
+---
+
+# 12. Tabela: acesso_laboratorio
+
+id (PK)
+usuario_id (FK usuarios.id)
+status ENUM (PENDENTE, AUTORIZADO, BLOQUEADO)
+data_solicitacao
+data_atualizacao
+
+Observacao:
+- Nao armazena biometria, somente status de acesso.
+
+---
+
+# 13. Tabela: notificacoes (opcional/recomendada)
+
+id (PK)
+usuario_destino_id (FK usuarios.id)
+tipo
+mensagem
+lida BOOLEAN
+data_criacao
+
+Uso:
+- Notificacao de novo interessado para admin.
+
+---
+
+# 14. Indices importantes
+
+- usuarios.email (UNIQUE)
+- dispositivos.mac_address (UNIQUE)
+- usuarios.tipo_usuario
+- usuarios.estado_usuario
+- usuarios.status_academico
+- projetos.usuario_id
+- projetos.status
+- acesso_laboratorio.usuario_id
+- atualizacoes.data_ultima_atualizacao

@@ -1,11 +1,11 @@
-# NAVIR — Backend Architecture
+# NAVIR - Backend Architecture
 
-Backend desenvolvido com NestJS usando:
+Backend desenvolvido com NestJS seguindo:
 
-* Arquitetura Modular
-* Separação por Domínio
-* Camadas (Controller, Service, Repository)
-* Banco relacional
+- Arquitetura modular por dominio
+- Camadas (Controller, Service, Repository)
+- Regras centralizadas em services de dominio
+- Persistencia relacional em PostgreSQL
 
 ---
 
@@ -21,216 +21,146 @@ src/
 
 ---
 
-# Modules
-
-Cada módulo representa um domínio do sistema.
+# Modulos Principais
 
 ```
 modules/
- ├── users/
  ├── auth/
- ├── academic/
- ├── projects/
- ├── devices/
- ├── biometric/
- ├── status/
- ├── updates/
+ ├── usuarios/
+ ├── perfis/
+ ├── dados-academicos/
+ ├── curriculos/
+ ├── historico/
+ ├── projetos/
+ ├── dispositivos/
+ ├── acesso-laboratorio/
+ ├── status-academico/
  ├── dashboard/
- └── reports/
-```
-
----
-
-# Users Module
-
-Responsável por:
-
-* Cadastro
-* Aprovação
-* Conversão interessado → aluno
-* Bloqueio
-* Edição
-
-```
-users/
- ├── users.controller.ts
- ├── users.service.ts
- ├── users.repository.ts
- ├── users.entity.ts
- ├── users.module.ts
- └── dto/
+ ├── relatorios/
+ └── notificacoes/
 ```
 
 ---
 
 # Auth Module
 
-Autenticação do sistema.
+Responsavel por:
 
-```
-auth/
- ├── auth.controller.ts
- ├── auth.service.ts
- ├── jwt.strategy.ts
- ├── guards/
- └── auth.module.ts
-```
+- Login e emissao de JWT
+- Validacao de estado de usuario
+- Guards por role (ADMIN, PROFESSOR, PESQUISADOR)
 
-Responsável por:
-
-* Login
-* JWT
-* Proteção de rotas
-* Roles
-* Permissões
+Regra critica:
+- Usuario com estado NEGADO nao autentica.
 
 ---
 
-# Academic Module
+# Usuarios Module
 
-Dados acadêmicos do usuário.
+Responsavel por:
 
-```
-academic/
- ├── academic.service.ts
- ├── academic.entity.ts
- ├── parser.service.ts
- └── academic.module.ts
-```
+- Cadastro inicial (pesquisador/professor/interessado)
+- Fluxo de aprovacao (ACEITAR/NEGAR)
+- Conversao interessado -> pesquisador
+- Bloqueio e manutencao cadastral
 
-Responsável por:
+Estados de usuario:
+- PENDENTE
+- ACEITO
+- NEGADO
 
-* coeficiente
-* período
-* carga horária
-* percentual
-* curso
+Observacao:
+- INTERESSADO nao possui estado.
 
 ---
 
-# Projects Module
+# Dados Academicos + Historico
 
-Usuário pode ter múltiplos projetos.
+Responsavel por:
 
-```
-projects/
- ├── projects.controller.ts
- ├── projects.service.ts
- ├── projects.repository.ts
- ├── projects.entity.ts
- └── projects.module.ts
-```
-
-Relacionamento:
-
-User 1:N Projects
+- Parser do historico escolar
+- Persistencia de curso, modalidade, matricula, periodo e coeficiente
+- Calculo de percentual concluido
+- Atualizacao de datas para classificacao
 
 ---
 
-# Devices Module
+# Projetos Module
 
-Controle de dispositivos WiFi.
+Responsavel por:
 
-```
-devices/
- ├── devices.controller.ts
- ├── devices.service.ts
- ├── devices.entity.ts
- └── devices.module.ts
-```
+- Cadastro e atualizacao de projetos
+- Finalizacao automatica por data
+- Sinalizacao de disponibilidade quando nao houver projeto ativo
 
----
-
-# Biometric Module
-
-Controle de acesso ao laboratório.
-
-```
-biometric/
- ├── biometric.controller.ts
- ├── biometric.service.ts
- ├── biometric.entity.ts
- └── biometric.module.ts
-```
+Regra:
+- Tipos PIBIC/PIBIT exigem codigo_projeto.
 
 ---
 
-# Status Module
+# Dispositivos Module
 
-Classificação automática.
+Responsavel por:
 
-```
-status/
- ├── status.service.ts
- ├── status.cron.ts
- ├── status.enum.ts
- └── status.module.ts
-```
+- Cadastro de dispositivo por pesquisador
+- Ativacao/Inativacao por administrador
 
 Status:
-
-* REGULAR
-* FINALISTA
-* INATIVO
-* EGRESSO
+- PENDENTE
+- ATIVO
+- INATIVO
 
 ---
 
-# Updates Module
+# Acesso Laboratorio Module
 
-Controle de atualização obrigatória.
+Responsavel por:
 
-```
-updates/
- ├── updates.service.ts
- ├── updates.entity.ts
- └── updates.module.ts
-```
+- Receber solicitacoes de acesso
+- Permitir autorizacao ou bloqueio pelo admin
 
----
+Status:
+- PENDENTE
+- AUTORIZADO
+- BLOQUEADO
 
-# Dashboard Module
-
-Métricas administrativas.
-
-```
-dashboard/
- ├── dashboard.controller.ts
- ├── dashboard.service.ts
- └── dashboard.module.ts
-```
+Observacao:
+- O backend nao armazena biometria, apenas status de acesso.
 
 ---
 
-# Reports Module
+# Status Academico Module
 
-Exportação de relatórios.
+Responsavel por classificacao automatica:
 
-```
-reports/
- ├── reports.controller.ts
- ├── reports.service.ts
- └── reports.module.ts
-```
+- REGULAR
+- FINALISTA
+- INATIVO
+- EGRESSO
+- DESISTENTE (manual)
 
----
+Triggers de recalculo:
+- login
+- envio de historico
+- atualizacao de lattes
+- cron diario
 
-# Relacionamentos
-
-```
-User
- ├── Academic (1:1)
- ├── Projects (1:N)
- ├── Devices (1:N)
- ├── Update (1:1)
- └── Biometric (1:1)
-```
+Regra de egresso:
+- finalista sem atualizacao por 2 meses de inatividade, ou marcacao manual.
 
 ---
 
-# Fluxo do Sistema
+# Dashboard e Relatorios
 
-Cadastro:
+Dashboard:
+- Metricas de usuarios, status academico, projetos e disponibilidade.
+
+Relatorios:
+- Exportacao em CSV e PDF.
+
+---
+
+# Fluxo Padrao de Requisicao
 
 ```
 Controller
@@ -240,23 +170,4 @@ Service
 Repository
    ↓
 Database
-```
-
----
-
-# Recalculo de Status
-
-Executado:
-
-* login
-* atualização
-* envio histórico
-* cron diário
-
-```
-StatusCron
-  ↓
-StatusService
-  ↓
-UsersRepository
 ```

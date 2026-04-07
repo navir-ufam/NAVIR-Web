@@ -1,532 +1,312 @@
-# NAVIR Interno — Documento de Requisitos
-
-## 1. Visão Geral
-
-O **NAVIR Interno** é um sistema para gerenciamento de:
-
-* Alunos do laboratório NAVIR
-* Banco de talentos (interessados)
-* Projetos acadêmicos
-* Acesso físico ao laboratório (biometria)
-* Dispositivos conectados ao WiFi
-* Currículo Lattes
-* Histórico escolar
-* Status acadêmico automático
-* Atualizações obrigatórias
-* Dashboard administrativo
-
-O sistema deve diferenciar **Aluno NAVIR** e **Interessado (Banco de Talentos)**.
+# 📘 NAVIR Interno — Documento de Requisitos
 
 ---
 
-# 2. Tipos de Usuário
+# 1. Objetivo do Sistema
 
-## 2.1 Administrador
+O NAVIR Interno é um sistema para gestão integrada do laboratório, contemplando:
 
-Possui acesso total ao sistema.
-
-Permissões:
-
-* Aprovar/rejeitar usuários
-* Converter interessado em aluno
-* Editar usuários
-* Visualizar todos os dados
-* Autorizar acesso ao laboratório
-* Cadastrar biometria
-* Exportar relatórios
-* Visualizar dashboard
-* Filtrar usuários
-* Bloquear usuários
+- Gestão de usuários (pesquisadores, interessados e professores)
+- Projetos acadêmicos
+- Dados acadêmicos automatizados (via histórico escolar)
+- Currículo Lattes
+- Controle de acesso ao laboratório
+- Controle de dispositivos WiFi
+- Classificação acadêmica automática
+- Monitoramento de atualização de dados
+- Dashboard administrativo e relatórios
 
 ---
 
-## 2.2 Aluno NAVIR
+# 2. Modelagem de Usuários
 
-Usuário ativo do laboratório.
+## 2.1 Tipos de Usuário
+
+
+| Tipo          | Descrição |
+|---------------|----------|
+| ADMIN | Controle total do sistema |
+| PROFESSOR     | Orientador com acesso a pesquisadores |
+| PESQUISADOR   | Membro ativo do laboratório |
+| INTERESSADO   | Candidato no banco de talentos |
+
+---
+
+## 2.2 Estados do Usuário (Sistema)
+
+Controlam o ciclo de vida no sistema:
+- PENDENTE
+- ACEITO
+- NEGADO
+
+### Regras:
+
+- Pesquisador inicia como **Pendente**
+- Professor inicia como **Pendente** (quando se cadastra sozinho)
+- Interessado **não possui estado**
+- Usuário Negado não pode acessar o sistema
+
+---
+
+## 2.3 Status Acadêmico
+
+Aplicável apenas a Pesquisadores:
+
+- REGULAR
+- FINALISTA
+- INATIVO
+- EGRESSO
+- DESISTENTE (manual)
+
+---
+
+## 2.4 Permissões
+
+### Administrador
+- Gerenciar usuários
+- Bloquear usuários
+- Aprovar (Aceitar) ou negar usuários
+- Converter interessado → pesquisador
+- Gerenciar projetos e tipos
+- Autorizar acesso ao laboratório
+- Gerenciar dispositivos
+- Exportar relatórios
+- Acessar dashboard
+
+---
+
+### Professor
+- Completar e atualizar perfil
+- Visualizar pesquisadores vinculados
+- Visualizar projetos
+- Buscar por pesquisadores por:
+  - habilidades
+  - disponibilidade
+- Acessar dashboard de orientandos
+
+---
+
+### Pesquisador
+- Completar e atualizar perfil
+- Gerenciar projetos
+- Enviar histórico escolar
+- Atualizar Lattes
+- Cadastrar dispositivos
+- Solicitar acesso ao laboratório
+- Visualizar status acadêmico
+
+---
+
+### Interessado
+
+1. Cadastro realizado  
+2. Sistema **não exige aprovação**  
+3. Sistema exibe mensagem:
+
+> "Seu cadastro foi realizado com sucesso. Entraremos em contato quando surgir uma oportunidade compatível com seu perfil."
+
+4. Sistema realiza automaticamente:
+   - Armazena dados no banco  
+   - Notifica administradores sobre novo interessado  
 
 Pode:
+- Se cadastrar com dados básico (Nome, email, histórico e link lattes)
+- Pode colocar uma descrição (que seria a bio caso ele for convertido para pesquisador) e habilidades
+- Enviar histórico atualizado
+- Informar link do Lattes atualizado
+- Atualizar perfil básico (histórico e link do lattes)
 
-* Completar cadastro
-* Atualizar perfil
-* Enviar histórico escolar
-* Informar Lattes
-* Cadastrar dispositivos WiFi
-* Ter biometria cadastrada
-* Possuir projeto
-* Atualizar dados acadêmicos
-* Ser classificado automaticamente
-* Ver status acadêmico
+Sistema:
+- Não envia email automático
+- Não realiza aprovação
+- Não possui estado
+- Notifica o administrador sobre novo cadastro
+- Exibe mensagem ao logar:
+  "Entraremos em contato quando surgir uma oportunidade"
+- Professores e admin podem pesquisar interessado
+- O sistema faz um perfil básico do interessado pelos dados abstraídos do histórico para ser mostrado nas pesquisas.
 
----
-
-## 2.3 Interessado (Banco de Talentos)
-
-Usuário externo interessado em entrar no NAVIR.
-
-Pode:
-
-* Se cadastrar
-* Enviar histórico escolar
-* Informar Lattes
-* Atualizar perfil básico
-
-Não pode:
-
-* Ter biometria
-* Ter acesso ao laboratório
-* Cadastrar dispositivos
-* Criar projeto
-* Ser classificado como finalista
-* Ser classificado como egresso
-* Ser classificado como inativo
-
-Admin pode converter interessado em aluno NAVIR.
+Restrições:
+- Sem acesso ao laboratório
+- Sem projetos
+- Sem dispositivos
 
 ---
 
-# 3. Fluxo de Cadastro
+# 3. Cadastro
 
 ## 3.1 Cadastro Inicial
 
-Usuário preenche:
+Dados obrigatórios:
 
-* Nome completo
-* Email
-* Histórico escolar analítico
-* Link do Lattes
-* Tipo de cadastro:
+- Nome completo  
+- Email institucional  
+- Histórico escolar  (exceto Professor)
+- Link do Lattes  
+- Tipo (Pesquisador ou Interessado)  
+- Aceite de termos  
 
-  * Aluno NAVIR
-  * Banco de talentos
+## 3.1 Pesquisador / Professor
 
-Status inicial:
-
-Pendente aprovação
-
-Após análise:
-
-* Aprovado
-* Rejeitado
-
-Usuário recebe email com resultado.
+- Cadastro → Estado Pendente
+- Requer aprovação do admin
+- Negação exige justificativa
 
 ---
 
-# 4. Cadastro Completo (Aluno NAVIR)
+## 3.2 Interessado
 
-Após aprovação, o aluno deve preencher:
-
-## 4.1 Dados pessoais
-
-* Senha
-* Foto de perfil
-* Cidade de origem
-* Atividades externas
-* Descrição das atividades
+- Cadastro direto
+- Não acessa sistema interno
+- Ao tentar login:
+  - Exibir mensagem:
+    "Entraremos em contato quando surgir uma oportunidade"
+- Admin é notificado
 
 ---
 
-## 4.2 Dados acadêmicos
+## 3.3 Conversão de Interessado para Pesquisador
 
-* Curso
-* Modalidade (bacharelado / mestrado)
-* Matrícula
-* Período atual
-* Coeficiente
-* Carga horária total
-* Carga horária concluída
+- Mantém dados
+- Torna Pesquisador
+- Libera funcionalidades de pesquisador
 
 ---
 
-## 4.3 Projeto
+# 4. Perfil do Pesquisador
 
-* Tipo de projeto
-
-  * PIBIC
-  * P&D
-  * Mestrado
-  * Outro
-* Título do projeto
-* Data inicial
-* Data final prevista
-* Professor orientador
-* Projeto remunerado (sim/não)
+## 4.1 Dados Pessoais
+- Nome, email, senha
+- Foto
+- Biografia
+- Cidade origem (automatico do histórico escolar)
+- Habilidades
 
 ---
 
-## 4.4 Currículo
-
-* Link do Lattes
-* Data atualização Lattes
-* Descrição (opcional)
-
----
-
-# 5. Dados obtidos automaticamente do histórico
-
-O sistema deve identificar:
-
-* Coeficiente escolar
-* Período atual
-* Curso
-* Modalidade
-* Matrícula
-* Cidade/Estado
-* Sexo
-* CPF
-* Carga horária total
-* Carga horária concluída
-* Percentual concluído
+## 4.2 Dados Acadêmicos (automáticos)
+- Curso
+- Modalidade
+- Matrícula
+- Período
+- Coeficiente
+- Carga horária
+- Percentual concluído
 
 ---
 
-# 6. Controle de Dispositivos WiFi
-
-Apenas Aluno NAVIR pode cadastrar.
-
-Campos:
-
-* Nome do dispositivo
-* Endereço MAC
-* Tipo
-
-  * Notebook
-  * Celular
-  * Tablet
-  * Outro
-
-Objetivo:
-
-Controle de acesso ao WiFi do laboratório.
+## 4.3 Currículo
+- Link Lattes
+- Data atualização
 
 ---
 
-# 7. Controle de Acesso ao Laboratório
+## 4.4 Projetos
 
-Sistema deve armazenar:
+Campos obrigatórios:
 
-* Biometria cadastrada
-* Status de acesso
+- Título
+- Tipo (tag)
+- Data início
+- Data fim
+- Professor oriientador
+- Status
 
-Status possíveis:
+Obrigatórios dependendo do tipo de projeto (Caso não for projeto independente)
+- Agência
+- Remunerado
 
-* Autorizado
-* Pendente biometria
-* Bloqueado
-* Inativo
-
-Admin cadastra a biometria.
-
-Somente "Autorizado" pode abrir a porta.
-
----
-
-# 8. Atualização Obrigatória do Usuário
-
-Aluno NAVIR deve atualizar:
-
-* Link do Lattes
-* Histórico escolar analítico
-
-A atualização só é válida se:
-
-* Novo histórico enviado
-* Lattes atualizado
-
-Alterações em:
-
-* Foto
-* Senha
-* Dispositivos
-
-Não contam como atualização.
+### Regra especial:
+- Se tipo = **PIBIC ou PIBIT**, deve possuir **código do projeto (obrigatório)**
 
 ---
 
-# 9. Registro de Atualização
+# 5. Acesso ao Laboratório
 
-O sistema deve armazenar:
-
-* data_ultima_atualizacao
-* data_ultima_atualizacao_lattes
-* data_ultimo_historico
-* link_lattes
-
----
-
-# 10. Exibição para o Usuário
-
-Mostrar no perfil:
-
-* Última atualização do sistema
-* Última atualização do Lattes
-* Último histórico enviado
-* Status acadêmico
-* Situação do usuário
-
----
-
-# 11. Classificação Automática do Aluno NAVIR
-
-O sistema deve classificar automaticamente:
-
-* Regular
-* Finalista
-* Inativo
-* Egresso
-
----
-
-## 11.1 Regular
-
-Condição:
-
-Carga horária concluída menor que 80%
-
----
-
-## 11.2 Finalista
-
-Condição:
-
-Carga horária concluída maior ou igual a 80%
-
----
-
-## 11.3 Inativo
-
-Condição:
-
-Usuário não atualiza o sistema por 1 semestre (6 meses)
-
-Ações:
-
-* Marcar como inativo
-* Enviar email
-* Mostrar no dashboard
-
----
-
-## 11.4 Egresso
-
-Condições:
-
-Usuário é finalista
-E não atualiza o sistema por 1 ano
-
-Ações:
-
-* Remover acesso ao laboratório
-* Remover WiFi
-* Mover para ex-alunos
-* Manter histórico
-
----
-
-## 11.5 Prioridade dos Status
-
-Ordem:
-
-1. Egresso
-2. Inativo
-3. Finalista
-4. Regular
-
----
-
-# 12. Atualização Automática
-
-Sistema deve recalcular status:
-
-* Ao login
-* Ao atualizar perfil
-* Ao enviar histórico
-* Automaticamente diariamente
-
----
-
-# 13. Estados do Usuário
-
-* Pendente aprovação
-* Aprovado
-* Ativo
-* Inativo
-* Finalista
-* Regular
-* Egresso
-* Banco de talentos
-* Bloqueado
-
----
-
-# 14. Conversão de Interessado para Aluno
-
-Admin pode converter interessado.
-
-Sistema deve:
-
-* Manter dados existentes
-* Liberar cadastro completo
-* Liberar projeto
-* Liberar biometria
-* Liberar WiFi
-* Iniciar classificação automática
-
----
-
-# 15. Dashboard do Administrador
-
-Mostrar métricas:
-
-* Total de alunos
-* Interessados
-* Regulares
-* Finalistas
-* Inativos
-* Egressos
-* Com acesso ao laboratório
-* Sem atualização
-* Lattes desatualizado
-* Projetos ativos
-
----
-
-# 16. Filtros do Admin
-
-Filtrar por:
-
-* Nome
-* Curso
-* Status
-* Tipo de usuário
-* Projeto
-* Professor
-* Cidade
-* Remunerado
-* Com acesso ao lab
-* Atualização recente
-
----
-
-# 17. Relatórios
-
-Admin pode exportar:
-
-* CSV
-* PDF
-
-Conteúdo:
-
-* Lista de usuários
-* Status
-* Projetos
-* Atualização
-* Lattes
-* Histórico
-
----
-
-# 18. Campos principais do banco
-
-Usuário:
-
-* id
-* nome
-* email
-* senha
-* foto
-* tipo_usuario
-* cpf
-* curso
-* modalidade
-* matricula
-* cidade_origem
-
-Acadêmico:
-
-* coeficiente
-* periodo
-* carga_horaria_total
-* carga_horaria_concluida
-* percentual_concluido
-
-Projeto:
-
-* tipo_projeto
-* titulo_projeto
-* data_inicio
-* data_fim
-* professor
-* remunerado
-
-Currículo:
-
-* link_lattes
-* data_ultima_atualizacao_lattes
-
-Atualização:
-
-* data_ultima_atualizacao
-* data_ultimo_historico
+- Sistema não armazena biometria
+- Apenas status
 
 Status:
-
-* status_academico
-* status_usuario
-* acesso_lab
-
-Dispositivos:
-
-* nome_dispositivo
-* mac_address
-* tipo
+- PENDENTE
+- AUTORIZADO
+- BLOQUEADO
 
 ---
 
-# 19. Funcionalidades do Aluno NAVIR
+# 6. Dispositivos WiFi
 
-* Atualizar perfil
-* Enviar histórico
-* Atualizar Lattes
-* Atualizar projeto
-* Cadastrar dispositivos
-* Atualizar foto
-* Atualizar senha
-* Ver status acadêmico
-* Ver última atualização
+- Apenas pesquisador cadastra
+- Admin ativa/inativa
 
 ---
 
-# 20. Funcionalidades do Interessado
+# 7. Atualização
 
-* Atualizar perfil básico
-* Enviar histórico
-* Informar Lattes
-* Permanecer no banco de talentos
-
----
-
-# 21. Funcionalidades do Admin
-
-* Aprovar usuários
-* Converter interessado
-* Editar usuários
-* Cadastrar biometria
-* Autorizar acesso
-* Exportar relatórios
-* Filtrar alunos
-* Ver dashboard
-* Bloquear usuários
-* Ver histórico de atualização
+Atualização válida (para pesquisador e interessado):
+- Novo histórico
+- Lattes atualizado
 
 ---
 
-# 22. Extras (Opcional)
+# 8. Classificação Acadêmica
 
-* Log de acessos à porta
-* Log de WiFi
-* Histórico de projetos
-* Lista de ex-alunos
-* Notificações internas
-* Integração API Lattes
-* Atualização automática por cron job
+## Regular
+- < 80%
+
+## Finalista
+- ≥ 80%
+
+## Inativo
+
+- Sem atualização por 6 meses
+
+Exceções:
+- Se projeto termina antes dos 6 meses:
+  → conta a partir do fim do projeto
+- Se está disponível:
+  → prazo reduzido para 3 meses
+
+---
+
+## Egresso
+
+- Finalista sem atualização (2 meses de inativo)
+
+OU
+
+- Definido manualmente por:
+  - Usuário
+  - Admin
+
+---
+
+# 9. Projetos e Disponibilidade
+
+- Finalizam automaticamente por data
+- Pesquisador sem projeto ativo:
+  - Flag: Disponível
+
+---
+
+# 10. Dashboard
+
+Métricas:
+- Usuários
+- Status acadêmico
+- Projetos
+- Disponibilidade
+
+---
+
+# 11. Relatórios
+
+- CSV
+- PDF
+
+---
+
+# 12. Extras
+
+- Integração Lattes
+- Cron diário
+- Notificações

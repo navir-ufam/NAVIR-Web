@@ -1,0 +1,105 @@
+name: "Nova funcionalidade / Feature Request"
+description: "Sugestao de nova funcionalidade ou melhoria no sistema"
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Preencha este template para descrever uma feature de forma clara e acionavel.
+        Quanto mais objetivo, mais facil para implementar e revisar em fluxo async.
+
+  - type: textarea
+    id: descricao
+    attributes:
+      label: "Descricao da Feature"
+      description: "Explique de forma clara e objetiva qual funcionalidade deve existir."
+      placeholder: "Ex: Permitir exportar relatorios em PDF com filtro por periodo e status academico."
+    validations:
+      required: true
+
+  - type: textarea
+    id: problema
+    attributes:
+      label: "Problema Relacionado"
+      description: "Qual problema atual essa feature resolve?"
+      placeholder: "Ex: Hoje so existe exportacao em CSV e usuarios precisam converter manualmente para PDF."
+    validations:
+      required: false
+
+  - type: textarea
+    id: solucao
+    attributes:
+      label: "Solucao Proposta"
+      description: "Descreva a solucao imaginada, incluindo o comportamento esperado no fluxo."
+      placeholder: "Ex: Adicionar botao Exportar PDF na tela de relatorios usando os filtros ja aplicados na listagem."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: "Alternativas Consideradas"
+      description: "Liste abordagens alternativas avaliadas e porque nao foram escolhidas."
+      placeholder: "Ex: Gerar XLSX como formato unico e deixar conversao para o usuario final."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: impacto
+    attributes:
+      label: "Impacto Esperado"
+      description: "Qual area principal sera impactada por esta feature?"
+      options:
+        - "Frontend"
+        - "Backend"
+        - "Banco de Dados"
+        - "Frontend + Backend"
+        - "Sistema completo"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: prioridade
+    attributes:
+      label: "Prioridade"
+      description: "Ajuda no planejamento das proximas sprints."
+      options:
+        - "Alta"
+        - "Media"
+        - "Baixa"
+    validations:
+      required: true
+
+  - type: textarea
+    id: criterios
+    attributes:
+      label: "Criterios de Aceite"
+      description: "Liste o que deve estar funcionando para considerar a feature concluida."
+      placeholder: |
+        - [ ] Usuario consegue exportar relatorio em PDF
+        - [ ] Layout do arquivo segue padrao definido
+        - [ ] Funciona com filtros aplicados
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexto
+    attributes:
+      label: "Contexto Adicional"
+      description: "Inclua links, prints, diagramas, endpoints ou referencias uteis para implementacao."
+      placeholder: "Links, prints, contratos de API, diagramas, observacoes de negocio..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: alinhamento
+    attributes:
+      label: "Checklist de Alinhamento"
+      description: "Marque os itens para garantir que a solicitacao esta pronta para desenvolvimento."
+      options:
+        - label: "A feature esta alinhada com docs/requisitos.md"
+        - label: "Existe criterio de aceite claro e testavel"
+        - label: "A descricao evita ambiguidade de regra de negocio"
