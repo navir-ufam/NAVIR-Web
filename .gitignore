@@ -195,3 +195,14 @@ dist/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# AI agent artifacts
+.ai/
+.ai-generated/
+.codex
+.codex/
+.claude
+.claude/
+.windsurf
+.windsurf/
+agent-output/
