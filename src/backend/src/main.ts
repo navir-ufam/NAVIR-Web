@@ -15,7 +15,7 @@ async function bootstrap() {
   if (env === 'production') {
     app.useLogger(['warn', 'error']);
   } else {
-    app.useLogger(['error', 'warn', 'debug']);
+    app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']);
   }
 
   app.useGlobalInterceptors(new LoggingInterceptor());
@@ -39,7 +39,7 @@ async function bootstrap() {
   const port = configService.get<number>('PORT') || 3000;
   await app.listen(port);
   console.log(
-    `\x1b[32m[Bootstrap] Aplicação rodando em ambiente de [${env}] na porta ${port}`,
+    `\n\n\x1b[32m[Bootstrap] Aplicação rodando em ambiente de [${env}] na porta ${port}`,
   );
 }
 bootstrap();
