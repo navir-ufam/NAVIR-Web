@@ -1,9 +1,5 @@
 function App() {
-  return (
-    <>
-      Hello, NAVIR!
-    </>
-  )
+  return <>Hello, NAVIR!</>;
 }
 
-export default App
+export default App;

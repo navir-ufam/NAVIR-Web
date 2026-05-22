@@ -1,7 +1,7 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function DashboardPage() {
-  return <PagePlaceholder title="Dashboard" description="Pagina placeholder do dashboard." />
+  return <PagePlaceholder title="Dashboard" description="Pagina placeholder do dashboard." />;
 }
 
-export default DashboardPage
+export default DashboardPage;

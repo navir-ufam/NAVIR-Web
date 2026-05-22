@@ -1,4 +1,4 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function InteressadoFeedbackPage() {
   return (
@@ -6,7 +6,7 @@ function InteressadoFeedbackPage() {
       title="Interessado Feedback"
       description="Pagina placeholder para usuarios do tipo interessado."
     />
-  )
+  );
 }
 
-export default InteressadoFeedbackPage
+export default InteressadoFeedbackPage;
