@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react";
-import App from "../App";
 import { describe, it, expect } from "vitest";
+import App from "../app/App";
 
-describe("App Smoke Test", () => {
+describe("Smoke Test - App Component", () => {
   it("deve renderizar o componente App sem quebrar", () => {
-    render(<App />);
-    expect(document.body).toBeTruthy();
+    const { container } = render(<App />);
+    expect(container).toBeTruthy();
   });
 });
