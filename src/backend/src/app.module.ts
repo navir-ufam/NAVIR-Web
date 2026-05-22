@@ -1,4 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
@@ -17,6 +19,46 @@ import { NotificacoesModule } from './modules/notificacoes/notificacoes.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate: (envConfig: Record<string, unknown>) => {
+        const schema = Joi.object<Record<string, string | number>>({
+          PORT: Joi.number().default(3000),
+          NODE_ENV: Joi.string()
+            .valid('development', 'production', 'test')
+            .default('development'),
+          DB_HOST: Joi.string().required(),
+          DB_PORT: Joi.number().default(5432),
+          DB_USERNAME: Joi.string().required(),
+          DB_PASSWORD: Joi.string().required(),
+          DB_DATABASE: Joi.string().required(),
+          DATABASE_URL: Joi.string().required(),
+          ADMIN_EMAIL: Joi.string().required(),
+          ADMIN_PASSWORD: Joi.string().required(),
+          JWT_SECRET: Joi.string().required(),
+          JWT_EXPIRATION: Joi.string().default('24h'),
+          CORS_ORIGIN: Joi.string().required(),
+        });
+
+        const validationResult = schema.validate(envConfig, {
+          abortEarly: false,
+          allowUnknown: true,
+        });
+        if (validationResult.error) {
+          const logger = new Logger('ConfigValidation');
+          logger.error(
+            '❌ Falha ao iniciar a aplicação: Variáveis de ambiente ausentes ou inválidas:',
+          );
+
+          validationResult.error.details.forEach((err) => {
+            logger.error(`--> ${err.message}`);
+          });
+
+          process.exit(1);
+        }
+        return validationResult.value;
+      },
+    }),
     AuthModule,
     UsuariosModule,
     PerfisModule,
