@@ -1,6 +1,18 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CriarUsuarioDto } from './dto/criar-usuario.dto';
 import { UsuariosService } from './usuarios.service';
+import { AuthGuard } from '../../common/guards/auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { TipoUsuario } from '@prisma/client';
 
 @Controller('usuarios')
 export class UsuariosController {
@@ -12,7 +24,12 @@ export class UsuariosController {
     return this.usuariosService.criar(dto);
   }
 
-  // GET /usuarios — Listar com filtros (ADMIN/PROFESSOR)
+  @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(TipoUsuario.ADMIN)
+  listar() {
+    return this.usuariosService.listarTodos();
+  }
 
   // GET /usuarios/:id — Detalhe do perfil completo
 
