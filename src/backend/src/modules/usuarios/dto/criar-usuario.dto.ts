@@ -6,7 +6,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { TipoUsuario } from '../../../common/enums';
+import { TipoUsuario } from '@prisma/client';
 
 export class CriarUsuarioDto {
   @IsString()

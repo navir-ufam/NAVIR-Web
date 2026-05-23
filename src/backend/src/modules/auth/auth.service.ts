@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { EstadoUsuario, TipoUsuario } from '../../common/enums';
+import { EstadoUsuario, TipoUsuario } from '@prisma/client';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { LoginDto } from './dto/login.dto';
 

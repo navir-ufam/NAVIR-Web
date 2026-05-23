@@ -11,4 +11,12 @@ export class UsuariosController {
   criar(@Body() dto: CriarUsuarioDto) {
     return this.usuariosService.criar(dto);
   }
+
+  // GET /usuarios — Listar com filtros (ADMIN/PROFESSOR)
+
+  // GET /usuarios/:id — Detalhe do perfil completo
+
+  // PATCH /usuarios/:id/aprovacao — Aprovar/Negar cadastro (ADMIN)
+
+  // PATCH /usuarios/:id/converter-para-pesquisador — Conversão (ADMIN)
 }

@@ -4,7 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { EstadoUsuario, TipoUsuario } from '../../common/enums';
+import { EstadoUsuario, TipoUsuario } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CriarUsuarioDto } from './dto/criar-usuario.dto';
 
@@ -56,5 +56,23 @@ export class UsuariosService {
 
   async findByEmail(email: string) {
     return this.prisma.usuario.findUnique({ where: { email } });
+  }
+
+  // --- Placeholders para funcionalidades futuras ---
+
+  async listarTodos(): Promise<void> {
+    // Placeholder para listagem e busca com filtros
+  }
+
+  async buscarPorId(): Promise<void> {
+    // Placeholder para retornar o detalhe completo do usuário
+  }
+
+  async aprovarOuNegar(): Promise<void> {
+    // Placeholder para mudar estado de PENDENTE para ACEITO ou NEGADO
+  }
+
+  async converterInteressado(): Promise<void> {
+    // Placeholder para transformar INTERESSADO em PESQUISADOR
   }
 }
