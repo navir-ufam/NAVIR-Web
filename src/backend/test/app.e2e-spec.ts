@@ -1,15 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import request from 'supertest';
+import { Agent } from 'supertest';
+import * as http from 'http';
 import * as bcrypt from 'bcrypt';
-import { PrismaClient, EstadoUsuario, TipoUsuario } from '@prisma/client';
+import { EstadoUsuario, TipoUsuario } from '@prisma/client';
 import { AppModule } from '../src/app.module';
 import { PrismaTestService } from './prisma-test.service';
+
+interface LoginResponse {
+  token?: string;
+  usuario?: { id: string; tipo: TipoUsuario; estado: EstadoUsuario };
+  mensagem?: string;
+  message?: string;
+}
 
 describe('Auth Flow E2E Tests', () => {
   let app: INestApplication;
   let prisma: PrismaTestService;
+  let agent: Agent;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -26,6 +35,8 @@ describe('Auth Flow E2E Tests', () => {
     );
     await app.init();
 
+    agent = request.agent(app.getHttpServer() as http.Server);
+
     prisma = new PrismaTestService();
     await prisma.$connect();
   });
@@ -41,7 +52,7 @@ describe('Auth Flow E2E Tests', () => {
 
   describe('POST /api/v1/usuarios (Cadastro básico)', () => {
     it('deve criar usuário válido e retornar 201 sem senha no response', async () => {
-      const response = await request(app.getHttpServer())
+      const response = await agent
         .post('/api/v1/usuarios')
         .send({
           nome: 'João Silva',
@@ -52,13 +63,15 @@ describe('Auth Flow E2E Tests', () => {
         })
         .expect(201);
 
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('nome', 'João Silva');
-      expect(response.body).toHaveProperty('email', 'joao@teste.com');
-      expect(response.body).toHaveProperty('tipo', TipoUsuario.PESQUISADOR);
-      expect(response.body).toHaveProperty('estado', EstadoUsuario.PENDENTE);
-      expect(response.body).not.toHaveProperty('senha');
-      expect(response.body).not.toHaveProperty('senha_hash');
+      const body = response.body as LoginResponse;
+
+      expect(body).toHaveProperty('id');
+      expect(body).toHaveProperty('nome', 'João Silva');
+      expect(body).toHaveProperty('email', 'joao@teste.com');
+      expect(body).toHaveProperty('tipo', TipoUsuario.PESQUISADOR);
+      expect(body).toHaveProperty('estado', EstadoUsuario.PENDENTE);
+      expect(body).not.toHaveProperty('senha');
+      expect(body).not.toHaveProperty('senha_hash');
     });
   });
 
@@ -76,7 +89,7 @@ describe('Auth Flow E2E Tests', () => {
         },
       });
 
-      const response = await request(app.getHttpServer())
+      const response = await agent
         .post('/api/v1/usuarios')
         .send({
           nome: 'Novo Usuário',
@@ -87,8 +100,9 @@ describe('Auth Flow E2E Tests', () => {
         })
         .expect(409);
 
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toContain('E-mail já cadastrado');
+      const body = response.body as LoginResponse;
+      expect(body).toHaveProperty('message');
+      expect(body.message).toContain('E-mail já cadastrado');
     });
   });
 
@@ -106,7 +120,7 @@ describe('Auth Flow E2E Tests', () => {
         },
       });
 
-      const response = await request(app.getHttpServer())
+      const response = await agent
         .post('/api/v1/auth/login')
         .send({
           email: 'aceito@teste.com',
@@ -114,11 +128,13 @@ describe('Auth Flow E2E Tests', () => {
         })
         .expect(200);
 
-      expect(response.body).toHaveProperty('token');
-      expect(response.body).toHaveProperty('usuario');
-      expect(response.body.usuario).toHaveProperty('id');
-      expect(response.body.usuario).toHaveProperty('tipo', TipoUsuario.PROFESSOR);
-      expect(response.body.usuario).toHaveProperty('estado', EstadoUsuario.ACEITO);
+      const body = response.body as LoginResponse;
+
+      expect(body).toHaveProperty('token');
+      expect(body).toHaveProperty('usuario');
+      expect(body.usuario).toHaveProperty('id');
+      expect(body.usuario).toHaveProperty('tipo', TipoUsuario.PROFESSOR);
+      expect(body.usuario).toHaveProperty('estado', EstadoUsuario.ACEITO);
     });
   });
 
@@ -136,16 +152,16 @@ describe('Auth Flow E2E Tests', () => {
         },
       });
 
-      const response = await request(app.getHttpServer())
+      const response = await agent
         .post('/api/v1/auth/login')
         .send({
           email: 'semba@teste.com',
           senha: 'senhaerrada',
         })
         .expect(401);
-
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toContain('Credenciais inválidas');
+      const body = response.body as LoginResponse;
+      expect(body).toHaveProperty('message');
+      expect(body.message).toContain('Credenciais inválidas');
     });
   });
 
@@ -163,16 +179,16 @@ describe('Auth Flow E2E Tests', () => {
         },
       });
 
-      const response = await request(app.getHttpServer())
+      const response = await agent
         .post('/api/v1/auth/login')
         .send({
           email: 'negado@teste.com',
           senha: 'senha12345',
         })
         .expect(403);
-
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toContain('Acesso negado');
+      const body = response.body as LoginResponse;
+      expect(body).toHaveProperty('message');
+      expect(body.message).toContain('Acesso negado');
     });
   });
 
@@ -189,17 +205,17 @@ describe('Auth Flow E2E Tests', () => {
         },
       });
 
-      const response = await request(app.getHttpServer())
+      const response = await agent
         .post('/api/v1/auth/login')
         .send({
           email: 'interessado@teste.com',
           senha: 'senha12345',
         })
         .expect(200);
-
-      expect(response.body).not.toHaveProperty('token');
-      expect(response.body).toHaveProperty('mensagem');
-      expect(response.body.mensagem).toContain(
+      const body = response.body as LoginResponse;
+      expect(body).not.toHaveProperty('token');
+      expect(body).toHaveProperty('mensagem');
+      expect(body.mensagem).toContain(
         'Entraremos em contato quando surgir uma oportunidade',
       );
     });
@@ -207,18 +223,17 @@ describe('Auth Flow E2E Tests', () => {
 
   describe('GET /api/v1/usuarios (Rota protegida sem token)', () => {
     it('deve retornar 401 ao acessar rota protegida sem token', async () => {
-      const response = await request(app.getHttpServer())
-        .get('/api/v1/usuarios')
-        .expect(401);
+      const response = await agent.get('/api/v1/usuarios').expect(401);
 
-      expect(response.body).toHaveProperty('message');
+      const body = response.body as LoginResponse;
+      expect(body).toHaveProperty('message');
     });
   });
 
   describe('GET /api/v1/usuarios (Rota protegida role errado)', () => {
     it('deve retornar 403 ao acessar rota de ADMIN com token de PESQUISADOR', async () => {
       const senhaHash = await bcrypt.hash('senha12345', 10);
-      const usuarioPesquisador = await prisma.usuario.create({
+      await prisma.usuario.create({
         data: {
           nome: 'Pesquisador Teste',
           email: 'pesquisador@teste.com',
@@ -229,7 +244,7 @@ describe('Auth Flow E2E Tests', () => {
         },
       });
 
-      const loginResponse = await request(app.getHttpServer())
+      const loginResponse = await agent
         .post('/api/v1/auth/login')
         .send({
           email: 'pesquisador@teste.com',
@@ -237,9 +252,9 @@ describe('Auth Flow E2E Tests', () => {
         })
         .expect(200);
 
-      const token = loginResponse.body.token;
+      const { token } = loginResponse.body as { token: string };
 
-      await request(app.getHttpServer())
+      await agent
         .get('/api/v1/usuarios')
         .set('Authorization', `Bearer ${token}`)
         .expect(403);
