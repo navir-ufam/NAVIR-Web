@@ -1,5 +1,6 @@
 import { Module, Logger } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './database/prisma.module';
 import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -59,6 +60,7 @@ import { NotificacoesModule } from './modules/notificacoes/notificacoes.module';
         return validationResult.value;
       },
     }),
+    PrismaModule,
     AuthModule,
     UsuariosModule,
     PerfisModule,
