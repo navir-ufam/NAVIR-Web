@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - develop
-      - 'SCRUM-**'
+      - "SCRUM-**"
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  #v4.2.2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -35,11 +35,11 @@ jobs:
 
       - name: Run frontend tests with coverage
         working-directory: src/frontend
-        run: npm run test -- --coverage --watchAll=false
+        run: npm run test -- --coverage --coverage.reporter=lcov
         continue-on-error: true
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995  # v8.1.0
+        uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io

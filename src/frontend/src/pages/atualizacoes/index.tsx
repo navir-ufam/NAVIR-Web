@@ -1,4 +1,4 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function AtualizacoesPage() {
   return (
@@ -6,7 +6,7 @@ function AtualizacoesPage() {
       title="Atualizacoes"
       description="Pagina placeholder para atualizacoes academicas."
     />
-  )
+  );
 }
 
-export default AtualizacoesPage
+export default AtualizacoesPage;

@@ -1,7 +1,7 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function CurriculoPage() {
-  return <PagePlaceholder title="Curriculo" description="Pagina placeholder de curriculo." />
+  return <PagePlaceholder title="Curriculo" description="Pagina placeholder de curriculo." />;
 }
 
-export default CurriculoPage
+export default CurriculoPage;

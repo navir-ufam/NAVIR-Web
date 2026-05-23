@@ -1,7 +1,7 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function HistoricoPage() {
-  return <PagePlaceholder title="Historico" description="Pagina placeholder de historico." />
+  return <PagePlaceholder title="Historico" description="Pagina placeholder de historico." />;
 }
 
-export default HistoricoPage
+export default HistoricoPage;

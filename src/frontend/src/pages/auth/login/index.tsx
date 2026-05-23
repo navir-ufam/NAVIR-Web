@@ -1,7 +1,7 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function LoginPage() {
-  return <PagePlaceholder title="Login" description="Pagina placeholder de autenticacao." />
+  return <PagePlaceholder title="Login" description="Pagina placeholder de autenticacao." />;
 }
 
-export default LoginPage
+export default LoginPage;

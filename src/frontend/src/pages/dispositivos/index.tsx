@@ -1,12 +1,7 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function DispositivosPage() {
-  return (
-    <PagePlaceholder
-      title="Dispositivos"
-      description="Pagina placeholder de dispositivos."
-    />
-  )
+  return <PagePlaceholder title="Dispositivos" description="Pagina placeholder de dispositivos." />;
 }
 
-export default DispositivosPage
+export default DispositivosPage;

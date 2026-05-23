@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-
   :root {
     --background: 220 25% 97%;
     --foreground: 215 50% 10%;
@@ -58,7 +57,12 @@
 
 @layer components {
   .bg-navy-gradient {
-    background: linear-gradient(135deg, hsl(var(--navy-dark)), hsl(var(--navy)), hsl(var(--navy-light)));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--navy-dark)),
+      hsl(var(--navy)),
+      hsl(var(--navy-light))
+    );
   }
 
   .bg-blue-gradient {
@@ -66,7 +70,9 @@
   }
 
   .metric-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
   }
 
   .metric-card:hover {

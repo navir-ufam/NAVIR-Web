@@ -1,4 +1,4 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function AcessoNegadoPage() {
   return (
@@ -6,7 +6,7 @@ function AcessoNegadoPage() {
       title="Acesso Negado"
       description="Pagina placeholder para bloqueio de autorizacao."
     />
-  )
+  );
 }
 
-export default AcessoNegadoPage
+export default AcessoNegadoPage;

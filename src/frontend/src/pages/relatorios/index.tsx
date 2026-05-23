@@ -1,7 +1,7 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function RelatoriosPage() {
-  return <PagePlaceholder title="Relatorios" description="Pagina placeholder de relatorios." />
+  return <PagePlaceholder title="Relatorios" description="Pagina placeholder de relatorios." />;
 }
 
-export default RelatoriosPage
+export default RelatoriosPage;

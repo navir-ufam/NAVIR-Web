@@ -1,4 +1,4 @@
-import { PagePlaceholder } from '@/components/layout'
+import { PagePlaceholder } from "@/components/layout";
 
 function AcessoLaboratorioPage() {
   return (
@@ -6,7 +6,7 @@ function AcessoLaboratorioPage() {
       title="Acesso Laboratorio"
       description="Pagina placeholder de acesso ao laboratorio."
     />
-  )
+  );
 }
 
-export default AcessoLaboratorioPage
+export default AcessoLaboratorioPage;
