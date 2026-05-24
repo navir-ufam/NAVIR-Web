@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotImplementedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { EstadoUsuario, TipoUsuario } from '@prisma/client';
@@ -58,21 +59,27 @@ export class UsuariosService {
     return this.prisma.usuario.findUnique({ where: { email } });
   }
 
-  // --- Placeholders para funcionalidades futuras ---
-
-  async listarTodos(): Promise<void> {
-    // Placeholder para listagem e busca com filtros
+  listarTodos(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async buscarPorId(): Promise<void> {
-    // Placeholder para retornar o detalhe completo do usuário
+  buscarPorId(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async aprovarOuNegar(): Promise<void> {
-    // Placeholder para mudar estado de PENDENTE para ACEITO ou NEGADO
+  aprovadoOuNegado(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async converterInteressado(): Promise<void> {
-    // Placeholder para transformar INTERESSADO em PESQUISADOR
+  converterInteressado(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class PerfisService {
-  async atualizarPerfil(): Promise<void> {
-    // Placeholder para atualização de foto, bio, habilidades e cidade
+  atualizarPerfil(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

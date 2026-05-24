@@ -11,7 +11,7 @@ import { RequestWithUser } from './auth.guard';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<TipoUsuario[]>(
@@ -26,7 +26,7 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
 
-    if (!user || !user.tipo) {
+    if (!user?.tipo) {
       throw new ForbiddenException('Acesso negado: Perfil não identificado.');
     }
 

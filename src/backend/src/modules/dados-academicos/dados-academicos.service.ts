@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class DadosAcademicosService {
-  async salvarDadosExtraidos(): Promise<void> {
-    // Placeholder para persistência de curso, modalidade, matrícula, CR, etc.
+  salvarDadosExtraidos(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

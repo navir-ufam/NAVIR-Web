@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class HistoricoService {
-  async processarHistorico(): Promise<void> {}
+  processarHistorico(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
+  }
 }

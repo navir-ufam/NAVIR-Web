@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class RelatoriosService {
-  async exportarDados(): Promise<void> {
-    // Placeholder para processamento e exportação de dados cross-module
+  exportarDados(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

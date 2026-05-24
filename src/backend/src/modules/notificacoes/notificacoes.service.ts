@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class NotificacoesService {
-  async dispararEventoInterno(): Promise<void> {
-    // Placeholder para escuta de eventos (novo_interessado, projeto_finalizado, etc.)
+  dispararEventoInterno(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

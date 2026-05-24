@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class StatusAcademicoService {
-  async executarClassificacaoAutomatica(): Promise<void> {
-    // Placeholder para classificação (REGULAR, FINALISTA, EGRESSO, INATIVO)
+  executarClassificacaoAutomatica(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

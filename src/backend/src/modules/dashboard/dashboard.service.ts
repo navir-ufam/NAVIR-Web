@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class DashboardService {
-  async obterMetricasAgregadas(): Promise<void> {
-    // Placeholder para consultas cross-module (métricas de usuários, status, projetos)
+  obterMetricasAgregadas(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

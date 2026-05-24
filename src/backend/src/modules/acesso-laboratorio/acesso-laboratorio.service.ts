@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class AcessoLaboratorioService {
-  async solicitarAcesso(): Promise<void> {
-    // Placeholder para receber solicitações de acesso (PESQUISADOR)
+  solicitarAcesso(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async decidirAcesso(): Promise<void> {
-    // Placeholder para permitir autorização ou bloqueio pelo admin
+  decidirAcesso(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

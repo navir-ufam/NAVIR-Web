@@ -1,16 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class DispositivosService {
-  async cadastrar(): Promise<void> {
-    // Placeholder para cadastro de dispositivo por pesquisador
+  cadastrar(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async ativar(): Promise<void> {
-    // Placeholder para ativação de dispositivo (ADMIN)
+  ativar(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async inativar(): Promise<void> {
-    // Placeholder para inativação de dispositivo (ADMIN)
+  inativar(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }

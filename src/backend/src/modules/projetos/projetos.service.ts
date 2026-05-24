@@ -1,20 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class ProjetosService {
-  async criar(): Promise<void> {
-    // Placeholder para criação de projeto (PIBIC/PIBIT/Independente)
+  criar(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async listar(): Promise<void> {
-    // Placeholder para listar projetos com filtros (status, professor, tipo)
+  listar(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async atualizar(): Promise<void> {
-    // Placeholder para atualização cadastral parcial de projetos
+  atualizar(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 
-  async finalizar(): Promise<void> {
-    // Placeholder para finalização automática por data ou manual por permissão
+  finalizar(): void {
+    throw new NotImplementedException(
+      'Funcionalidade em desenvolvimento (US futura)',
+    );
   }
 }
