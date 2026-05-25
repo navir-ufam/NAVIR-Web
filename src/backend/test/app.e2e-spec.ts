@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import request from 'supertest';
-import { Agent } from 'supertest';
-import * as http from 'http';
+import request, { Agent } from 'supertest';
+import * as http from 'node:http';
 import * as bcrypt from 'bcrypt';
 import { EstadoUsuario, TipoUsuario } from '@prisma/client';
 import { AppModule } from '../src/app.module';
