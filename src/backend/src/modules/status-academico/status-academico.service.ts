@@ -4,7 +4,7 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class StatusAcademicoService {
   executarClassificacaoAutomatica(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método executarClassificacaoAutomatica de StatusAcademicoService em desenvolvimento (US futura)',
     );
   }
 }

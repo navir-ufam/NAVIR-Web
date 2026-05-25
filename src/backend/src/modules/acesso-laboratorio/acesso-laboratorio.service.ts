@@ -4,13 +4,13 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class AcessoLaboratorioService {
   solicitarAcesso(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método solicitarAcesso de AcessoLaboratorioService em desenvolvimento (US futura)',
     );
   }
 
   decidirAcesso(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método decidirAcesso de AcessoLaboratorioService em desenvolvimento (US futura)',
     );
   }
 }

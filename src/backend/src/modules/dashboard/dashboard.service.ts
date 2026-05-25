@@ -4,7 +4,7 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class DashboardService {
   obterMetricasAgregadas(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método obterMetricasAgregadas de DashboardService em desenvolvimento (US futura)',
     );
   }
 }

@@ -4,25 +4,25 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class ProjetosService {
   criar(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método criar de ProjetosService em desenvolvimento (US futura)',
     );
   }
 
   listar(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método listar de ProjetosService em desenvolvimento (US futura)',
     );
   }
 
   atualizar(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método atualizar de ProjetosService em desenvolvimento (US futura)',
     );
   }
 
   finalizar(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método finalizar de ProjetosService em desenvolvimento (US futura)',
     );
   }
 }

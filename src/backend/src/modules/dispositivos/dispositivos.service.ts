@@ -4,19 +4,19 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class DispositivosService {
   cadastrar(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método cadastrar de DispositivosService em desenvolvimento (US futura)',
     );
   }
 
   ativar(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método ativar de DispositivosService em desenvolvimento (US futura)',
     );
   }
 
   inativar(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método inativar de DispositivosService em desenvolvimento (US futura)',
     );
   }
 }

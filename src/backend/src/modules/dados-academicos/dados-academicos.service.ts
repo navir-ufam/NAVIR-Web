@@ -4,7 +4,7 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class DadosAcademicosService {
   salvarDadosExtraidos(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método salvarDadosExtraidos de DadosAcademicosService em desenvolvimento (US futura)',
     );
   }
 }

@@ -4,7 +4,7 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class CurriculosService {
   atualizarCurriculo(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método atualizarCurriculo de CurriculosService em desenvolvimento (US futura)',
     );
   }
 }

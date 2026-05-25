@@ -4,7 +4,7 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class HistoricoService {
   processarHistorico(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método processarHistorico de HistoricoService em desenvolvimento (US futura)',
     );
   }
 }

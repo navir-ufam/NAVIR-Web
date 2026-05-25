@@ -61,25 +61,25 @@ export class UsuariosService {
 
   listarTodos(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método listarTodos de UsuariosService em desenvolvimento (US futura)',
     );
   }
 
   buscarPorId(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método buscarPorId de UsuariosService em desenvolvimento (US futura)',
     );
   }
 
   aprovadoOuNegado(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método aprovadoOuNegado de UsuariosService em desenvolvimento (US futura)',
     );
   }
 
   converterInteressado(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método converterInteressado de UsuariosService em desenvolvimento (US futura)',
     );
   }
 }

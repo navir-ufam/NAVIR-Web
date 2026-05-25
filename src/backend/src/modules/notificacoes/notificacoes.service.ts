@@ -4,7 +4,7 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class NotificacoesService {
   dispararEventoInterno(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método dispararEventoInterno de NotificacoesService em desenvolvimento (US futura)',
     );
   }
 }

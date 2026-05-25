@@ -4,7 +4,7 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 export class PerfisService {
   atualizarPerfil(): void {
     throw new NotImplementedException(
-      'Funcionalidade em desenvolvimento (US futura)',
+      'Método atualizarPerfil de PerfisService em desenvolvimento (US futura)',
     );
   }
 }
