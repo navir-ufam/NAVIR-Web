@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoUsuario {
+  ADMIN
+  PROFESSOR
+  PESQUISADOR
+  INTERESSADO
+}
+
+enum EstadoUsuario {
+  PENDENTE
+  ACEITO
+  NEGADO
+}
+
+enum StatusAcademico {
+  REGULAR
+  FINALISTA
+  INATIVO
+  EGRESSO
+  DESISTENTE
+}
+
+enum StatusProjeto {
+  ATIVO
+  FINALIZADO
+}
+
+enum TipoDispositivo {
+  NOTEBOOK
+  CELULAR
+  TABLET
+  OUTRO
+}
+
+enum StatusDispositivo {
+  PENDENTE
+  ATIVO
+  INATIVO
+}
+
+enum StatusAcesso {
+  PENDENTE
+  AUTORIZADO
+  BLOQUEADO
+}
+
+model Usuario {
+  id               String           @id @default(uuid())
+  nome             String
+  email            String           @unique
+  senha_hash       String
+  tipo_usuario     TipoUsuario
+  estado_usuario   EstadoUsuario?
+  status_academico StatusAcademico?
+  aceite_termos    Boolean          @default(false)
+  data_criacao     DateTime         @default(now())
+  data_atualizacao DateTime         @updatedAt
+
+  perfil            Perfil?
+  dados_academicos  DadosAcademicos?
+  curriculo         Curriculo?
+  atualizacoes      Atualizacao?
+  projetos_aluno    Projeto[]            @relation("UsuarioProjetos")
+  projetos_prof     Projeto[]            @relation("ProfessorProjetos")
+  habilidades       UsuarioHabilidade[]
+  dispositivos      Dispositivo[]
+  acessos_lab       AcessoLaboratorio[]
+  notificacoes      Notificacao[]
+
+  @@index([tipo_usuario])
+  @@index([estado_usuario])
+  @@index([status_academico])
+}
+
+model Perfil {
+  id            String  @id @default(uuid())
+  usuario_id    String  @unique
+  foto_url      String?
+  biografia     String?
+  cidade_origem String?
+  usuario       Usuario @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}
+
+model DadosAcademicos {
+  id                      String  @id @default(uuid())
+  usuario_id              String  @unique
+  curso                   String
+  modalidade              String
+  matricula               String
+  periodo                 Int
+  coeficiente             Float
+  carga_horaria_total     Int
+  carga_horaria_concluida Int
+  percentual_concluido    Float
+  usuario                 Usuario @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}
+
+model Curriculo {
+  id                      String    @id @default(uuid())
+  usuario_id              String    @unique
+  link_lattes             String?
+  data_atualizacao_lattes DateTime?
+  usuario                 Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}
+
+model Atualizacao {
+  id                      String    @id @default(uuid())
+  usuario_id              String    @unique
+  data_ultima_atualizacao DateTime
+  data_ultimo_historico   DateTime?
+  data_ultimo_lattes      DateTime?
+  usuario                 Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+
+  @@index([data_ultima_atualizacao])
+}
+
+model Projeto {
+  id              String        @id @default(uuid())
+  usuario_id      String
+  titulo          String
+  tipo_projeto_id String
+  agencia_id      String?
+  codigo_projeto  String?
+  data_inicio     DateTime
+  data_fim        DateTime?
+  professor_id    String
+  remunerado      Boolean?
+  status          StatusProjeto @default(ATIVO)
+
+  usuario      Usuario     @relation("UsuarioProjetos", fields: [usuario_id], references: [id])
+  professor    Usuario     @relation("ProfessorProjetos", fields: [professor_id], references: [id])
+  tipo_projeto TipoProjeto @relation(fields: [tipo_projeto_id], references: [id])
+  agencia      Agencia?    @relation(fields: [agencia_id], references: [id])
+
+  @@index([usuario_id])
+  @@index([status])
+}
+
+model TipoProjeto {
+  id       String    @id @default(uuid())
+  nome     String
+  sigla    String
+  logo_url String?
+  projetos Projeto[]
+}
+
+model Agencia {
+  id       String    @id @default(uuid())
+  nome     String
+  sigla    String
+  logo_url String?
+  projetos Projeto[]
+}
+
+model Habilidade {
+  id       String              @id @default(uuid())
+  nome     String
+  usuarios UsuarioHabilidade[]
+}
+
+model UsuarioHabilidade {
+  usuario_id    String
+  habilidade_id String
+  usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  habilidade    Habilidade @relation(fields: [habilidade_id], references: [id], onDelete: Cascade)
+
+  @@id([usuario_id, habilidade_id])
+}
+
+model Dispositivo {
+  id          String            @id @default(uuid())
+  usuario_id  String
+  nome        String
+  mac_address String            @unique
+  tipo        TipoDispositivo
+  status      StatusDispositivo @default(PENDENTE)
+  usuario     Usuario           @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}
+
+model AcessoLaboratorio {
+  id               String       @id @default(uuid())
+  usuario_id       String
+  status           StatusAcesso @default(PENDENTE)
+  data_solicitacao DateTime     @default(now())
+  data_atualizacao DateTime     @updatedAt
+  usuario          Usuario      @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+
+  @@index([usuario_id])
+}
+
+model Notificacao {
+  id                 String   @id @default(uuid())
+  usuario_destino_id String
+  tipo               String
+  mensagem           String
+  lida               Boolean  @default(false)
+  data_criacao       DateTime @default(now())
+  usuario            Usuario  @relation(fields: [usuario_destino_id], references: [id], onDelete: Cascade)
+}
