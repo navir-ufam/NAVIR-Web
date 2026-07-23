@@ -300,7 +300,7 @@ export const ComponentShowcase: React.FC = () => {
                             <FormItem>
                               <FormLabel>Link do Lattes (opcional)</FormLabel>
                               <FormControl>
-                                <Input placeholder="http://lattes.cnpq.br/..." {...field} />
+                                <Input placeholder="https://lattes.cnpq.br/..." {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
