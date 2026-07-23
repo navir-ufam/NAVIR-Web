@@ -36,23 +36,23 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 const loginSchema = z.object({
-  email: z.string().email('E-mail inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  email: z.string().email({ message: 'E-mail inválido' }),
+  password: z.string().min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
   rememberMe: z.boolean().optional(),
 });
 
 const registerSchema = z.object({
-  fullName: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
-  email: z.string().email('E-mail acadêmico inválido'),
-  lattesUrl: z.string().url('URL do Lattes inválida').or(z.literal('')),
+  fullName: z.string().min(3, { message: 'Nome deve ter pelo menos 3 caracteres' }),
+  email: z.string().email({ message: 'E-mail acadêmico inválido' }),
+  lattesUrl: z.string().url({ message: 'URL do Lattes inválida' }).or(z.literal('')),
   userType: z.enum(['PESQUISADOR', 'PROFESSOR', 'INTERESSADO']),
-  acceptTerms: z.boolean().refine((val) => val === true, 'Você deve aceitar os termos de uso'),
+  acceptTerms: z.boolean().refine((val) => val === true, { message: 'Você deve aceitar os termos de uso' }),
 });
 
 const projectSchema = z.object({
-  title: z.string().min(3, 'Título é obrigatório'),
-  area: z.string().min(1, 'Área é obrigatória'),
-  description: z.string().min(10, 'Descrição detalhada é obrigatória'),
+  title: z.string().min(3, { message: 'Título é obrigatório' }),
+  area: z.string().min(1, { message: 'Área é obrigatória' }),
+  description: z.string().min(10, { message: 'Descrição detalhada é obrigatória' }),
 });
 
 export const ComponentShowcase: React.FC = () => {
