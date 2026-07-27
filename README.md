@@ -41,9 +41,22 @@ python run.py
 ```
 
 O script:
-- instala dependencias de src/backend e src/frontend (se necessario)
+- executa `npm install` no backend e frontend quando `node_modules` estiver ausente,
+  os manifests forem alterados ou a instalacao estiver inconsistente
 - inicia backend e frontend juntos
 - encerra os dois ao interromper (Ctrl+C)
+
+Para apenas verificar/instalar as dependencias, sem iniciar os servicos:
+
+```bash
+python run.py --install-only
+```
+
+Para forcar o `npm install` nos dois projetos:
+
+```bash
+python run.py --force-install
+```
 
 ### 2. Rodar separadamente (manual)
 
