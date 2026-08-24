@@ -35,7 +35,7 @@ jobs:
 
       - name: Run frontend tests with coverage
         working-directory: src/frontend
-        run: npm run test -- --coverage --watchAll=false
+        run: npm run test:cov
         continue-on-error: true
 
       - name: SonarQube Scan
