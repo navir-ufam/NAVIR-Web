@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:cov": "vitest run --coverage && node -e \"const fs=require('fs'); if(fs.existsSync('coverage/lcov.info')){ let c=fs.readFileSync('coverage/lcov.info','utf8'); c=c.replace(/SF:src[\\\\\\/]/g, 'SF:src/frontend/src/').replace(/\\\\/g, '/'); fs.writeFileSync('coverage/lcov.info', c); }\""
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.9",
