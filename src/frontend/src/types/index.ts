@@ -16,3 +16,6 @@ export interface User {
   tipo: UserType
   estado: UserState
 }
+
+export * from './auth'
+
