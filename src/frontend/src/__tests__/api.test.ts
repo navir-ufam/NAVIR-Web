@@ -16,6 +16,13 @@ function createJsonResponse(data: object, status = 200): Response {
   })
 }
 
+function createTextResponse(text: string, status = 200): Response {
+  return new Response(text, {
+    status,
+    headers: { 'content-type': 'text/plain' },
+  })
+}
+
 describe('Service Base (api.ts)', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
@@ -72,6 +79,13 @@ describe('Service Base (api.ts)', () => {
     expect(result.uploaded).toBe(true)
   })
 
+  it('handles plain text non-json responses in parseResponseData', async () => {
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createTextResponse('Plain Text Response'))
+
+    const result = await get<string>('/text-endpoint')
+    expect(result).toBe('Plain Text Response')
+  })
+
   it('handles 403 Forbidden with toast notification', async () => {
     vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ mensagem: 'Acesso Proibido' }, 403))
 
@@ -107,10 +121,16 @@ describe('Service Base (api.ts)', () => {
     expect(toast.error).toHaveBeenCalledWith('Erro interno do servidor. Tente novamente.')
   })
 
-  it('handles network error exception with toast notification', async () => {
+  it('handles network error exception with toast notification on all HTTP verbs', async () => {
     vi.spyOn(apiClient, 'apiFetch').mockRejectedValue(new Error('Network Failure'))
 
-    await expect(get('/network')).rejects.toThrow('Network Failure')
+    await expect(get('/net')).rejects.toThrow('Network Failure')
+    await expect(post('/net')).rejects.toThrow('Network Failure')
+    await expect(put('/net')).rejects.toThrow('Network Failure')
+    await expect(patch('/net')).rejects.toThrow('Network Failure')
+    await expect(del('/net')).rejects.toThrow('Network Failure')
+    await expect(upload('/net', new FormData())).rejects.toThrow('Network Failure')
+
     expect(toast.error).toHaveBeenCalledWith('Sem conexão com o servidor.')
   })
 })

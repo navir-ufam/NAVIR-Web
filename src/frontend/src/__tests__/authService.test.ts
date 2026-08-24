@@ -38,12 +38,26 @@ describe('authService', () => {
     expect(user?.tipo).toBe('ADMIN')
   })
 
-  it('handles refreshTokenRequest and returns new token', async () => {
+  it('returns null on fetchCurrentUser non-200 or exception', async () => {
+    vi.spyOn(apiClient, 'apiFetch').mockResolvedValue(new Response(null, { status: 401 }))
+    const user1 = await fetchCurrentUser()
+    expect(user1).toBeNull()
+
+    vi.spyOn(apiClient, 'apiFetch').mockRejectedValue(new Error('Network Error'))
+    const user2 = await fetchCurrentUser()
+    expect(user2).toBeNull()
+  })
+
+  it('handles refreshTokenRequest and returns new token or null on exception', async () => {
     const mockResponse = new Response(JSON.stringify({ token: 'refreshed_token' }), { status: 200 })
     vi.spyOn(apiClient, 'apiFetch').mockResolvedValue(mockResponse)
 
     const token = await refreshTokenRequest()
     expect(token).toBe('refreshed_token')
+
+    vi.spyOn(apiClient, 'apiFetch').mockRejectedValue(new Error('Network Error'))
+    const failedToken = await refreshTokenRequest()
+    expect(failedToken).toBeNull()
   })
 
   it('handles fetch exception gracefully in loginRequest', async () => {
