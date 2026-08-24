@@ -3,11 +3,11 @@ import { useAuth } from '@/context'
 import type { UserType } from '@/types'
 import { hasPermission, type AppPermission } from '@/utils/permissions'
 
-type ProtectedRouteProps = {
+type ProtectedRouteProps = Readonly<{
   allowedRoles?: UserType[]
   requiredPermission?: AppPermission | AppPermission[]
   children?: React.ReactNode
-}
+}>
 
 export function ProtectedRoute({
   allowedRoles,

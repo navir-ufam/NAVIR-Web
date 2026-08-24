@@ -39,6 +39,7 @@ function LoginPage() {
 
         <div className="grid gap-3">
           <button
+            type="button"
             onClick={() => handleMockLogin('ADMIN')}
             className="w-full py-2.5 px-4 bg-primary text-primary-foreground font-medium rounded-lg hover:opacity-90 transition-opacity"
           >
@@ -46,6 +47,7 @@ function LoginPage() {
           </button>
 
           <button
+            type="button"
             onClick={() => handleMockLogin('PROFESSOR')}
             className="w-full py-2.5 px-4 bg-secondary text-secondary-foreground font-medium rounded-lg hover:opacity-90 transition-opacity"
           >
@@ -53,6 +55,7 @@ function LoginPage() {
           </button>
 
           <button
+            type="button"
             onClick={() => handleMockLogin('PESQUISADOR')}
             className="w-full py-2.5 px-4 bg-accent text-accent-foreground border font-medium rounded-lg hover:bg-accent/80 transition-colors"
           >

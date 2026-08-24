@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from 'react'
 import type { User } from '@/types'
 import { AUTH_UNAUTHORIZED_EVENT } from '@/services/apiClient'
 
@@ -10,18 +10,17 @@ type AuthContextType = {
   setMockUser: (userData: User | null) => void
 }
 
+type AuthProviderProps = Readonly<{
+  children: ReactNode
+  initialUser?: User | null
+}>
+
 const AUTH_STORAGE_KEY = 'navir_auth_user'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({
-  children,
-  initialUser,
-}: {
-  children: ReactNode
-  initialUser?: User | null
-}) {
-  const [user, setUserState] = useState<User | null>(() => {
+export function AuthProvider({ children, initialUser }: AuthProviderProps) {
+  const [user, setUser] = useState<User | null>(() => {
     if (initialUser !== undefined) return initialUser
     try {
       const stored = localStorage.getItem(AUTH_STORAGE_KEY)
@@ -41,7 +40,7 @@ export function AuthProvider({
 
   useEffect(() => {
     const handleUnauthorized = () => {
-      setUserState(null)
+      setUser(null)
       localStorage.removeItem(AUTH_STORAGE_KEY)
     }
 
@@ -51,34 +50,33 @@ export function AuthProvider({
     }
   }, [])
 
-  const login = (userData: User) => {
-    setUserState(userData)
-  }
+  const login = useCallback((userData: User) => {
+    setUser(userData)
+  }, [])
 
-  const logout = () => {
-    setUserState(null)
+  const logout = useCallback(() => {
+    setUser(null)
     localStorage.removeItem(AUTH_STORAGE_KEY)
-  }
+  }, [])
 
-  const setMockUser = (userData: User | null) => {
-    setUserState(userData)
-  }
+  const setMockUser = useCallback((userData: User | null) => {
+    setUser(userData)
+  }, [])
 
   const isAuthenticated = user !== null
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated,
-        login,
-        logout,
-        setMockUser,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      user,
+      isAuthenticated,
+      login,
+      logout,
+      setMockUser,
+    }),
+    [user, isAuthenticated, login, logout, setMockUser]
   )
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth(): AuthContextType {

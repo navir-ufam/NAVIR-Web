@@ -110,6 +110,7 @@ export function AppLayout() {
       <header className="h-16 border-b bg-card px-4 flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="md:hidden p-2 rounded-md hover:bg-accent hover:text-accent-foreground"
             aria-label="Alternar menu"
@@ -130,6 +131,7 @@ export function AppLayout() {
             <span className="text-xs text-muted-foreground font-semibold">{user?.tipo}</span>
           </div>
           <button
+            type="button"
             onClick={handleLogout}
             className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors"
             title="Sair da conta"
@@ -174,9 +176,11 @@ export function AppLayout() {
 
         {/* Overlay mobile */}
         {sidebarOpen && (
-          <div
+          <button
+            type="button"
+            aria-label="Fechar menu"
             onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-black/40 z-10 md:hidden"
+            className="fixed inset-0 bg-black/40 z-10 md:hidden w-full border-0 p-0 cursor-default"
           />
         )}
 

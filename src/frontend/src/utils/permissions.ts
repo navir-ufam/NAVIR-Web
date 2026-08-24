@@ -54,7 +54,7 @@ export function hasPermission(
   user: User | null | undefined,
   required: AppPermission | AppPermission[] | UserType[]
 ): boolean {
-  if (!user || !user.tipo || user.estado !== 'ACEITO') {
+  if (user?.estado !== 'ACEITO' || !user?.tipo) {
     return false
   }
 
