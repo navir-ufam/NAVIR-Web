@@ -8,3 +8,11 @@ export type AcademicStatus =
   | 'INATIVO'
   | 'EGRESSO'
   | 'DESISTENTE'
+
+export interface User {
+  id?: string
+  nome?: string
+  email?: string
+  tipo: UserType
+  estado: UserState
+}
