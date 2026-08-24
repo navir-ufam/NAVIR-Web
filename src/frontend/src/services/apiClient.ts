@@ -9,8 +9,44 @@ export function triggerUnauthorized() {
   }
 }
 
+function resolveUrlString(input: RequestInfo | URL): string {
+  if (typeof input === 'string') return input
+  if (input instanceof URL) return input.href
+  return input.url
+}
+
+async function tryRefreshToken(
+  input: RequestInfo | URL,
+  init: RequestInit,
+  headers: Headers
+): Promise<Response | null> {
+  if (isRefreshing) return null
+  isRefreshing = true
+
+  try {
+    const refreshResponse = await fetch('/api/v1/auth/refresh', {
+      method: 'POST',
+      credentials: 'include',
+    })
+
+    if (refreshResponse.ok) {
+      const data = await refreshResponse.json().catch(() => ({}))
+      if (data.token) {
+        localStorage.setItem(TOKEN_STORAGE_KEY, data.token)
+        headers.set('Authorization', `Bearer ${data.token}`)
+      }
+      return await fetch(input, { ...init, headers })
+    }
+  } catch {
+  } finally {
+    isRefreshing = false
+  }
+
+  return null
+}
+
 export async function apiFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-  const urlString = typeof input === 'string' ? input : input.toString()
+  const urlString = resolveUrlString(input)
   const headers = new Headers(init?.headers || {})
 
   if (typeof window !== 'undefined' && !headers.has('Authorization')) {
@@ -29,29 +65,8 @@ export async function apiFetch(input: RequestInfo | URL, init?: RequestInit): Pr
   const response = await fetch(input, modifiedInit)
 
   if (response.status === 401 && !urlString.includes('/auth/login') && !urlString.includes('/auth/refresh')) {
-    if (!isRefreshing) {
-      isRefreshing = true
-      try {
-        const refreshResponse = await fetch('/api/v1/auth/refresh', {
-          method: 'POST',
-          credentials: 'include',
-        })
-
-        if (refreshResponse.ok) {
-          const refreshData = await refreshResponse.json().catch(() => ({}))
-          if (refreshData.token) {
-            localStorage.setItem(TOKEN_STORAGE_KEY, refreshData.token)
-            headers.set('Authorization', `Bearer ${refreshData.token}`)
-          }
-          isRefreshing = false
-          return fetch(input, { ...modifiedInit, headers })
-        }
-      } catch {
-      } finally {
-        isRefreshing = false
-      }
-    }
-
+    const retryResult = await tryRefreshToken(input, modifiedInit, headers)
+    if (retryResult) return retryResult
     triggerUnauthorized()
   } else if (response.status === 403) {
     triggerUnauthorized()

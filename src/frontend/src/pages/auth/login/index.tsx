@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type SyntheticEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context'
 import type { UserType } from '@/types'
@@ -15,7 +15,7 @@ function LoginPage() {
 
   const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || '/dashboard'
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault()
     setErrorMessage(null)
     setIsSubmitting(true)

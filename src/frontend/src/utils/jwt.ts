@@ -12,11 +12,14 @@ export function decodeJwtPayload(token: string): JwtPayload | null {
     }
 
     const base64Url = parts[1]
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+    const base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/')
     const jsonPayload = decodeURIComponent(
       atob(base64)
         .split('')
-        .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
+        .map((c) => {
+          const hex = c.codePointAt(0)?.toString(16).padStart(2, '0') || '00'
+          return `%${hex}`
+        })
         .join('')
     )
 
@@ -51,7 +54,7 @@ export function parseUserFromToken(token: string): AuthUser | null {
 
 export function isTokenExpired(token: string): boolean {
   const payload = decodeJwtPayload(token)
-  if (!payload || !payload.exp) {
+  if (!payload?.exp) {
     return false
   }
   return payload.exp * 1000 < Date.now()
