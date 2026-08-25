@@ -1,7 +1,13 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { Settings, Bell, Moon, Sun, Monitor, Check, Lock, UserX, Mail, Send, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useTheme, type ThemeMode } from '@/context'
+
+function getThemeLabel(mode: ThemeMode): string {
+  if (mode === 'light') return 'Claro'
+  if (mode === 'dark') return 'Escuro'
+  return 'Sistema'
+}
 
 export function ConfiguracoesPage() {
   const { theme, setTheme } = useTheme()
@@ -19,11 +25,11 @@ export function ConfiguracoesPage() {
 
   const handleThemeChange = (newTheme: ThemeMode) => {
     setTheme(newTheme)
-    const label = newTheme === 'light' ? 'Claro' : newTheme === 'dark' ? 'Escuro' : 'Sistema'
+    const label = getThemeLabel(newTheme)
     toast.success(`Tema alterado para ${label}!`)
   }
 
-  const handleAlterarSenha = (e: React.FormEvent) => {
+  const handleAlterarSenha = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!senhaAtual || !novaSenha || !confirmacaoSenha) {
@@ -47,7 +53,7 @@ export function ConfiguracoesPage() {
     setConfirmacaoSenha('')
   }
 
-  const handleEnviarMensagemSuporte = (e: React.FormEvent) => {
+  const handleEnviarMensagemSuporte = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!assuntoSuporte.trim() || !mensagemSuporte.trim()) {
@@ -199,8 +205,9 @@ export function ConfiguracoesPage() {
           <form onSubmit={handleAlterarSenha} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="text-xs font-semibold text-foreground block mb-1">Senha Atual</label>
+                <label htmlFor="senhaAtual" className="text-xs font-semibold text-foreground block mb-1">Senha Atual</label>
                 <input
+                  id="senhaAtual"
                   type="password"
                   value={senhaAtual}
                   onChange={(e) => setSenhaAtual(e.target.value)}
@@ -210,8 +217,9 @@ export function ConfiguracoesPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-foreground block mb-1">Nova Senha</label>
+                <label htmlFor="novaSenha" className="text-xs font-semibold text-foreground block mb-1">Nova Senha</label>
                 <input
+                  id="novaSenha"
                   type="password"
                   value={novaSenha}
                   onChange={(e) => setNovaSenha(e.target.value)}
@@ -221,8 +229,9 @@ export function ConfiguracoesPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-foreground block mb-1">Confirmar Nova Senha</label>
+                <label htmlFor="confirmacaoSenha" className="text-xs font-semibold text-foreground block mb-1">Confirmar Nova Senha</label>
                 <input
+                  id="confirmacaoSenha"
                   type="password"
                   value={confirmacaoSenha}
                   onChange={(e) => setConfirmacaoSenha(e.target.value)}
@@ -255,8 +264,9 @@ export function ConfiguracoesPage() {
 
           <form onSubmit={handleEnviarMensagemSuporte} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-foreground block mb-1">Assunto</label>
+              <label htmlFor="assuntoSuporte" className="text-xs font-semibold text-foreground block mb-1">Assunto</label>
               <input
+                id="assuntoSuporte"
                 type="text"
                 value={assuntoSuporte}
                 onChange={(e) => setAssuntoSuporte(e.target.value)}
@@ -266,8 +276,9 @@ export function ConfiguracoesPage() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-foreground block mb-1">Mensagem</label>
+              <label htmlFor="mensagemSuporte" className="text-xs font-semibold text-foreground block mb-1">Mensagem</label>
               <textarea
+                id="mensagemSuporte"
                 rows={3}
                 value={mensagemSuporte}
                 onChange={(e) => setMensagemSuporte(e.target.value)}

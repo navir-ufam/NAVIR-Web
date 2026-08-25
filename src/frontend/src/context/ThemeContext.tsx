@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useMemo, type ReactNode } from 'react'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -11,56 +11,63 @@ const THEME_STORAGE_KEY = 'navir_theme'
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
-export function ThemeProvider({ children }: { readonly children: ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeMode>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(THEME_STORAGE_KEY)
-      if (saved === 'light' || saved === 'dark' || saved === 'system') {
-        return saved
-      }
+function getInitialTheme(): ThemeMode {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY)
+    if (saved === 'light' || saved === 'dark' || saved === 'system') {
+      return saved
     }
-    return 'light'
-  })
+  }
+  return 'light'
+}
+
+function resolveIsDark(mode: ThemeMode): boolean {
+  if (mode === 'dark') return true
+  if (mode === 'light') return false
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  }
+  return false
+}
+
+export function ThemeProvider({ children }: { readonly children: ReactNode }) {
+  const [currentTheme, setCurrentTheme] = useState<ThemeMode>(getInitialTheme)
 
   useEffect(() => {
     const root = document.documentElement
+    const isDark = resolveIsDark(currentTheme)
 
-    const updateTheme = () => {
-      let isDark = false
-      if (theme === 'dark') {
-        isDark = true
-      } else if (theme === 'light') {
-        isDark = false
-      } else if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
-        isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      }
-
-      if (isDark) {
-        root.classList.add('dark')
-      } else {
-        root.classList.remove('dark')
-      }
+    if (isDark) {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
     }
 
-    updateTheme()
-
-    if (theme === 'system' && typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    if (currentTheme === 'system' && typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
       if (mediaQuery && typeof mediaQuery.addEventListener === 'function') {
-        const handleChange = () => updateTheme()
+        const handleChange = (e: MediaQueryListEvent) => {
+          if (e.matches) {
+            root.classList.add('dark')
+          } else {
+            root.classList.remove('dark')
+          }
+        }
         mediaQuery.addEventListener('change', handleChange)
         return () => mediaQuery.removeEventListener('change', handleChange)
       }
     }
-  }, [theme])
+  }, [currentTheme])
 
-  const setTheme = (newTheme: ThemeMode) => {
+  const setTheme = useCallback((newTheme: ThemeMode) => {
     localStorage.setItem(THEME_STORAGE_KEY, newTheme)
-    setThemeState(newTheme)
-  }
+    setCurrentTheme(newTheme)
+  }, [])
+
+  const contextValue = useMemo(() => ({ theme: currentTheme, setTheme }), [currentTheme, setTheme])
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   )

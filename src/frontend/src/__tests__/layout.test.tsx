@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from '@/context/AuthContext'
-import { Sidebar, Header, AppLayout } from '@/components/layout'
+import { Sidebar, Header, AppLayout, PagePlaceholder } from '@/components/layout'
 import { getNavItemsForUser } from '@/components/layout/Sidebar'
 import type { AuthUser } from '@/types'
 
@@ -10,7 +10,7 @@ const adminUser: AuthUser = { id: '1', nome: 'Admin Silva', email: 'admin@ufam.e
 const professorUser: AuthUser = { id: '2', nome: 'Carlos Professor', email: 'prof@ufam.edu.br', tipo: 'PROFESSOR', estado: 'ACEITO' }
 const pesquisadorUser: AuthUser = { id: '3', nome: 'Maria Pesquisadora', email: 'pesquisador@ufam.edu.br', tipo: 'PESQUISADOR', estado: 'ACEITO' }
 
-describe('Layout Components (Sidebar, Header & AppLayout)', () => {
+describe('Layout Components (Sidebar, Header, AppLayout & PagePlaceholder)', () => {
   beforeEach(() => {
     localStorage.clear()
   })
@@ -75,7 +75,7 @@ describe('Layout Components (Sidebar, Header & AppLayout)', () => {
     expect(screen.getByText('Atualizações Acadêmicas')).toBeDefined()
   })
 
-  it('renders Header with clean breadcrumb navigation', () => {
+  it('renders Header with clean breadcrumb navigation and Notifications Popover', () => {
     render(
       <MemoryRouter initialEntries={['/usuarios']}>
         <AuthProvider initialUser={adminUser}>
@@ -86,6 +86,22 @@ describe('Layout Components (Sidebar, Header & AppLayout)', () => {
 
     expect(screen.getByText('Início')).toBeDefined()
     expect(screen.getByText('Usuários')).toBeDefined()
+
+    const notifBtn = screen.getByLabelText('Abrir Notificações')
+    fireEvent.click(notifBtn)
+
+    expect(screen.getByText('Notificações')).toBeDefined()
+    expect(screen.getByText('Projeto Aprovado')).toBeDefined()
+
+    const markReadBtn = screen.getByText('Marcar lidas')
+    fireEvent.click(markReadBtn)
+    expect(screen.queryByText('Marcar lidas')).toBeNull()
+  })
+
+  it('renders PagePlaceholder component correctly', () => {
+    render(<PagePlaceholder title="Página Teste" description="Descrição teste do placeholder." />)
+    expect(screen.getByText('Página Teste')).toBeDefined()
+    expect(screen.getByText('Descrição teste do placeholder.')).toBeDefined()
   })
 
   it('renders AppLayout composing Sidebar, Header and Outlet content', () => {
@@ -104,7 +120,7 @@ describe('Layout Components (Sidebar, Header & AppLayout)', () => {
     expect(screen.getByText('Dashboard Outlet Content')).toBeDefined()
   })
 
-  it('triggers logout from Sidebar Encerrar Sessão button', async () => {
+  it('triggers logout from Sidebar Encerrar Sessão button', () => {
     render(
       <MemoryRouter initialEntries={['/dashboard']}>
         <AuthProvider initialUser={adminUser}>
@@ -116,10 +132,7 @@ describe('Layout Components (Sidebar, Header & AppLayout)', () => {
       </MemoryRouter>
     )
 
-    await act(async () => {
-      fireEvent.click(screen.getByTitle('Encerrar Sessão'))
-    })
-
+    fireEvent.click(screen.getByTitle('Encerrar Sessão'))
     expect(screen.getByText('Login Page Redirect Target')).toBeDefined()
   })
 })

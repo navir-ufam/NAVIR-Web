@@ -9,7 +9,6 @@ import {
   Wifi,
   Fingerprint,
   FileText,
-  Search,
   User,
   GraduationCap,
   LogOut,
@@ -144,11 +143,13 @@ export function getNavItemsForUser(userType?: UserType | null, userObj?: Paramet
 }
 
 function getInitialLetter(name?: string, email?: string): string {
-  if (name && name.trim()) {
-    return name.trim()[0].toUpperCase()
+  const trimmedName = name?.trim()
+  if (trimmedName) {
+    return trimmedName[0].toUpperCase()
   }
-  if (email && email.trim()) {
-    return email.trim()[0].toUpperCase()
+  const trimmedEmail = email?.trim()
+  if (trimmedEmail) {
+    return trimmedEmail[0].toUpperCase()
   }
   return 'U'
 }
