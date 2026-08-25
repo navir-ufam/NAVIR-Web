@@ -3,7 +3,7 @@ type PagePlaceholderProps = {
   description?: string
 }
 
-function PagePlaceholder({
+export function PagePlaceholder({
   title,
   description = 'Placeholder inicial para a pagina.',
 }: PagePlaceholderProps) {

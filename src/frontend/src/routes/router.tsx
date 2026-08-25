@@ -24,6 +24,7 @@ const RelatoriosPage = lazy(() => import('@/pages/relatorios'))
 const CurriculoPage = lazy(() => import('@/pages/curriculo'))
 const HistoricoPage = lazy(() => import('@/pages/historico'))
 const AtualizacoesPage = lazy(() => import('@/pages/atualizacoes'))
+const ConfiguracoesPage = lazy(() => import('@/pages/configuracoes'))
 
 const withSuspense = (Component: React.ComponentType) => (
   <Suspense fallback={<PageLoader />}>
@@ -97,6 +98,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredPermission="profile:view">
             {withSuspense(PerfilPage)}
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/configuracoes',
+        element: (
+          <ProtectedRoute requiredPermission="profile:view">
+            {withSuspense(ConfiguracoesPage)}
           </ProtectedRoute>
         ),
       },

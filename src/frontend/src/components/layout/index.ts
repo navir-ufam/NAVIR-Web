@@ -1,2 +1,5 @@
-export { default as PagePlaceholder } from './PagePlaceholder'
-export { default as AppLayout } from './AppLayout'
+export * from './Sidebar'
+export * from './Header'
+export * from './AppLayout'
+export * from './PagePlaceholder'
+export { ProtectedRoute, PublicRoute, PageLoader } from '@/components/common'
