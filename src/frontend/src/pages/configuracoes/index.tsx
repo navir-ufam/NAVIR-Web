@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type SyntheticEvent } from 'react'
 import { Settings, Bell, Moon, Sun, Monitor, Check, Lock, UserX, Mail, Send, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useTheme, type ThemeMode } from '@/context'
@@ -29,7 +29,7 @@ export function ConfiguracoesPage() {
     toast.success(`Tema alterado para ${label}!`)
   }
 
-  const handleAlterarSenha = (e: FormEvent<HTMLFormElement>) => {
+  const handleAlterarSenha = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!senhaAtual || !novaSenha || !confirmacaoSenha) {
@@ -53,7 +53,7 @@ export function ConfiguracoesPage() {
     setConfirmacaoSenha('')
   }
 
-  const handleEnviarMensagemSuporte = (e: FormEvent<HTMLFormElement>) => {
+  const handleEnviarMensagemSuporte = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!assuntoSuporte.trim() || !mensagemSuporte.trim()) {
