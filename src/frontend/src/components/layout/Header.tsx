@@ -94,10 +94,10 @@ export function Header() {
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Link to="/dashboard" className="flex items-center gap-1 hover:text-foreground transition-colors">
             <Home className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Início</span>
+            <span className="hidden sm:inline">Dashboard</span>
           </Link>
 
-          {pathSegments.map((segment, index) => {
+          {pathSegments.length > 0 && pathSegments[0] !== 'dashboard' && pathSegments.map((segment, index) => {
             const path = `/${pathSegments.slice(0, index + 1).join('/')}`
             const isLast = index === pathSegments.length - 1
             const label = ROUTE_LABELS[segment] || segment
