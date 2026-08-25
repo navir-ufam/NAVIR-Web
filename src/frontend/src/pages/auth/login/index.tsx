@@ -69,12 +69,6 @@ function LoginPage() {
           </p>
         </div>
 
-        {location.state?.from?.pathname && (
-          <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-md text-xs text-amber-600 dark:text-amber-400">
-            Você foi redirecionado da rota: <code className="font-bold">{location.state.from.pathname}</code>
-          </div>
-        )}
-
         {errorMessage && (
           <div className="p-3 bg-destructive/10 border border-destructive/30 rounded-md text-xs text-destructive font-medium">
             {errorMessage}
