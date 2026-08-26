@@ -11,13 +11,8 @@ import { useTheme } from '@/context'
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
 function Toaster({ ...props }: Readonly<ToasterProps>) {
-  let themeMode: ToasterProps['theme'] = 'system'
-  try {
-    const { theme } = useTheme()
-    themeMode = theme as ToasterProps['theme']
-  } catch {
-    // Fallback safe for test environments
-  }
+  const { theme } = useTheme()
+  const themeMode = (theme as ToasterProps['theme']) || 'system'
 
   return (
     <Sonner

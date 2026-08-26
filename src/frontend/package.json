@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:watch": "vitest",
     "test:cov": "vitest run --coverage && node -e \"const fs=require('fs'); if(fs.existsSync('coverage/lcov.info')){ let c=fs.readFileSync('coverage/lcov.info','utf8'); c=c.replace(/SF:src[\\\\\\/]/g, 'SF:src/frontend/src/').replace(/\\\\/g, '/'); fs.writeFileSync('coverage/lcov.info', c); }\""
   },
   "dependencies": {
@@ -64,6 +65,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.12.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
