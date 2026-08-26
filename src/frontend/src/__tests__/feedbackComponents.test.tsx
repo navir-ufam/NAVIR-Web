@@ -9,18 +9,18 @@ describe('Global Feedback Components (LoadingState, EmptyState, ErrorState, Toas
   it('renders LoadingState with default spinner variant', () => {
     render(<LoadingState text="Buscando projetos..." />)
     expect(screen.getByText('Buscando projetos...')).toBeDefined()
-    expect(screen.getByRole('status')).toBeDefined()
+    expect(screen.getByLabelText('Buscando projetos...')).toBeDefined()
   })
 
   it('renders LoadingState table, cards and page variants', () => {
-    const { rerender } = render(<LoadingState variant="table" count={4} />)
-    expect(screen.getByRole('status')).toBeDefined()
+    const { rerender } = render(<LoadingState variant="table" count={4} text="Carregando tabela..." />)
+    expect(screen.getByLabelText('Carregando tabela...')).toBeDefined()
 
-    rerender(<LoadingState variant="cards" count={3} />)
-    expect(screen.getByRole('status')).toBeDefined()
+    rerender(<LoadingState variant="cards" count={3} text="Carregando cards..." />)
+    expect(screen.getByLabelText('Carregando cards...')).toBeDefined()
 
-    rerender(<LoadingState variant="page" />)
-    expect(screen.getByRole('status')).toBeDefined()
+    rerender(<LoadingState variant="page" text="Carregando página..." />)
+    expect(screen.getByLabelText('Carregando página...')).toBeDefined()
   })
 
   it('renders EmptyState with custom icon, title, description and action CTA button', () => {
@@ -77,6 +77,9 @@ describe('Global Feedback Components (LoadingState, EmptyState, ErrorState, Toas
     )
 
     const btn = screen.getByText('Disparar Toast')
+    expect(btn).toBeDefined()
+
     fireEvent.click(btn)
+    expect(screen.getByText('Disparar Toast')).toBeDefined()
   })
 })

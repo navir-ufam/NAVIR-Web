@@ -27,12 +27,11 @@ export function EmptyState({
   const ActionIcon = action?.icon
 
   return (
-    <div
+    <section
       className={cn(
         'flex flex-col items-center justify-center p-8 text-center rounded-xl border border-dashed border-border bg-card/50 space-y-4 w-full max-w-md mx-auto my-6',
         className
       )}
-      role="region"
       aria-label={title}
     >
       <div className="p-3.5 rounded-2xl bg-muted/60 text-muted-foreground shadow-xs">
@@ -57,7 +56,7 @@ export function EmptyState({
           <span>{action.label}</span>
         </Button>
       )}
-    </div>
+    </section>
   )
 }
 

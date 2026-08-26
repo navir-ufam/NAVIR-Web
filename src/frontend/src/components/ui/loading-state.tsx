@@ -19,7 +19,7 @@ export function LoadingState({
 }: Readonly<LoadingStateProps>) {
   if (variant === 'table') {
     return (
-      <div className={cn('w-full space-y-3 p-4 bg-card border border-border rounded-xl shadow-xs', className)} role="status" aria-label={text}>
+      <output className={cn('block w-full space-y-3 p-4 bg-card border border-border rounded-xl shadow-xs', className)} aria-label={text}>
         <div className="flex items-center justify-between pb-2 border-b border-border">
           <Skeleton className="h-4 w-1/4" />
           <Skeleton className="h-4 w-1/6" />
@@ -31,13 +31,13 @@ export function LoadingState({
             <Skeleton className="h-4 w-1/5" />
           </div>
         ))}
-      </div>
+      </output>
     )
   }
 
   if (variant === 'cards') {
     return (
-      <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full', className)} role="status" aria-label={text}>
+      <output className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full', className)} aria-label={text}>
         {Array.from({ length: count }).map((_, index) => (
           <div key={`card-skeleton-${index + 1}`} className="p-5 border border-border bg-card rounded-xl shadow-xs space-y-3">
             <div className="flex items-center justify-between">
@@ -52,13 +52,13 @@ export function LoadingState({
             </div>
           </div>
         ))}
-      </div>
+      </output>
     )
   }
 
   if (variant === 'page') {
     return (
-      <div className={cn('space-y-6 w-full max-w-4xl p-6 bg-card border border-border rounded-xl shadow-xs', className)} role="status" aria-label={text}>
+      <output className={cn('block space-y-6 w-full max-w-4xl p-6 bg-card border border-border rounded-xl shadow-xs', className)} aria-label={text}>
         <div className="flex items-center space-x-4">
           <Skeleton className="h-12 w-12 rounded-full shrink-0" />
           <div className="space-y-2 flex-1">
@@ -71,19 +71,18 @@ export function LoadingState({
           <Skeleton className="h-20 w-full rounded-lg" />
           <Skeleton className="h-20 w-full rounded-lg" />
         </div>
-      </div>
+      </output>
     )
   }
 
   return (
-    <div
+    <output
       className={cn('flex flex-col items-center justify-center p-8 text-center space-y-3 w-full', className)}
-      role="status"
       aria-label={text}
     >
       <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
       <span className="text-xs font-medium text-muted-foreground">{text}</span>
-    </div>
+    </output>
   )
 }
 
