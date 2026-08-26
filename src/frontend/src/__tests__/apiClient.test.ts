@@ -34,7 +34,9 @@ describe('apiClient service', () => {
 
   it('attempts silent token refresh on 401 response and retries request if refresh succeeds', async () => {
     const firstResponse = new Response(null, { status: 401 })
-    const refreshResponse = new Response(JSON.stringify({ token: 'new_token_456' }), { status: 200 })
+    const refreshResponse = new Response(JSON.stringify({ token: 'new_token_456' }), {
+      status: 200,
+    })
     const retryResponse = new Response(JSON.stringify({ success: true }), { status: 200 })
 
     const fetchSpy = vi
@@ -57,7 +59,10 @@ describe('apiClient service', () => {
     const firstResponse = new Response(null, { status: 401 })
     const refreshResponse = new Response(null, { status: 401 })
 
-    globalThis.fetch = vi.fn().mockResolvedValueOnce(firstResponse).mockResolvedValueOnce(refreshResponse)
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValueOnce(firstResponse)
+      .mockResolvedValueOnce(refreshResponse)
 
     await apiFetch('/api/protected')
 

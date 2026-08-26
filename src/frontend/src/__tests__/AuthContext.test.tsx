@@ -33,7 +33,9 @@ function TestComponent() {
       <button
         type="button"
         data-testid="mock-user-btn"
-        onClick={() => setMockUser?.({ id: '2', email: 'mock@ufam.edu.br', tipo: 'PROFESSOR', estado: 'ACEITO' })}
+        onClick={() =>
+          setMockUser?.({ id: '2', email: 'mock@ufam.edu.br', tipo: 'PROFESSOR', estado: 'ACEITO' })
+        }
       >
         Set Mock User
       </button>

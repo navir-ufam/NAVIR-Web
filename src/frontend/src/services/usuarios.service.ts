@@ -2,7 +2,9 @@ import { api, withMock } from './api'
 import { mockUsuarios } from '@/mocks'
 import type { Usuario } from '@/types'
 
-export async function listar(filtros?: Record<string, string | number | boolean | undefined | null>): Promise<Usuario[]> {
+export async function listar(
+  filtros?: Record<string, string | number | boolean | undefined | null>
+): Promise<Usuario[]> {
   return withMock(() => api.get<Usuario[]>('/usuarios', filtros), mockUsuarios)
 }
 

@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useLocation, Link } from 'react-router-dom'
-import { Menu, ChevronRight, Home, Bell, CheckCheck, FolderKanban, Wifi, Fingerprint } from 'lucide-react'
+import {
+  Menu,
+  ChevronRight,
+  Home,
+  Bell,
+  CheckCheck,
+  FolderKanban,
+  Wifi,
+  Fingerprint,
+} from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { SidebarContent } from './Sidebar'
@@ -91,30 +100,38 @@ export function Header() {
           </SheetContent>
         </Sheet>
 
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Link to="/dashboard" className="flex items-center gap-1 hover:text-foreground transition-colors">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-1.5 text-xs text-muted-foreground"
+        >
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-1 hover:text-foreground transition-colors"
+          >
             <Home className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Dashboard</span>
           </Link>
 
-          {pathSegments.length > 0 && pathSegments[0] !== 'dashboard' && pathSegments.map((segment, index) => {
-            const path = `/${pathSegments.slice(0, index + 1).join('/')}`
-            const isLast = index === pathSegments.length - 1
-            const label = ROUTE_LABELS[segment] || segment
+          {pathSegments.length > 0 &&
+            pathSegments[0] !== 'dashboard' &&
+            pathSegments.map((segment, index) => {
+              const path = `/${pathSegments.slice(0, index + 1).join('/')}`
+              const isLast = index === pathSegments.length - 1
+              const label = ROUTE_LABELS[segment] || segment
 
-            return (
-              <div key={path} className="flex items-center gap-1.5">
-                <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
-                {isLast ? (
-                  <span className="font-semibold text-foreground capitalize">{label}</span>
-                ) : (
-                  <Link to={path} className="hover:text-foreground transition-colors capitalize">
-                    {label}
-                  </Link>
-                )}
-              </div>
-            )
-          })}
+              return (
+                <div key={path} className="flex items-center gap-1.5">
+                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
+                  {isLast ? (
+                    <span className="font-semibold text-foreground capitalize">{label}</span>
+                  ) : (
+                    <Link to={path} className="hover:text-foreground transition-colors capitalize">
+                      {label}
+                    </Link>
+                  )}
+                </div>
+              )
+            })}
         </nav>
       </div>
 
@@ -181,7 +198,9 @@ export function Header() {
                           <span className="text-xs font-semibold text-foreground truncate">
                             {item.title}
                           </span>
-                          <span className="text-[10px] text-muted-foreground shrink-0">{item.time}</span>
+                          <span className="text-[10px] text-muted-foreground shrink-0">
+                            {item.time}
+                          </span>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                           {item.description}

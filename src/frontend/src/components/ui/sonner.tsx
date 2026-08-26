@@ -1,10 +1,4 @@
-import {
-  CircleCheck,
-  Info,
-  LoaderCircle,
-  OctagonX,
-  TriangleAlert,
-} from 'lucide-react'
+import { CircleCheck, Info, LoaderCircle, OctagonX, TriangleAlert } from 'lucide-react'
 import { Toaster as Sonner } from 'sonner'
 import { useTheme } from '@/context'
 
@@ -33,8 +27,7 @@ function Toaster({ ...props }: Readonly<ToasterProps>) {
           description: 'group-[.toast]:text-muted-foreground',
           actionButton:
             'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground font-semibold',
-          cancelButton:
-            'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground font-medium',
+          cancelButton: 'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground font-medium',
         },
       }}
       {...props}

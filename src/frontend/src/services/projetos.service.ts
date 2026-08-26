@@ -6,7 +6,9 @@ function getSafeString(val: unknown, fallback: string): string {
   return typeof val === 'string' && val.trim() ? val : fallback
 }
 
-export async function listar(filtros?: Record<string, string | number | boolean | undefined | null>): Promise<Projeto[]> {
+export async function listar(
+  filtros?: Record<string, string | number | boolean | undefined | null>
+): Promise<Projeto[]> {
   return withMock(() => api.get<Projeto[]>('/projetos', filtros), mockProjetos)
 }
 

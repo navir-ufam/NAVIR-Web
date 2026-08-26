@@ -6,9 +6,27 @@ import { Sidebar, Header, AppLayout, PagePlaceholder } from '@/components/layout
 import { getNavItemsForUser } from '@/components/layout/Sidebar'
 import type { AuthUser } from '@/types'
 
-const adminUser: AuthUser = { id: '1', nome: 'Admin Silva', email: 'admin@ufam.edu.br', tipo: 'ADMIN', estado: 'ACEITO' }
-const professorUser: AuthUser = { id: '2', nome: 'Carlos Professor', email: 'prof@ufam.edu.br', tipo: 'PROFESSOR', estado: 'ACEITO' }
-const pesquisadorUser: AuthUser = { id: '3', nome: 'Maria Pesquisadora', email: 'pesquisador@ufam.edu.br', tipo: 'PESQUISADOR', estado: 'ACEITO' }
+const adminUser: AuthUser = {
+  id: '1',
+  nome: 'Admin Silva',
+  email: 'admin@ufam.edu.br',
+  tipo: 'ADMIN',
+  estado: 'ACEITO',
+}
+const professorUser: AuthUser = {
+  id: '2',
+  nome: 'Carlos Professor',
+  email: 'prof@ufam.edu.br',
+  tipo: 'PROFESSOR',
+  estado: 'ACEITO',
+}
+const pesquisadorUser: AuthUser = {
+  id: '3',
+  nome: 'Maria Pesquisadora',
+  email: 'pesquisador@ufam.edu.br',
+  tipo: 'PESQUISADOR',
+  estado: 'ACEITO',
+}
 
 describe('Layout Components (Sidebar, Header, AppLayout & PagePlaceholder)', () => {
   beforeEach(() => {

@@ -128,7 +128,10 @@ type SidebarContentProps = Readonly<{
   onItemClick?: () => void
 }>
 
-export function getNavItemsForUser(userType?: UserType | null, userObj?: Parameters<typeof hasPermission>[0]): NavItemConfig[] {
+export function getNavItemsForUser(
+  userType?: UserType | null,
+  userObj?: Parameters<typeof hasPermission>[0]
+): NavItemConfig[] {
   if (!userType) return []
 
   return ALL_NAV_ITEMS.filter((item) => {
@@ -183,7 +186,11 @@ export function SidebarContent({ onItemClick }: SidebarContentProps) {
       <div>
         <div className="h-20 px-6 flex items-center justify-center border-b border-white/10 py-3">
           <Link to="/dashboard" onClick={onItemClick} className="flex items-center justify-center">
-            <img src={logoSvg} alt="NAVIR" className="h-12 w-auto object-contain transition-transform hover:scale-105" />
+            <img
+              src={logoSvg}
+              alt="NAVIR"
+              className="h-12 w-auto object-contain transition-transform hover:scale-105"
+            />
           </Link>
         </div>
 
@@ -222,7 +229,10 @@ export function SidebarContent({ onItemClick }: SidebarContentProps) {
         <DropdownMenu>
           <div className="flex items-center justify-between gap-2 p-2 rounded-xl hover:bg-white/10 transition-colors">
             <DropdownMenuTrigger asChild>
-              <button type="button" className="flex items-center gap-3 flex-1 min-w-0 text-left outline-none cursor-pointer">
+              <button
+                type="button"
+                className="flex items-center gap-3 flex-1 min-w-0 text-left outline-none cursor-pointer"
+              >
                 <Avatar className="h-10 w-10 border-2 border-sky-400/50 shadow-md">
                   <AvatarFallback className="bg-sky-500 text-white font-bold text-base">
                     {getInitialLetter(user?.nome, user?.email)}
@@ -251,20 +261,33 @@ export function SidebarContent({ onItemClick }: SidebarContentProps) {
             </button>
           </div>
 
-          <DropdownMenuContent side="top" align="start" className="w-56 bg-slate-900 border-white/10 text-white shadow-2xl p-1.5">
-            <DropdownMenuItem onClick={handleNavigatePerfil} className="cursor-pointer hover:bg-white/10 text-xs py-2 gap-2.5">
+          <DropdownMenuContent
+            side="top"
+            align="start"
+            className="w-56 bg-slate-900 border-white/10 text-white shadow-2xl p-1.5"
+          >
+            <DropdownMenuItem
+              onClick={handleNavigatePerfil}
+              className="cursor-pointer hover:bg-white/10 text-xs py-2 gap-2.5"
+            >
               <User className="h-4 w-4 text-cyan-300" />
               <span>Meu Perfil</span>
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={handleNavigateConfiguracoes} className="cursor-pointer hover:bg-white/10 text-xs py-2 gap-2.5">
+            <DropdownMenuItem
+              onClick={handleNavigateConfiguracoes}
+              className="cursor-pointer hover:bg-white/10 text-xs py-2 gap-2.5"
+            >
               <Settings className="h-4 w-4 text-cyan-300" />
               <span>Configurações</span>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator className="bg-white/10 my-1" />
 
-            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer hover:bg-rose-500/20 text-rose-300 text-xs py-2 gap-2.5">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="cursor-pointer hover:bg-rose-500/20 text-rose-300 text-xs py-2 gap-2.5"
+            >
               <LogOut className="h-4 w-4" />
               <span>Encerrar Sessão</span>
             </DropdownMenuItem>

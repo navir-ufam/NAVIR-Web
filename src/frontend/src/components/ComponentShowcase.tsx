@@ -1,113 +1,204 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { toast } from 'sonner';
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { toast } from 'sonner'
 
 import {
-  Search, Bell, User, Plus, X, CheckCircle, XCircle, Clock, Shield, Filter,
-  Settings, Eye, Edit, Calendar as CalendarIcon, Tag, Activity, Users, BookOpen
-} from 'lucide-react';
+  Search,
+  Bell,
+  User,
+  Plus,
+  X,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Shield,
+  Filter,
+  Settings,
+  Eye,
+  Edit,
+  Calendar as CalendarIcon,
+  Tag,
+  Activity,
+  Users,
+  BookOpen,
+} from 'lucide-react'
 
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { Progress } from '@/components/ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Checkbox } from '@/components/ui/checkbox';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Switch } from '@/components/ui/switch'
+import { Slider } from '@/components/ui/slider'
+import { Badge } from '@/components/ui/badge'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import { Progress } from '@/components/ui/progress'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Checkbox } from '@/components/ui/checkbox'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'E-mail inválido' }),
   password: z.string().min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
   rememberMe: z.boolean().optional(),
-});
+})
 
 const registerSchema = z.object({
   fullName: z.string().min(3, { message: 'Nome deve ter pelo menos 3 caracteres' }),
   email: z.string().email({ message: 'E-mail acadêmico inválido' }),
   lattesUrl: z.string().url({ message: 'URL do Lattes inválida' }).or(z.literal('')),
   userType: z.enum(['PESQUISADOR', 'PROFESSOR', 'INTERESSADO']),
-  acceptTerms: z.boolean().refine((val) => val === true, { message: 'Você deve aceitar os termos de uso' }),
-});
+  acceptTerms: z
+    .boolean()
+    .refine((val) => val === true, { message: 'Você deve aceitar os termos de uso' }),
+})
 
 const projectSchema = z.object({
   title: z.string().min(3, { message: 'Título é obrigatório' }),
   area: z.string().min(1, { message: 'Área é obrigatória' }),
   description: z.string().min(10, { message: 'Descrição detalhada é obrigatória' }),
-});
+})
 
 export const ComponentShowcase: React.FC = () => {
-  const [tags, setTags] = useState<string[]>(['Robótica', 'IA', 'Visão Computacional']);
-  const [newTagInput, setNewTagInput] = useState('');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [isAvailable, setIsAvailable] = useState(true);
-  const [sliderValue, setSliderValue] = useState([70]);
+  const [tags, setTags] = useState<string[]>(['Robótica', 'IA', 'Visão Computacional'])
+  const [newTagInput, setNewTagInput] = useState('')
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
+  const [isAvailable, setIsAvailable] = useState(true)
+  const [sliderValue, setSliderValue] = useState([70])
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: 'pesquisador@navir.ufam.edu.br', password: '••••••••', rememberMe: true },
-  });
+    defaultValues: {
+      email: 'pesquisador@navir.ufam.edu.br',
+      password: '••••••••',
+      rememberMe: true,
+    },
+  })
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { fullName: '', email: '', lattesUrl: '', userType: 'PESQUISADOR', acceptTerms: false },
-  });
+    defaultValues: {
+      fullName: '',
+      email: '',
+      lattesUrl: '',
+      userType: 'PESQUISADOR',
+      acceptTerms: false,
+    },
+  })
 
   const projectForm = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: { title: '', area: 'ia', description: '' },
-  });
+  })
 
   const handleAddTag = () => {
     if (newTagInput.trim() && !tags.includes(newTagInput.trim())) {
-      setTags([...tags, newTagInput.trim()]);
-      setNewTagInput('');
-      toast.success(`Tag "${newTagInput.trim()}" adicionada!`);
+      setTags([...tags, newTagInput.trim()])
+      setNewTagInput('')
+      toast.success(`Tag "${newTagInput.trim()}" adicionada!`)
     }
-  };
+  }
 
   const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter((t) => t !== tagToRemove));
-    toast.info(`Tag "${tagToRemove}" removida.`);
-  };
+    setTags(tags.filter((t) => t !== tagToRemove))
+    toast.info(`Tag "${tagToRemove}" removida.`)
+  }
 
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-background text-foreground space-y-8 pb-16">
-
         {/* Header Superior estilo NAVIR */}
         <header className="bg-navy border-b border-sidebar-border px-6 py-4 flex items-center justify-between text-white shadow-md">
           <div className="flex items-center space-x-3">
             <img className="h-16" src="/logo.svg" alt="Logotipo do NAVIR" />
             <div>
-              <h1 className="font-heading font-bold text-lg leading-none tracking-wide text-white">NAVIR</h1>
-              <p className="text-xs text-blue-light">Núcleo de Automação, Visão Computacional, IA e Robótica</p>
+              <h1 className="font-heading font-bold text-lg leading-none tracking-wide text-white">
+                NAVIR
+              </h1>
+              <p className="text-xs text-blue-light">
+                Núcleo de Automação, Visão Computacional, IA e Robótica
+              </p>
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative text-white hover:bg-navy-light">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative text-white hover:bg-navy-light"
+                >
                   <Bell className="w-5 h-5" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full animate-pulse" />
                 </Button>
@@ -119,11 +210,15 @@ export const ComponentShowcase: React.FC = () => {
                 <div className="space-y-2 text-xs">
                   <div className="p-2 rounded bg-muted">
                     <p className="font-medium">Novo usuário cadastrado</p>
-                    <p className="text-muted-foreground text-[10px]">Aguardando aprovação do perfil Pesquisador.</p>
+                    <p className="text-muted-foreground text-[10px]">
+                      Aguardando aprovação do perfil Pesquisador.
+                    </p>
                   </div>
                   <div className="p-2 rounded bg-muted">
                     <p className="font-medium">Reserva de dispositivo aprovada</p>
-                    <p className="text-muted-foreground text-[10px]">Projeto MOB4AI • Dispositivo ESP32-CAM.</p>
+                    <p className="text-muted-foreground text-[10px]">
+                      Projeto MOB4AI • Dispositivo ESP32-CAM.
+                    </p>
                   </div>
                 </div>
               </PopoverContent>
@@ -131,10 +226,15 @@ export const ComponentShowcase: React.FC = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-2 text-white hover:bg-navy-light">
+                <Button
+                  variant="ghost"
+                  className="flex items-center space-x-2 text-white hover:bg-navy-light"
+                >
                   <Avatar className="w-8 h-8 border border-secondary">
                     <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback className="bg-secondary text-white font-bold">NV</AvatarFallback>
+                    <AvatarFallback className="bg-secondary text-white font-bold">
+                      NV
+                    </AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium hidden sm:inline-block">Admin</span>
                 </Button>
@@ -149,7 +249,10 @@ export const ComponentShowcase: React.FC = () => {
                   <Settings className="mr-2 h-4 w-4" /> Configurações
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive" onClick={() => toast.error('Sessão encerrada')}>
+                <DropdownMenuItem
+                  className="text-destructive"
+                  onClick={() => toast.error('Sessão encerrada')}
+                >
                   <User className="mr-2 h-4 w-4" /> Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -158,21 +261,31 @@ export const ComponentShowcase: React.FC = () => {
         </header>
 
         <div className="max-w-7xl mx-auto px-6 space-y-10">
-
           {/* Banner de apresentação da suíte */}
           <div className="bg-navy-gradient text-white p-6 rounded-xl shadow-lg border border-navy-light flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center space-x-2 mb-2">
                 <Badge className="bg-cyan text-white font-semibold">DESIGN SYSTEM NAVIR</Badge>
-                <Badge variant="outline" className="text-white border-cyan-light">39 COMPONENTES UI</Badge>
+                <Badge variant="outline" className="text-white border-cyan-light">
+                  39 COMPONENTES UI
+                </Badge>
               </div>
-              <h2 className="text-2xl font-heading font-bold">Catálogo Completo de Componentes & Paleta NAVIR</h2>
+              <h2 className="text-2xl font-heading font-bold">
+                Catálogo Completo de Componentes & Paleta NAVIR
+              </h2>
               <p className="text-sm text-slate-200 mt-1 max-w-2xl">
-                Demonstração técnica interativa contendo formulários de <strong>Login</strong>, <strong>Cadastro</strong>, <strong>Projetos</strong>, <strong>Gerenciamento de Tags</strong>, <strong>Tabelas de Gestão</strong>, <strong>Modais de Confirmação/Justificativa</strong> e toda a suíte visual de tokens.
+                Demonstração técnica interativa contendo formulários de <strong>Login</strong>,{' '}
+                <strong>Cadastro</strong>, <strong>Projetos</strong>,{' '}
+                <strong>Gerenciamento de Tags</strong>, <strong>Tabelas de Gestão</strong>,{' '}
+                <strong>Modais de Confirmação/Justificativa</strong> e toda a suíte visual de
+                tokens.
               </p>
             </div>
             <div className="flex gap-2 flex-wrap">
-              <Button className="bg-blue hover:bg-blue-light text-white font-medium shadow" onClick={() => toast.success('Todas as cores NAVIR validadas!')}>
+              <Button
+                className="bg-blue hover:bg-blue-light text-white font-medium shadow"
+                onClick={() => toast.success('Todas as cores NAVIR validadas!')}
+              >
                 Validar Cores
               </Button>
             </div>
@@ -181,11 +294,11 @@ export const ComponentShowcase: React.FC = () => {
           {/* Seção 1: Formulários Principais do Sistema (Login & Cadastro) */}
           <section className="space-y-4">
             <h3 className="text-xl font-heading font-bold text-primary flex items-center gap-2">
-              <Shield className="w-5 h-5 text-secondary" /> 1. Formulários de Autenticação & Cadastro
+              <Shield className="w-5 h-5 text-secondary" /> 1. Formulários de Autenticação &
+              Cadastro
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
               {/* Form de Login */}
               <Card className="shadow-md border-border">
                 <CardHeader className="bg-muted/30 border-b border-border">
@@ -193,11 +306,18 @@ export const ComponentShowcase: React.FC = () => {
                     <span>Tela de Login</span>
                     <Badge variant="secondary">Exemplo de Formulário</Badge>
                   </CardTitle>
-                  <CardDescription>Acesso seguro à área interna do laboratório NAVIR.</CardDescription>
+                  <CardDescription>
+                    Acesso seguro à área interna do laboratório NAVIR.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-6">
                   <Form {...loginForm}>
-                    <form onSubmit={loginForm.handleSubmit(() => toast.success('Login efetuado com sucesso!'))} className="space-y-4">
+                    <form
+                      onSubmit={loginForm.handleSubmit(() =>
+                        toast.success('Login efetuado com sucesso!')
+                      )}
+                      className="space-y-4"
+                    >
                       <FormField
                         control={loginForm.control}
                         name="email"
@@ -235,16 +355,28 @@ export const ComponentShowcase: React.FC = () => {
                               <FormControl>
                                 <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                               </FormControl>
-                              <FormLabel className="text-xs cursor-pointer">Lembrar minha sessão</FormLabel>
+                              <FormLabel className="text-xs cursor-pointer">
+                                Lembrar minha sessão
+                              </FormLabel>
                             </FormItem>
                           )}
                         />
-                        <a href="#esqueceu" onClick={(e) => { e.preventDefault(); toast.info('Link de recuperação enviado.'); }} className="text-secondary font-medium hover:underline">
+                        <a
+                          href="#esqueceu"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            toast.info('Link de recuperação enviado.')
+                          }}
+                          className="text-secondary font-medium hover:underline"
+                        >
                           Esqueceu a senha?
                         </a>
                       </div>
 
-                      <Button type="submit" className="w-full bg-primary hover:bg-navy-light text-white font-medium">
+                      <Button
+                        type="submit"
+                        className="w-full bg-primary hover:bg-navy-light text-white font-medium"
+                      >
                         Entrar no NAVIR
                       </Button>
                     </form>
@@ -259,11 +391,18 @@ export const ComponentShowcase: React.FC = () => {
                     <span>Solicitação de Cadastro</span>
                     <Badge variant="outline">Fluxo com Escolha de Perfil</Badge>
                   </CardTitle>
-                  <CardDescription>Cadastro de Pesquisadores, Professores e Interessados.</CardDescription>
+                  <CardDescription>
+                    Cadastro de Pesquisadores, Professores e Interessados.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-6">
                   <Form {...registerForm}>
-                    <form onSubmit={registerForm.handleSubmit((values) => toast.success(`Solicitação enviada para ${values.userType}!`))} className="space-y-4">
+                    <form
+                      onSubmit={registerForm.handleSubmit((values) =>
+                        toast.success(`Solicitação enviada para ${values.userType}!`)
+                      )}
+                      className="space-y-4"
+                    >
                       <FormField
                         control={registerForm.control}
                         name="fullName"
@@ -315,24 +454,49 @@ export const ComponentShowcase: React.FC = () => {
                           <FormItem className="space-y-2">
                             <FormLabel>Tipo de Perfil Desejado</FormLabel>
                             <FormControl>
-                              <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-2">
+                              <RadioGroup
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="grid grid-cols-3 gap-2"
+                              >
                                 <div>
-                                  <RadioGroupItem value="PESQUISADOR" id="p-pesquisador" className="peer sr-only" />
-                                  <Label htmlFor="p-pesquisador" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-secondary [&:has([data-state=checked])]:border-secondary cursor-pointer text-center text-xs">
+                                  <RadioGroupItem
+                                    value="PESQUISADOR"
+                                    id="p-pesquisador"
+                                    className="peer sr-only"
+                                  />
+                                  <Label
+                                    htmlFor="p-pesquisador"
+                                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-secondary [&:has([data-state=checked])]:border-secondary cursor-pointer text-center text-xs"
+                                  >
                                     <Users className="mb-1 h-4 w-4" />
                                     Pesquisador
                                   </Label>
                                 </div>
                                 <div>
-                                  <RadioGroupItem value="PROFESSOR" id="p-professor" className="peer sr-only" />
-                                  <Label htmlFor="p-professor" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-secondary [&:has([data-state=checked])]:border-secondary cursor-pointer text-center text-xs">
+                                  <RadioGroupItem
+                                    value="PROFESSOR"
+                                    id="p-professor"
+                                    className="peer sr-only"
+                                  />
+                                  <Label
+                                    htmlFor="p-professor"
+                                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-secondary [&:has([data-state=checked])]:border-secondary cursor-pointer text-center text-xs"
+                                  >
                                     <BookOpen className="mb-1 h-4 w-4" />
                                     Professor
                                   </Label>
                                 </div>
                                 <div>
-                                  <RadioGroupItem value="INTERESSADO" id="p-interessado" className="peer sr-only" />
-                                  <Label htmlFor="p-interessado" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-secondary [&:has([data-state=checked])]:border-secondary cursor-pointer text-center text-xs">
+                                  <RadioGroupItem
+                                    value="INTERESSADO"
+                                    id="p-interessado"
+                                    className="peer sr-only"
+                                  />
+                                  <Label
+                                    htmlFor="p-interessado"
+                                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-secondary [&:has([data-state=checked])]:border-secondary cursor-pointer text-center text-xs"
+                                  >
                                     <User className="mb-1 h-4 w-4" />
                                     Interessado
                                   </Label>
@@ -352,19 +516,23 @@ export const ComponentShowcase: React.FC = () => {
                             <FormControl>
                               <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                             </FormControl>
-                            <FormLabel className="text-xs cursor-pointer">Aceito as normas e regulamentos do Laboratório NAVIR</FormLabel>
+                            <FormLabel className="text-xs cursor-pointer">
+                              Aceito as normas e regulamentos do Laboratório NAVIR
+                            </FormLabel>
                           </FormItem>
                         )}
                       />
 
-                      <Button type="submit" className="w-full bg-secondary hover:bg-blue-light text-white font-medium">
+                      <Button
+                        type="submit"
+                        className="w-full bg-secondary hover:bg-blue-light text-white font-medium"
+                      >
                         Enviar Solicitação de Cadastro
                       </Button>
                     </form>
                   </Form>
                 </CardContent>
               </Card>
-
             </div>
           </section>
 
@@ -375,7 +543,6 @@ export const ComponentShowcase: React.FC = () => {
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
               {/* Form de Cadastro de Projeto com Tags */}
               <Card className="md:col-span-1 shadow-md">
                 <CardHeader className="bg-muted/30 border-b border-border">
@@ -384,7 +551,12 @@ export const ComponentShowcase: React.FC = () => {
                 </CardHeader>
                 <CardContent className="pt-4 space-y-4">
                   <Form {...projectForm}>
-                    <form onSubmit={projectForm.handleSubmit((val) => toast.success(`Projeto "${val.title}" criado!`))} className="space-y-4">
+                    <form
+                      onSubmit={projectForm.handleSubmit((val) =>
+                        toast.success(`Projeto "${val.title}" criado!`)
+                      )}
+                      className="space-y-4"
+                    >
                       <FormField
                         control={projectForm.control}
                         name="title"
@@ -433,19 +605,27 @@ export const ComponentShowcase: React.FC = () => {
                             onChange={(e) => setNewTagInput(e.target.value)}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
-                                e.preventDefault();
-                                handleAddTag();
+                                e.preventDefault()
+                                handleAddTag()
                               }
                             }}
                           />
-                          <Button type="button" variant="secondary" size="icon" onClick={handleAddTag}>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="icon"
+                            onClick={handleAddTag}
+                          >
                             <Plus className="w-4 h-4" />
                           </Button>
                         </div>
 
                         <div className="flex flex-wrap gap-1.5 pt-2">
                           {tags.map((t) => (
-                            <Badge key={t} className="bg-navy-light text-white flex items-center gap-1 pr-1 text-xs">
+                            <Badge
+                              key={t}
+                              className="bg-navy-light text-white flex items-center gap-1 pr-1 text-xs"
+                            >
                               {t}
                               <button
                                 type="button"
@@ -459,7 +639,10 @@ export const ComponentShowcase: React.FC = () => {
                         </div>
                       </div>
 
-                      <Button type="submit" className="w-full bg-primary hover:bg-navy-light text-white">
+                      <Button
+                        type="submit"
+                        className="w-full bg-primary hover:bg-navy-light text-white"
+                      >
                         Cadastrar Projeto
                       </Button>
                     </form>
@@ -469,22 +652,31 @@ export const ComponentShowcase: React.FC = () => {
 
               {/* Cards de Exemplo de Projetos */}
               <div className="md:col-span-2 space-y-4">
-
                 {/* Projeto MOB4AI */}
                 <Card className="metric-card border-l-4 border-l-secondary shadow-md">
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-start">
                       <div>
-                        <CardTitle className="font-heading text-lg text-primary">MOB4AI — Mobilidade Inteligente</CardTitle>
-                        <CardDescription>Pesquisa aplicada a veículos autônomos e sistemas inteligentes.</CardDescription>
+                        <CardTitle className="font-heading text-lg text-primary">
+                          MOB4AI — Mobilidade Inteligente
+                        </CardTitle>
+                        <CardDescription>
+                          Pesquisa aplicada a veículos autônomos e sistemas inteligentes.
+                        </CardDescription>
                       </div>
-                      <Badge className="bg-success text-success-foreground font-semibold">ATIVO</Badge>
+                      <Badge className="bg-success text-success-foreground font-semibold">
+                        ATIVO
+                      </Badge>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="border-secondary text-secondary">Inteligência Artificial</Badge>
-                      <Badge variant="outline" className="border-accent text-accent">Visão Computacional</Badge>
+                      <Badge variant="outline" className="border-secondary text-secondary">
+                        Inteligência Artificial
+                      </Badge>
+                      <Badge variant="outline" className="border-accent text-accent">
+                        Visão Computacional
+                      </Badge>
                       <Badge variant="secondary">C++ / Python</Badge>
                     </div>
                     <div className="space-y-1">
@@ -497,7 +689,9 @@ export const ComponentShowcase: React.FC = () => {
                     <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
                       <div className="flex items-center space-x-2">
                         <Avatar className="w-6 h-6">
-                          <AvatarFallback className="bg-primary text-white text-[10px]">DR</AvatarFallback>
+                          <AvatarFallback className="bg-primary text-white text-[10px]">
+                            DR
+                          </AvatarFallback>
                         </Avatar>
                         <span>Coord: Dr. Ricardo</span>
                       </div>
@@ -511,16 +705,26 @@ export const ComponentShowcase: React.FC = () => {
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-start">
                       <div>
-                        <CardTitle className="font-heading text-lg text-primary">Startando com o NAVIR</CardTitle>
-                        <CardDescription>Capacitação e onboarding de novos talentos e alunos de graduação.</CardDescription>
+                        <CardTitle className="font-heading text-lg text-primary">
+                          Startando com o NAVIR
+                        </CardTitle>
+                        <CardDescription>
+                          Capacitação e onboarding de novos talentos e alunos de graduação.
+                        </CardDescription>
                       </div>
-                      <Badge className="bg-warning text-warning-foreground font-semibold">EM ANDAMENTO</Badge>
+                      <Badge className="bg-warning text-warning-foreground font-semibold">
+                        EM ANDAMENTO
+                      </Badge>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="border-accent text-accent">Treinamento</Badge>
-                      <Badge variant="outline" className="border-navy text-navy">Robótica</Badge>
+                      <Badge variant="outline" className="border-accent text-accent">
+                        Treinamento
+                      </Badge>
+                      <Badge variant="outline" className="border-navy text-navy">
+                        Robótica
+                      </Badge>
                       <Badge variant="secondary">ROS2 / Arduino</Badge>
                     </div>
                     <div className="space-y-1">
@@ -533,7 +737,9 @@ export const ComponentShowcase: React.FC = () => {
                     <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
                       <div className="flex items-center space-x-2">
                         <Avatar className="w-6 h-6">
-                          <AvatarFallback className="bg-accent text-white text-[10px]">PF</AvatarFallback>
+                          <AvatarFallback className="bg-accent text-white text-[10px]">
+                            PF
+                          </AvatarFallback>
                         </Avatar>
                         <span>Coord: Prof. Fabiano</span>
                       </div>
@@ -541,16 +747,15 @@ export const ComponentShowcase: React.FC = () => {
                     </div>
                   </CardContent>
                 </Card>
-
               </div>
-
             </div>
           </section>
 
           {/* Seção 3: Tabela de Gestão de Usuários e Filtros Avançados */}
           <section className="space-y-4">
             <h3 className="text-xl font-heading font-bold text-primary flex items-center gap-2">
-              <Activity className="w-5 h-5 text-secondary" /> 3. Tabela de Gestão com Filtros & Ações por Linha
+              <Activity className="w-5 h-5 text-secondary" /> 3. Tabela de Gestão com Filtros &
+              Ações por Linha
             </h3>
 
             <Card className="shadow-md">
@@ -587,13 +792,23 @@ export const ComponentShowcase: React.FC = () => {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="end">
-                        <Calendar mode="single" selected={selectedDate} onSelect={setSelectedDate} />
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={setSelectedDate}
+                        />
                       </PopoverContent>
                     </Popover>
 
                     <div className="flex items-center space-x-2 pl-2 border-l">
-                      <Switch id="filter-avail" checked={isAvailable} onCheckedChange={setIsAvailable} />
-                      <Label htmlFor="filter-avail" className="text-xs cursor-pointer">Disponíveis</Label>
+                      <Switch
+                        id="filter-avail"
+                        checked={isAvailable}
+                        onCheckedChange={setIsAvailable}
+                      />
+                      <Label htmlFor="filter-avail" className="text-xs cursor-pointer">
+                        Disponíveis
+                      </Label>
                     </div>
                   </div>
                 </div>
@@ -616,7 +831,9 @@ export const ComponentShowcase: React.FC = () => {
                       <TableCell className="font-medium">
                         <div className="flex items-center space-x-3">
                           <Avatar className="w-8 h-8">
-                            <AvatarFallback className="bg-navy text-white text-xs">AM</AvatarFallback>
+                            <AvatarFallback className="bg-navy text-white text-xs">
+                              AM
+                            </AvatarFallback>
                           </Avatar>
                           <div>
                             <p className="text-sm font-semibold">Ana Maria Costa</p>
@@ -624,17 +841,31 @@ export const ComponentShowcase: React.FC = () => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell><Badge className="bg-info text-info-foreground">PESQUISADOR</Badge></TableCell>
-                      <TableCell><Badge className="bg-success text-success-foreground">ACEITO</Badge></TableCell>
-                      <TableCell><Badge variant="outline" className="border-success text-success">REGULAR</Badge></TableCell>
+                      <TableCell>
+                        <Badge className="bg-info text-info-foreground">PESQUISADOR</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className="bg-success text-success-foreground">ACEITO</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="border-success text-success">
+                          REGULAR
+                        </Badge>
+                      </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm"><Settings className="w-4 h-4" /></Button>
+                            <Button variant="ghost" size="sm">
+                              <Settings className="w-4 h-4" />
+                            </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => toast('Visualizando perfil')}><Eye className="w-4 h-4 mr-2" /> Detalhes (T12)</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => toast('Editar cadastro')}><Edit className="w-4 h-4 mr-2" /> Editar</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => toast('Visualizando perfil')}>
+                              <Eye className="w-4 h-4 mr-2" /> Detalhes (T12)
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => toast('Editar cadastro')}>
+                              <Edit className="w-4 h-4 mr-2" /> Editar
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -645,23 +876,40 @@ export const ComponentShowcase: React.FC = () => {
                       <TableCell className="font-medium">
                         <div className="flex items-center space-x-3">
                           <Avatar className="w-8 h-8">
-                            <AvatarFallback className="bg-warning text-warning-foreground font-bold text-xs">CL</AvatarFallback>
+                            <AvatarFallback className="bg-warning text-warning-foreground font-bold text-xs">
+                              CL
+                            </AvatarFallback>
                           </Avatar>
                           <div>
                             <p className="text-sm font-semibold">Carlos Lima</p>
-                            <p className="text-xs text-muted-foreground">carlos.lima@icomp.ufam.edu.br</p>
+                            <p className="text-xs text-muted-foreground">
+                              carlos.lima@icomp.ufam.edu.br
+                            </p>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell><Badge className="bg-info-muted text-info">PROFESSOR</Badge></TableCell>
-                      <TableCell><Badge className="bg-warning text-warning-foreground">PENDENTE</Badge></TableCell>
-                      <TableCell><Badge variant="outline" className="border-warning text-warning">EM ANÁLISE</Badge></TableCell>
+                      <TableCell>
+                        <Badge className="bg-info-muted text-info">PROFESSOR</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className="bg-warning text-warning-foreground">PENDENTE</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="border-warning text-warning">
+                          EM ANÁLISE
+                        </Badge>
+                      </TableCell>
                       <TableCell className="text-right flex items-center justify-end space-x-1">
-
                         {/* Aprovar Modal (Dialog) */}
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="ghost" size="sm" className="text-success hover:bg-success-muted"><CheckCircle className="w-4 h-4" /></Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-success hover:bg-success-muted"
+                            >
+                              <CheckCircle className="w-4 h-4" />
+                            </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
@@ -669,12 +917,16 @@ export const ComponentShowcase: React.FC = () => {
                                 <CheckCircle className="w-5 h-5" /> Aprovar Cadastro de Carlos Lima
                               </DialogTitle>
                               <DialogDescription>
-                                O usuário receberá privilégios do perfil <strong>PROFESSOR</strong> no laboratório.
+                                O usuário receberá privilégios do perfil <strong>PROFESSOR</strong>{' '}
+                                no laboratório.
                               </DialogDescription>
                             </DialogHeader>
                             <div className="flex justify-end space-x-2 mt-4">
                               <Button variant="outline">Cancelar</Button>
-                              <Button className="bg-success text-white hover:bg-success/90" onClick={() => toast.success('Cadastro aprovado com sucesso!')}>
+                              <Button
+                                className="bg-success text-white hover:bg-success/90"
+                                onClick={() => toast.success('Cadastro aprovado com sucesso!')}
+                              >
                                 Confirmar Aprovação
                               </Button>
                             </div>
@@ -684,7 +936,13 @@ export const ComponentShowcase: React.FC = () => {
                         {/* Negar Modal (AlertDialog com Justificativa Textarea) */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive-muted"><XCircle className="w-4 h-4" /></Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-destructive hover:bg-destructive-muted"
+                            >
+                              <XCircle className="w-4 h-4" />
+                            </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
@@ -692,7 +950,8 @@ export const ComponentShowcase: React.FC = () => {
                                 <XCircle className="w-5 h-5" /> Negar Solicitação de Cadastro
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Informe a justificativa obrigatória. O motivo será enviado ao e-mail do usuário.
+                                Informe a justificativa obrigatória. O motivo será enviado ao e-mail
+                                do usuário.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <div className="space-y-2 my-2">
@@ -701,13 +960,15 @@ export const ComponentShowcase: React.FC = () => {
                             </div>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Voltar</AlertDialogCancel>
-                              <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => toast.error('Solicitação negada com justificativa.')}>
+                              <AlertDialogAction
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                onClick={() => toast.error('Solicitação negada com justificativa.')}
+                              >
                                 Negar Cadastro
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
-
                       </TableCell>
                     </TableRow>
 
@@ -716,7 +977,9 @@ export const ComponentShowcase: React.FC = () => {
                       <TableCell className="font-medium">
                         <div className="flex items-center space-x-3">
                           <Avatar className="w-8 h-8">
-                            <AvatarFallback className="bg-muted text-muted-foreground text-xs">JR</AvatarFallback>
+                            <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                              JR
+                            </AvatarFallback>
                           </Avatar>
                           <div>
                             <p className="text-sm font-semibold">João Ribeiro</p>
@@ -724,13 +987,23 @@ export const ComponentShowcase: React.FC = () => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell><Badge variant="secondary">INTERESSADO</Badge></TableCell>
-                      <TableCell><Badge className="bg-destructive text-destructive-foreground">NEGADO</Badge></TableCell>
-                      <TableCell><Badge variant="outline" className="border-destructive text-destructive">INATIVO</Badge></TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">INTERESSADO</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className="bg-destructive text-destructive-foreground">NEGADO</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="border-destructive text-destructive">
+                          INATIVO
+                        </Badge>
+                      </TableCell>
                       <TableCell className="text-right">
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button variant="ghost" size="sm" className="text-muted-foreground"><Clock className="w-4 h-4" /></Button>
+                            <Button variant="ghost" size="sm" className="text-muted-foreground">
+                              <Clock className="w-4 h-4" />
+                            </Button>
                           </TooltipTrigger>
                           <TooltipContent>Recusado em 14/06/2026</TooltipContent>
                         </Tooltip>
@@ -745,26 +1018,34 @@ export const ComponentShowcase: React.FC = () => {
           {/* Seção 4: Demais Componentes Adicionais do Design */}
           <section className="space-y-4">
             <h3 className="text-xl font-heading font-bold text-primary flex items-center gap-2">
-              <Filter className="w-5 h-5 text-accent" /> 4. Suíte Adicional: Accordion, Command Search, Slider & Skeleton
+              <Filter className="w-5 h-5 text-accent" /> 4. Suíte Adicional: Accordion, Command
+              Search, Slider & Skeleton
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
               {/* Command Combobox & Accordion */}
               <Card className="shadow-md">
                 <CardHeader>
-                  <CardTitle className="font-heading text-base">Busca Rápida (Command) & FAQ (Accordion)</CardTitle>
+                  <CardTitle className="font-heading text-base">
+                    Busca Rápida (Command) & FAQ (Accordion)
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="border rounded-md p-2 bg-muted/20">
-                    <Label className="text-xs font-semibold mb-1 block">Combobox de Pesquisa Rápida (Command)</Label>
+                    <Label className="text-xs font-semibold mb-1 block">
+                      Combobox de Pesquisa Rápida (Command)
+                    </Label>
                     <Command className="rounded-lg border shadow-sm">
                       <CommandInput placeholder="Buscar projetos ou dispositivos..." />
                       <CommandList className="max-h-32">
                         <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
                         <CommandGroup heading="Projetos">
-                          <CommandItem onSelect={() => toast('MOB4AI selecionado')}>MOB4AI</CommandItem>
-                          <CommandItem onSelect={() => toast('Startando NAVIR selecionado')}>Startando com o NAVIR</CommandItem>
+                          <CommandItem onSelect={() => toast('MOB4AI selecionado')}>
+                            MOB4AI
+                          </CommandItem>
+                          <CommandItem onSelect={() => toast('Startando NAVIR selecionado')}>
+                            Startando com o NAVIR
+                          </CommandItem>
                         </CommandGroup>
                       </CommandList>
                     </Command>
@@ -772,15 +1053,21 @@ export const ComponentShowcase: React.FC = () => {
 
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="acc-1">
-                      <AccordionTrigger className="text-sm">Quais são as regras para perfil INTERESSADO?</AccordionTrigger>
+                      <AccordionTrigger className="text-sm">
+                        Quais são as regras para perfil INTERESSADO?
+                      </AccordionTrigger>
                       <AccordionContent className="text-xs text-muted-foreground">
-                        Usuários com perfil INTERESSADO visualizam a tela de oportunidade com orientações sobre como se tornar pesquisador ou aluno bolsista.
+                        Usuários com perfil INTERESSADO visualizam a tela de oportunidade com
+                        orientações sobre como se tornar pesquisador ou aluno bolsista.
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="acc-2">
-                      <AccordionTrigger className="text-sm">Como funciona o export de relatórios em PDF/CSV?</AccordionTrigger>
+                      <AccordionTrigger className="text-sm">
+                        Como funciona o export de relatórios em PDF/CSV?
+                      </AccordionTrigger>
                       <AccordionContent className="text-xs text-muted-foreground">
-                        Administradores e professores podem exportar listas consolidadas via serviço REST em `/api/v1/relatorios/export`.
+                        Administradores e professores podem exportar listas consolidadas via serviço
+                        REST em `/api/v1/relatorios/export`.
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
@@ -790,7 +1077,9 @@ export const ComponentShowcase: React.FC = () => {
               {/* Slider, ScrollArea & Skeleton Loading */}
               <Card className="shadow-md">
                 <CardHeader>
-                  <CardTitle className="font-heading text-base">Sliders, Rolamento Estilizado & Skeleton Loading</CardTitle>
+                  <CardTitle className="font-heading text-base">
+                    Sliders, Rolamento Estilizado & Skeleton Loading
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -802,19 +1091,35 @@ export const ComponentShowcase: React.FC = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold">Feed de Atividades do Laboratório (ScrollArea)</Label>
+                    <Label className="text-xs font-semibold">
+                      Feed de Atividades do Laboratório (ScrollArea)
+                    </Label>
                     <ScrollArea className="h-28 w-full rounded-md border p-3 bg-muted/20">
                       <div className="space-y-2 text-xs">
-                        <p className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-success" /> <strong>[11:00]</strong> Projeto MOB4AI atualizado para 85%.</p>
-                        <p className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-warning" /> <strong>[10:15]</strong> Cadastro de Carlos Lima aguarda aprovação.</p>
-                        <p className="flex items-center gap-1.5"><XCircle className="w-3.5 h-3.5 text-destructive" /> <strong>[09:30]</strong> Tentativa de login recusada para perfil inativo.</p>
-                        <p className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-info" /> <strong>[08:00]</strong> Backup automático da base concluído.</p>
+                        <p className="flex items-center gap-1.5">
+                          <CheckCircle className="w-3.5 h-3.5 text-success" />{' '}
+                          <strong>[11:00]</strong> Projeto MOB4AI atualizado para 85%.
+                        </p>
+                        <p className="flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-warning" /> <strong>[10:15]</strong>{' '}
+                          Cadastro de Carlos Lima aguarda aprovação.
+                        </p>
+                        <p className="flex items-center gap-1.5">
+                          <XCircle className="w-3.5 h-3.5 text-destructive" />{' '}
+                          <strong>[09:30]</strong> Tentativa de login recusada para perfil inativo.
+                        </p>
+                        <p className="flex items-center gap-1.5">
+                          <Activity className="w-3.5 h-3.5 text-info" /> <strong>[08:00]</strong>{' '}
+                          Backup automático da base concluído.
+                        </p>
                       </div>
                     </ScrollArea>
                   </div>
 
                   <div className="space-y-2 pt-2 border-t">
-                    <Label className="text-xs font-semibold">Skeleton Screen (Loading State Preview)</Label>
+                    <Label className="text-xs font-semibold">
+                      Skeleton Screen (Loading State Preview)
+                    </Label>
                     <div className="flex items-center space-x-3">
                       <Skeleton className="h-10 w-10 rounded-full" />
                       <div className="space-y-1.5 flex-1">
@@ -825,12 +1130,10 @@ export const ComponentShowcase: React.FC = () => {
                   </div>
                 </CardContent>
               </Card>
-
             </div>
           </section>
-
         </div>
       </div>
     </TooltipProvider>
-  );
-};
+  )
+}

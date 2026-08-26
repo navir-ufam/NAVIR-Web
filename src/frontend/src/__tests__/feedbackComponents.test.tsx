@@ -13,7 +13,9 @@ describe('Global Feedback Components (LoadingState, EmptyState, ErrorState, Toas
   })
 
   it('renders LoadingState table, cards and page variants', () => {
-    const { rerender } = render(<LoadingState variant="table" count={4} text="Carregando tabela..." />)
+    const { rerender } = render(
+      <LoadingState variant="table" count={4} text="Carregando tabela..." />
+    )
     expect(screen.getByLabelText('Carregando tabela...')).toBeDefined()
 
     rerender(<LoadingState variant="cards" count={3} text="Carregando cards..." />)
