@@ -1,18 +1,18 @@
-type PagePlaceholderProps = Readonly<{
-  title: string;
-  description?: string;
-}>;
+type PagePlaceholderProps = {
+  title: string
+  description?: string
+}
 
-function PagePlaceholder({
+export function PagePlaceholder({
   title,
-  description = "Placeholder inicial para a pagina.",
-}: PagePlaceholderProps) {
+  description = 'Placeholder inicial para a página.',
+}: Readonly<PagePlaceholderProps>) {
   return (
     <section className="page-placeholder">
       <h2>{title}</h2>
       <p>{description}</p>
     </section>
-  );
+  )
 }
 
-export default PagePlaceholder;
+export default PagePlaceholder
