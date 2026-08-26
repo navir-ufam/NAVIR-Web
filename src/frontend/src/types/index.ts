@@ -11,6 +11,8 @@ export type AcademicStatus =
 
 export type StatusProjeto = 'ATIVO' | 'FINALIZADO'
 
+export type TipoProjeto = 'PIBIC' | 'PIBIT' | 'Independente' | 'Extensão' | 'Pesquisa Aplicada'
+
 export type StatusDispositivo = 'PENDENTE' | 'ATIVO' | 'INATIVO'
 
 export type TipoDispositivo = 'NOTEBOOK' | 'CELULAR' | 'TABLET' | 'OUTRO'
@@ -41,7 +43,7 @@ export interface Projeto {
   id: number
   titulo: string
   descricao: string
-  tipo: 'PIBIC' | 'PIBIT' | 'Independente' | string
+  tipo: TipoProjeto
   agencia_fomento?: string
   status: StatusProjeto
   orientador_id: number
