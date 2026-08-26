@@ -24,6 +24,10 @@ jobs:
         working-directory: src/backend
         run: npm ci --ignore-scripts
 
+      - name: Generate Prisma Client
+        working-directory: src/backend
+        run: npx prisma generate
+
       - name: Run backend tests with coverage
         working-directory: src/backend
         run: npm run test:cov
