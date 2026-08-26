@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-
   :root {
     --background: 220 25% 97%;
     --foreground: 215 50% 10%;
@@ -11,17 +10,22 @@
     --primary-foreground: 0 0% 100%;
     --secondary: 207 90% 54%;
     --secondary-foreground: 0 0% 100%;
-    --accent: 195 100% 45%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 210 20% 94%;
+    --accent-foreground: 215 50% 10%;
     --muted: 210 20% 93%;
     --muted-foreground: 215 15% 45%;
     --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
     --card: 0 0% 100%;
+    --card-foreground: 215 50% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 50% 10%;
     --border: 214 25% 88%;
+    --input: 214 25% 88%;
     --ring: 207 90% 54%;
     --radius: 0.75rem;
 
-    /* Cores semânticas adicionais */
+    /* Cores adicionais (tokens semânticos NAVIR) */
     --navy-dark: 215 80% 10%;
     --navy: 215 80% 16%;
     --navy-light: 215 60% 25%;
@@ -29,19 +33,84 @@
     --blue-light: 207 90% 65%;
     --cyan: 195 100% 45%;
     --cyan-light: 195 100% 60%;
+
+    /* Status e estados de badges */
     --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-muted: 142 70% 95%;
+
     --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --warning-muted: 38 92% 95%;
+
+    --destructive-muted: 0 84% 95%;
+
+    --info: 262 83% 58%;
+    --info-foreground: 0 0% 100%;
+    --info-muted: 262 83% 95%;
 
     /* Sidebar */
-    --sidebar-background: 215 80% 12%;
-    --sidebar-foreground: 210 20% 90%;
-    --sidebar-primary: 207 90% 54%;
-    --sidebar-accent: 215 60% 20%;
-    --sidebar-border: 215 50% 20%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-width: 16rem;
+    --sidebar-width-icon: 3rem;
+
+    /* Charts */
+    --chart-1: 207 90% 54%;
+    --chart-2: 195 100% 45%;
+    --chart-3: 215 80% 16%;
+    --chart-4: 142 70% 45%;
+    --chart-5: 38 92% 50%;
+  }
+
+  .dark {
+    --background: 215 80% 8%;
+    --foreground: 210 20% 98%;
+    --primary: 207 90% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 60% 20%;
+    --secondary-foreground: 210 20% 98%;
+    --accent: 215 50% 18%;
+    --accent-foreground: 210 20% 98%;
+    --muted: 215 50% 15%;
+    --muted-foreground: 215 20% 65%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --card: 215 80% 12%;
+    --card-foreground: 210 20% 98%;
+    --popover: 215 80% 12%;
+    --popover-foreground: 210 20% 98%;
+    --border: 215 50% 20%;
+    --input: 215 50% 20%;
+    --ring: 207 90% 54%;
+
+    --success-muted: 142 70% 15%;
+    --warning-muted: 38 92% 15%;
+    --destructive-muted: 0 84% 15%;
+    --info-muted: 262 83% 15%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  * {
+    @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground font-body;
+    @apply font-body bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
