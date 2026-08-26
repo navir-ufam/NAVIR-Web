@@ -1,40 +1,45 @@
-"use client"
-
 import {
   CircleCheck,
   Info,
   LoaderCircle,
   OctagonX,
   TriangleAlert,
-} from "lucide-react"
-import { useTheme } from "next-themes"
-import { Toaster as Sonner } from "sonner"
+} from 'lucide-react'
+import { Toaster as Sonner } from 'sonner'
+import { useTheme } from '@/context'
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+function Toaster({ ...props }: Readonly<ToasterProps>) {
+  let themeMode: ToasterProps['theme'] = 'system'
+  try {
+    const { theme } = useTheme()
+    themeMode = theme as ToasterProps['theme']
+  } catch {
+    // Fallback safe for test environments
+  }
 
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme={themeMode}
       className="toaster group"
+      richColors
       icons={{
-        success: <CircleCheck className="h-4 w-4" />,
-        info: <Info className="h-4 w-4" />,
-        warning: <TriangleAlert className="h-4 w-4" />,
-        error: <OctagonX className="h-4 w-4" />,
-        loading: <LoaderCircle className="h-4 w-4 animate-spin" />,
+        success: <CircleCheck className="h-4 w-4 text-emerald-500" />,
+        info: <Info className="h-4 w-4 text-sky-500" />,
+        warning: <TriangleAlert className="h-4 w-4 text-amber-500" />,
+        error: <OctagonX className="h-4 w-4 text-rose-500" />,
+        loading: <LoaderCircle className="h-4 w-4 animate-spin text-sky-500" />,
       }}
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
+            'group toast group-[.toaster]:bg-card group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-xl font-body text-xs rounded-xl',
+          description: 'group-[.toast]:text-muted-foreground',
           actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+            'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground font-semibold',
           cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+            'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground font-medium',
         },
       }}
       {...props}
