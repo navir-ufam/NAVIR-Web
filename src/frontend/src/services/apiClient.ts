@@ -37,7 +37,8 @@ async function tryRefreshToken(
       }
       return await fetch(input, { ...init, headers })
     }
-  } catch {
+  } catch (err) {
+    console.error('Falha na renovação de token:', err)
   } finally {
     isRefreshing = false
   }

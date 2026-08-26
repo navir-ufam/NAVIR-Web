@@ -1,10 +1,11 @@
-import { render } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import App from "../app/App";
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import App from '@/app/App'
 
-describe("Smoke Test - App Component", () => {
-  it("deve renderizar o componente App sem quebrar", () => {
-    const { container } = render(<App />);
-    expect(container).toBeTruthy();
-  });
-});
+describe('App Component (Smoke Test)', () => {
+  it('renders App without crashing', () => {
+    const { container } = render(<App />)
+    expect(container).toBeDefined()
+    expect(screen.getByText('Carregando módulo...')).toBeDefined()
+  })
+})

@@ -1,6 +1,9 @@
-import { describe, it } from "vitest";
-// import { cn } from "../lib/utils";
+import { describe, it, expect } from 'vitest'
+import { cn } from '@/lib/utils'
 
-describe("Utility - cn()", () => {
-  it.skip("merge classes corretamente resolvendo conflitos do tailwind", () => {});
-});
+describe('Utility - cn() (Smoke Test)', () => {
+  it('merge classes corretamente resolvendo conflitos do tailwind', () => {
+    const result = cn('p-4', 'p-2')
+    expect(result).toBe('p-2')
+  })
+})

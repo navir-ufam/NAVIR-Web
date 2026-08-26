@@ -9,6 +9,12 @@ describe('permissions utility (hasPermission & ROLE_PERMISSIONS)', () => {
   const interessadoUser: User = { id: '4', tipo: 'INTERESSADO', estado: 'ACEITO' }
   const pendenteUser: User = { id: '5', tipo: 'PESQUISADOR', estado: 'PENDENTE' }
 
+  it('defines valid ROLE_PERMISSIONS mapping', () => {
+    expect(ROLE_PERMISSIONS.ADMIN).toBeDefined()
+    expect(ROLE_PERMISSIONS.PESQUISADOR).toBeDefined()
+  })
+
+
   it('returns false for undefined, null, or non-ACEITO users', () => {
     expect(hasPermission(null, 'dashboard:view')).toBe(false)
     expect(hasPermission(undefined, 'dashboard:view')).toBe(false)
