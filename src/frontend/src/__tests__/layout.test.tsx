@@ -84,7 +84,7 @@ describe('Layout Components (Sidebar, Header, AppLayout & PagePlaceholder)', () 
       </MemoryRouter>
     )
 
-    expect(screen.getByText('Início')).toBeDefined()
+    expect(screen.getByText('Dashboard')).toBeDefined()
     expect(screen.getByText('Usuários')).toBeDefined()
 
     const notifBtn = screen.getByLabelText('Abrir Notificações')
