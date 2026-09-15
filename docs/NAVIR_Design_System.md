@@ -120,9 +120,9 @@ Todas as imagens ficam em `src/assets/` do frontend e são importadas como módu
 ### Core
 | Tecnologia | Versão | Uso |
 |---|---|---|
-| **React** | 18.3 | Biblioteca de UI |
+| **React** | 19.2 | Biblioteca de UI |
 | **TypeScript** | 5.x | Tipagem estática |
-| **Vite** | 5.x | Bundler e dev server |
+| **Vite** | 8.x | Bundler e dev server |
 
 ### Estilização
 | Tecnologia | Uso |
@@ -141,7 +141,7 @@ Todas as imagens ficam em `src/assets/` do frontend e são importadas como módu
 ### Roteamento e Estado
 | Biblioteca | Uso |
 |---|---|
-| **React Router DOM** v6 | Roteamento SPA com rotas protegidas |
+| **React Router DOM** v7 | Roteamento SPA com rotas protegidas |
 | **@tanstack/react-query** v5 | Gerenciamento de estado assíncrono |
 | **React Context** | Autenticação e estado global (AuthContext) |
 
