@@ -73,7 +73,7 @@ def ensure_npm_packages(
         install_reason = "dependencias ausentes ou inconsistentes"
 
     if install_reason is None:
-        print(f"✔ Dependencias do {name} ja estao instaladas.")
+        print(f"[OK] Dependencias do {name} ja estao instaladas.")
         return
 
     print(
@@ -161,6 +161,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def ensure_env_file(project_dir: Path) -> None:
+    env_file = project_dir / ".env"
+    env_example = project_dir / ".env.example"
+    if not env_file.exists() and env_example.exists():
+        shutil.copy(env_example, env_file)
+        print("[OK] Arquivo .env criado automaticamente a partir de .env.example no backend.")
+
 def main() -> int:
     args = parse_args()
     root = Path(__file__).resolve().parent
@@ -175,6 +182,7 @@ def main() -> int:
     npm_exec = resolve_npm_executable()
 
     print("---------------- Preparando ambiente ----------------", flush=True)
+    ensure_env_file(backend_dir)
     ensure_npm_packages(
         backend_dir,
         npm_exec,

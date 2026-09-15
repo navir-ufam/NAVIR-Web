@@ -28,13 +28,7 @@ export const ROLE_PERMISSIONS: Record<UserType, AppPermission[]> = {
     'acesso-laboratorio:read',
     'reports:read',
   ],
-  PROFESSOR: [
-    'dashboard:view',
-    'users:read',
-    'users:detail',
-    'profile:view',
-    'projects:read',
-  ],
+  PROFESSOR: ['dashboard:view', 'users:read', 'users:detail', 'profile:view', 'projects:read'],
   PESQUISADOR: [
     'dashboard:view',
     'profile:view',

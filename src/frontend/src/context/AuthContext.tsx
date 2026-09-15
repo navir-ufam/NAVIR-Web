@@ -38,16 +38,27 @@ function loadUserFromStorage(): { token: string | null; user: AuthUser | null } 
   }
 }
 
-function processLoginResponse(result: Awaited<ReturnType<typeof loginRequest>>, email: string): LoginResult {
+function processLoginResponse(
+  result: Awaited<ReturnType<typeof loginRequest>>,
+  email: string
+): LoginResult {
   if (result.status === 401) {
     return { success: false, type: 'INVALID_CREDENTIALS' }
   }
 
-  if (result.status === 403 || result.data?.estado === 'NEGADO' || result.data?.usuario?.estado === 'NEGADO') {
+  if (
+    result.status === 403 ||
+    result.data?.estado === 'NEGADO' ||
+    result.data?.usuario?.estado === 'NEGADO'
+  ) {
     return { success: false, type: 'NEGADO' }
   }
 
-  if (result.data?.mensagem || result.data?.tipo === 'INTERESSADO' || result.data?.usuario?.tipo === 'INTERESSADO') {
+  if (
+    result.data?.mensagem ||
+    result.data?.tipo === 'INTERESSADO' ||
+    result.data?.usuario?.tipo === 'INTERESSADO'
+  ) {
     return {
       success: false,
       type: 'INTERESSADO',

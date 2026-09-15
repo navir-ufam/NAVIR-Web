@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useState, useCallback, useMemo, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  type ReactNode,
+} from 'react'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -43,7 +51,11 @@ export function ThemeProvider({ children }: { readonly children: ReactNode }) {
       root.classList.remove('dark')
     }
 
-    if (currentTheme === 'system' && typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    if (
+      currentTheme === 'system' &&
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function'
+    ) {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
       if (mediaQuery && typeof mediaQuery.addEventListener === 'function') {
         const handleChange = (e: MediaQueryListEvent) => {
@@ -66,11 +78,7 @@ export function ThemeProvider({ children }: { readonly children: ReactNode }) {
 
   const contextValue = useMemo(() => ({ theme: currentTheme, setTheme }), [currentTheme, setTheme])
 
-  return (
-    <ThemeContext.Provider value={contextValue}>
-      {children}
-    </ThemeContext.Provider>
-  )
+  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>
 }
 
 export function useTheme(): ThemeContextType {

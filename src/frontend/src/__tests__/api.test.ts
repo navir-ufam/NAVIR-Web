@@ -29,7 +29,9 @@ describe('Service Base (api.ts)', () => {
   })
 
   it('performs GET request with query params successfully', async () => {
-    const apiFetchSpy = vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ data: 'ok' }))
+    const apiFetchSpy = vi
+      .spyOn(apiClient, 'apiFetch')
+      .mockImplementation(async () => createJsonResponse({ data: 'ok' }))
 
     const result = await get<{ data: string }>('/usuarios', { status: 'ACEITO', page: 1 })
     expect(result.data).toBe('ok')
@@ -47,21 +49,27 @@ describe('Service Base (api.ts)', () => {
   })
 
   it('performs PUT request successfully', async () => {
-    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ updated: true }))
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () =>
+      createJsonResponse({ updated: true })
+    )
 
     const result = await put<{ updated: boolean }>('/perfil', { bio: 'Bio' })
     expect(result.updated).toBe(true)
   })
 
   it('performs PATCH request successfully', async () => {
-    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ patched: true }))
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () =>
+      createJsonResponse({ patched: true })
+    )
 
     const result = await patch<{ patched: boolean }>('/projetos/1/finalizar')
     expect(result.patched).toBe(true)
   })
 
   it('performs DELETE request successfully via del and api.delete', async () => {
-    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ deleted: true }))
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () =>
+      createJsonResponse({ deleted: true })
+    )
 
     const result1 = await del<{ deleted: boolean }>('/items/1')
     const result2 = await api.delete<{ deleted: boolean }>('/items/2')
@@ -70,7 +78,9 @@ describe('Service Base (api.ts)', () => {
   })
 
   it('performs FormData upload successfully', async () => {
-    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ uploaded: true }))
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () =>
+      createJsonResponse({ uploaded: true })
+    )
 
     const formData = new FormData()
     formData.append('file', new File([''], 'test.pdf'))
@@ -80,14 +90,18 @@ describe('Service Base (api.ts)', () => {
   })
 
   it('handles plain text non-json responses in parseResponseData', async () => {
-    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createTextResponse('Plain Text Response'))
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () =>
+      createTextResponse('Plain Text Response')
+    )
 
     const result = await get<string>('/text-endpoint')
     expect(result).toBe('Plain Text Response')
   })
 
   it('handles 403 Forbidden with toast notification', async () => {
-    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ mensagem: 'Acesso Proibido' }, 403))
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () =>
+      createJsonResponse({ mensagem: 'Acesso Proibido' }, 403)
+    )
 
     await expect(get('/admin')).rejects.toThrow('Acesso Proibido')
     expect(toast.error).toHaveBeenCalledWith('Acesso Proibido')
@@ -101,14 +115,18 @@ describe('Service Base (api.ts)', () => {
   })
 
   it('handles 409 Conflict with toast notification', async () => {
-    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ mensagem: 'Email já existe' }, 409))
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () =>
+      createJsonResponse({ mensagem: 'Email já existe' }, 409)
+    )
 
     await expect(post('/usuarios', {})).rejects.toThrow('Email já existe')
     expect(toast.error).toHaveBeenCalledWith('Email já existe')
   })
 
   it('handles 422 Bad Request with toast notification', async () => {
-    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () => createJsonResponse({ mensagem: 'Dados inválidos' }, 422))
+    vi.spyOn(apiClient, 'apiFetch').mockImplementation(async () =>
+      createJsonResponse({ mensagem: 'Dados inválidos' }, 422)
+    )
 
     await expect(post('/usuarios', {})).rejects.toThrow('Dados inválidos')
     expect(toast.error).toHaveBeenCalledWith('Dados inválidos')

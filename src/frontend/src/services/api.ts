@@ -86,6 +86,16 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return data
 }
 
+export async function withMock<T>(realCall: () => Promise<T>, mockData: T): Promise<T> {
+  const useMocks = import.meta.env.VITE_USE_MOCKS === 'true' || import.meta.env.VITE_USE_MOCKS === true
+  if (useMocks) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(mockData), 300)
+    })
+  }
+  return realCall()
+}
+
 export async function get<T>(
   path: string,
   params?: Record<string, string | number | boolean | undefined | null>
@@ -189,4 +199,5 @@ export const api = {
   patch,
   delete: del,
   upload,
+  withMock,
 }

@@ -17,6 +17,7 @@ import * as apiModule from '@/services/api'
 describe('Domain Services (Scaffolding)', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
+    import.meta.env.VITE_USE_MOCKS = 'false'
   })
 
   it('tests authService methods', async () => {

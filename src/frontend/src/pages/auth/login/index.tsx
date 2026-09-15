@@ -77,7 +77,10 @@ function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email-input" className="block text-xs font-semibold text-muted-foreground mb-1">
+            <label
+              htmlFor="email-input"
+              className="block text-xs font-semibold text-muted-foreground mb-1"
+            >
               E-mail
             </label>
             <input
@@ -92,7 +95,10 @@ function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password-input" className="block text-xs font-semibold text-muted-foreground mb-1">
+            <label
+              htmlFor="password-input"
+              className="block text-xs font-semibold text-muted-foreground mb-1"
+            >
               Senha
             </label>
             <input

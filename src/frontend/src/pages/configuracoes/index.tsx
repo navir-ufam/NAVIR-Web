@@ -1,5 +1,17 @@
 import { useState, type SyntheticEvent } from 'react'
-import { Settings, Bell, Moon, Sun, Monitor, Check, Lock, UserX, Mail, Send, AlertTriangle } from 'lucide-react'
+import {
+  Settings,
+  Bell,
+  Moon,
+  Sun,
+  Monitor,
+  Check,
+  Lock,
+  UserX,
+  Mail,
+  Send,
+  AlertTriangle,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { useTheme, type ThemeMode } from '@/context'
 
@@ -78,9 +90,12 @@ export function ConfiguracoesPage() {
           <Settings className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Configurações do Sistema</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            Configurações do Sistema
+          </h1>
           <p className="text-xs text-muted-foreground">
-            Gerencie preferências de aparência, notificações, segurança e contato com a administração.
+            Gerencie preferências de aparência, notificações, segurança e contato com a
+            administração.
           </p>
         </div>
       </div>
@@ -156,7 +171,9 @@ export function ConfiguracoesPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-sm font-medium text-foreground block">Notificações por E-mail</span>
+                <span className="text-sm font-medium text-foreground block">
+                  Notificações por E-mail
+                </span>
                 <span className="text-xs text-muted-foreground">
                   Receba relatórios e atualizações dos seus projetos diretamente no e-mail.
                 </span>
@@ -164,19 +181,23 @@ export function ConfiguracoesPage() {
               <button
                 type="button"
                 onClick={() => setEmailNotifications(!emailNotifications)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${emailNotifications ? 'bg-primary' : 'bg-muted'
-                  }`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  emailNotifications ? 'bg-primary' : 'bg-muted'
+                }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${emailNotifications ? 'translate-x-6' : 'translate-x-1'
-                    }`}
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    emailNotifications ? 'translate-x-6' : 'translate-x-1'
+                  }`}
                 />
               </button>
             </div>
 
             <div className="flex items-center justify-between border-t pt-4">
               <div>
-                <span className="text-sm font-medium text-foreground block">Alertas de Dispositivos</span>
+                <span className="text-sm font-medium text-foreground block">
+                  Alertas de Dispositivos
+                </span>
                 <span className="text-xs text-muted-foreground">
                   Notificar quando novos dispositivos WiFi forem cadastrados ou alterados.
                 </span>
@@ -184,12 +205,14 @@ export function ConfiguracoesPage() {
               <button
                 type="button"
                 onClick={() => setSystemAlerts(!systemAlerts)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${systemAlerts ? 'bg-primary' : 'bg-muted'
-                  }`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  systemAlerts ? 'bg-primary' : 'bg-muted'
+                }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${systemAlerts ? 'translate-x-6' : 'translate-x-1'
-                    }`}
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    systemAlerts ? 'translate-x-6' : 'translate-x-1'
+                  }`}
                 />
               </button>
             </div>
@@ -205,7 +228,12 @@ export function ConfiguracoesPage() {
           <form onSubmit={handleAlterarSenha} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label htmlFor="senhaAtual" className="text-xs font-semibold text-foreground block mb-1">Senha Atual</label>
+                <label
+                  htmlFor="senhaAtual"
+                  className="text-xs font-semibold text-foreground block mb-1"
+                >
+                  Senha Atual
+                </label>
                 <input
                   id="senhaAtual"
                   type="password"
@@ -217,7 +245,12 @@ export function ConfiguracoesPage() {
               </div>
 
               <div>
-                <label htmlFor="novaSenha" className="text-xs font-semibold text-foreground block mb-1">Nova Senha</label>
+                <label
+                  htmlFor="novaSenha"
+                  className="text-xs font-semibold text-foreground block mb-1"
+                >
+                  Nova Senha
+                </label>
                 <input
                   id="novaSenha"
                   type="password"
@@ -229,7 +262,12 @@ export function ConfiguracoesPage() {
               </div>
 
               <div>
-                <label htmlFor="confirmacaoSenha" className="text-xs font-semibold text-foreground block mb-1">Confirmar Nova Senha</label>
+                <label
+                  htmlFor="confirmacaoSenha"
+                  className="text-xs font-semibold text-foreground block mb-1"
+                >
+                  Confirmar Nova Senha
+                </label>
                 <input
                   id="confirmacaoSenha"
                   type="password"
@@ -259,12 +297,18 @@ export function ConfiguracoesPage() {
           </div>
 
           <p className="text-xs text-muted-foreground">
-            Caso precise alterar dados cadastrais restritos ou precise de auxílio técnico, envie uma mensagem direta ao administrador.
+            Caso precise alterar dados cadastrais restritos ou precise de auxílio técnico, envie uma
+            mensagem direta ao administrador.
           </p>
 
           <form onSubmit={handleEnviarMensagemSuporte} className="space-y-4">
             <div>
-              <label htmlFor="assuntoSuporte" className="text-xs font-semibold text-foreground block mb-1">Assunto</label>
+              <label
+                htmlFor="assuntoSuporte"
+                className="text-xs font-semibold text-foreground block mb-1"
+              >
+                Assunto
+              </label>
               <input
                 id="assuntoSuporte"
                 type="text"
@@ -276,7 +320,12 @@ export function ConfiguracoesPage() {
             </div>
 
             <div>
-              <label htmlFor="mensagemSuporte" className="text-xs font-semibold text-foreground block mb-1">Mensagem</label>
+              <label
+                htmlFor="mensagemSuporte"
+                className="text-xs font-semibold text-foreground block mb-1"
+              >
+                Mensagem
+              </label>
               <textarea
                 id="mensagemSuporte"
                 rows={3}
@@ -307,9 +356,12 @@ export function ConfiguracoesPage() {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-sm font-medium text-foreground block">Desativar Conta de Acesso</span>
+              <span className="text-sm font-medium text-foreground block">
+                Desativar Conta de Acesso
+              </span>
               <span className="text-xs text-muted-foreground">
-                Sua conta será suspensa no sistema. Esta ação pode ser revertida mediante solicitação ao administrador.
+                Sua conta será suspensa no sistema. Esta ação pode ser revertida mediante
+                solicitação ao administrador.
               </span>
             </div>
 

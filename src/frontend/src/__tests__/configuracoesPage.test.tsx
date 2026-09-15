@@ -59,7 +59,9 @@ describe('ConfiguracoesPage', () => {
       </ThemeProvider>
     )
 
-    const inputs = screen.getAllByPlaceholderText(/••••••••|Mínimo 6 caracteres|Repita a nova senha/)
+    const inputs = screen.getAllByPlaceholderText(
+      /••••••••|Mínimo 6 caracteres|Repita a nova senha/
+    )
     expect(inputs).toHaveLength(3)
 
     fireEvent.change(inputs[0], { target: { value: 'senha123' } })
@@ -77,7 +79,9 @@ describe('ConfiguracoesPage', () => {
       </ThemeProvider>
     )
 
-    const inputs = screen.getAllByPlaceholderText(/••••••••|Mínimo 6 caracteres|Repita a nova senha/)
+    const inputs = screen.getAllByPlaceholderText(
+      /••••••••|Mínimo 6 caracteres|Repita a nova senha/
+    )
 
     fireEvent.change(inputs[0], { target: { value: 'senha123' } })
     fireEvent.change(inputs[1], { target: { value: 'novasenha123' } })
@@ -97,7 +101,9 @@ describe('ConfiguracoesPage', () => {
     fireEvent.click(screen.getByText('Atualizar Senha'))
     expect(toast.error).toHaveBeenCalledWith('Preencha todos os campos de senha.')
 
-    const inputs = screen.getAllByPlaceholderText(/••••••••|Mínimo 6 caracteres|Repita a nova senha/)
+    const inputs = screen.getAllByPlaceholderText(
+      /••••••••|Mínimo 6 caracteres|Repita a nova senha/
+    )
     fireEvent.change(inputs[0], { target: { value: 'senha123' } })
     fireEvent.change(inputs[1], { target: { value: '123' } })
     fireEvent.change(inputs[2], { target: { value: '123' } })
@@ -114,17 +120,27 @@ describe('ConfiguracoesPage', () => {
     )
 
     fireEvent.click(screen.getByText('Enviar Mensagem ao Administrador'))
-    expect(toast.error).toHaveBeenCalledWith('Preencha o assunto e a mensagem para o administrador.')
+    expect(toast.error).toHaveBeenCalledWith(
+      'Preencha o assunto e a mensagem para o administrador.'
+    )
 
-    fireEvent.change(screen.getByPlaceholderText('Ex: Solicitacao de alteracao de perfil / duvida de acesso'), {
-      target: { value: 'Dúvida de acesso ao laboratório' },
-    })
-    fireEvent.change(screen.getByPlaceholderText('Descreva o motivo do seu contato com detalhes...'), {
-      target: { value: 'Gostaria de solicitar liberação para os finais de semana.' },
-    })
+    fireEvent.change(
+      screen.getByPlaceholderText('Ex: Solicitacao de alteracao de perfil / duvida de acesso'),
+      {
+        target: { value: 'Dúvida de acesso ao laboratório' },
+      }
+    )
+    fireEvent.change(
+      screen.getByPlaceholderText('Descreva o motivo do seu contato com detalhes...'),
+      {
+        target: { value: 'Gostaria de solicitar liberação para os finais de semana.' },
+      }
+    )
 
     fireEvent.click(screen.getByText('Enviar Mensagem ao Administrador'))
-    expect(toast.success).toHaveBeenCalledWith('Sua mensagem foi enviada ao administrador com sucesso!')
+    expect(toast.success).toHaveBeenCalledWith(
+      'Sua mensagem foi enviada ao administrador com sucesso!'
+    )
   })
 
   it('toggles account deactivation confirmation dialog and cancel action', () => {
@@ -142,6 +158,8 @@ describe('ConfiguracoesPage', () => {
 
     fireEvent.click(screen.getByText('Desativar Conta'))
     fireEvent.click(screen.getByText('Sim, Desativar'))
-    expect(toast.success).toHaveBeenCalledWith('Solicitação de desativação encaminhada ao administrador.')
+    expect(toast.success).toHaveBeenCalledWith(
+      'Solicitação de desativação encaminhada ao administrador.'
+    )
   })
 })

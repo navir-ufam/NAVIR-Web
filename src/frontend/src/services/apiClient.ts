@@ -37,7 +37,8 @@ async function tryRefreshToken(
       }
       return await fetch(input, { ...init, headers })
     }
-  } catch {
+  } catch (err) {
+    console.error('Falha na renovação de token:', err)
   } finally {
     isRefreshing = false
   }
@@ -64,7 +65,11 @@ export async function apiFetch(input: RequestInfo | URL, init?: RequestInit): Pr
 
   const response = await fetch(input, modifiedInit)
 
-  if (response.status === 401 && !urlString.includes('/auth/login') && !urlString.includes('/auth/refresh')) {
+  if (
+    response.status === 401 &&
+    !urlString.includes('/auth/login') &&
+    !urlString.includes('/auth/refresh')
+  ) {
     const retryResult = await tryRefreshToken(input, modifiedInit, headers)
     if (retryResult) return retryResult
     triggerUnauthorized()
