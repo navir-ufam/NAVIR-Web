@@ -1,7 +1,8 @@
 export class NotificacaoEntity {
   id!: string;
-  usuarioId!: string;
+  usuario_destino_id!: string;
+  tipo!: string;
   mensagem!: string;
   lida!: boolean;
-  dataCriacao!: Date;
+  data_criacao!: Date;
 }

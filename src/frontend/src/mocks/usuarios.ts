@@ -1,8 +1,21 @@
 import type { Usuario } from '@/types'
 
+export const MOCK_USER_IDS = {
+  admin: '11111111-1111-4111-8111-111111111111',
+  carlos: '22222222-2222-4222-8222-222222222222',
+  maria: '33333333-3333-4333-8333-333333333333',
+  lucas: '44444444-4444-4444-8444-444444444444',
+  ana: '55555555-5555-4555-8555-555555555555',
+  pedro: '66666666-6666-4666-8666-666666666666',
+  juliana: '77777777-7777-4777-8777-777777777777',
+  rafael: '88888888-8888-4888-8888-888888888888',
+  beatriz: '99999999-9999-4999-8999-999999999999',
+  fernando: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+} as const
+
 export const mockUsuarios: Usuario[] = [
   {
-    id: 1,
+    id: MOCK_USER_IDS.admin,
     nome: 'Admin Silva',
     email: 'admin@ufam.edu.br',
     tipo: 'ADMIN',
@@ -13,7 +26,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-08-01T10:30:00.000Z',
   },
   {
-    id: 2,
+    id: MOCK_USER_IDS.carlos,
     nome: 'Prof. Dr. Carlos Orientador',
     email: 'carlos.orientador@ufam.edu.br',
     tipo: 'PROFESSOR',
@@ -24,7 +37,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-07-20T14:00:00.000Z',
   },
   {
-    id: 3,
+    id: MOCK_USER_IDS.maria,
     nome: 'Maria Pesquisadora Aceita',
     email: 'maria.pesquisadora@ufam.edu.br',
     tipo: 'PESQUISADOR',
@@ -35,7 +48,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-08-10T16:20:00.000Z',
   },
   {
-    id: 4,
+    id: MOCK_USER_IDS.lucas,
     nome: 'Lucas Pesquisador Pendente',
     email: 'lucas.pendente@ufam.edu.br',
     tipo: 'PESQUISADOR',
@@ -46,7 +59,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-08-20T15:45:00.000Z',
   },
   {
-    id: 5,
+    id: MOCK_USER_IDS.ana,
     nome: 'Ana Pesquisadora Negada',
     email: 'ana.negada@ufam.edu.br',
     tipo: 'PESQUISADOR',
@@ -57,7 +70,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-03-06T09:00:00.000Z',
   },
   {
-    id: 6,
+    id: MOCK_USER_IDS.pedro,
     nome: 'Pedro Interessado',
     email: 'pedro.interessado@gmail.com',
     tipo: 'INTERESSADO',
@@ -68,7 +81,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-08-22T10:00:00.000Z',
   },
   {
-    id: 7,
+    id: MOCK_USER_IDS.juliana,
     nome: 'Prof. Dra. Juliana Colaboradora',
     email: 'juliana.prof@ufam.edu.br',
     tipo: 'PROFESSOR',
@@ -79,7 +92,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-06-15T11:10:00.000Z',
   },
   {
-    id: 8,
+    id: MOCK_USER_IDS.rafael,
     nome: 'Rafael Pesquisador Egresso',
     email: 'rafael.egresso@ufam.edu.br',
     tipo: 'PESQUISADOR',
@@ -90,7 +103,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-02-28T18:00:00.000Z',
   },
   {
-    id: 9,
+    id: MOCK_USER_IDS.beatriz,
     nome: 'Beatriz Pesquisadora Finalista',
     email: 'beatriz.finalista@ufam.edu.br',
     tipo: 'PESQUISADOR',
@@ -101,7 +114,7 @@ export const mockUsuarios: Usuario[] = [
     data_atualizacao: '2026-08-05T12:00:00.000Z',
   },
   {
-    id: 10,
+    id: MOCK_USER_IDS.fernando,
     nome: 'Fernando Pesquisador Inativo',
     email: 'fernando.inativo@ufam.edu.br',
     tipo: 'PESQUISADOR',

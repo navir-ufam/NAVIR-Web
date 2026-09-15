@@ -3,6 +3,8 @@
 Base URL:
 /api/v1
 
+Observacao: todos os identificadores (`id`, FKs como `usuario_id`, `tipo_projeto_id`, `agencia_id`, `professor_id`) sao **UUID em string**, conforme `prisma/schema.prisma` e `banco.md`.
+
 ---
 
 # 1. Autenticacao
@@ -19,7 +21,7 @@ Response (pesquisador/professor/admin):
 {
   "token": "jwt_token",
   "usuario": {
-    "id": 1,
+    "id": "11111111-1111-4111-8111-111111111111",
     "tipo": "PESQUISADOR",
     "estado": "ACEITO"
   }
@@ -143,12 +145,12 @@ Regras:
 
 {
   "titulo": "Machine Learning com IoT",
-  "tipo_projeto_id": 1,
-  "agencia_id": 1,
+  "tipo_projeto_id": "c0000001-0000-4000-8000-000000000002",
+  "agencia_id": "b0000001-0000-4000-8000-000000000001",
   "codigo_projeto": "99999999",
   "data_inicio": "2026-01-01",
   "data_fim": "2026-12-01",
-  "professor_id": 2,
+  "professor_id": "22222222-2222-4222-8222-222222222222",
   "remunerado": true
 }
 

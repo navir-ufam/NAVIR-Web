@@ -1,5 +1,8 @@
 # Modelo de Banco (Relacional)
 
+> Implementação: **PostgreSQL com Prisma ORM** (`src/backend/prisma/schema.prisma`).
+> Os `id (PK)` são `String` no formato **UUID**, exceto `usuario_habilidades`, cuja PK é composta por `(usuario_id, habilidade_id)`.
+
 ---
 
 # 1. Tabela: usuarios

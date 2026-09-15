@@ -1,8 +1,10 @@
+import { TipoDispositivo, StatusDispositivo } from '@prisma/client';
+
 export class DispositivoEntity {
   id!: string;
-  usuarioId!: string;
+  usuario_id!: string;
   nome!: string;
-  macAddress!: string;
-  tipo!: string;
-  status!: string;
+  mac_address!: string;
+  tipo!: TipoDispositivo;
+  status!: StatusDispositivo;
 }

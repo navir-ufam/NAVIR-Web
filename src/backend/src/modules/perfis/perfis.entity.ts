@@ -1,7 +1,7 @@
 export class PerfilEntity {
   id!: string;
-  usuarioId!: string;
-  fotoUrl?: string;
-  biografia?: string;
-  cidade?: string;
+  usuario_id!: string;
+  foto_url!: string | null;
+  biografia!: string | null;
+  cidade_origem!: string | null;
 }

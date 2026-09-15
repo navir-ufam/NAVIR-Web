@@ -16,10 +16,10 @@ O NAVIR Interno é o sistema de gestão integrada do laboratório, cobrindo usu�
 
 ## 1.1 Premissas
 
-- O **frontend** já possui base implementada (SCRUM-37 a SCRUM-44): setup Vite/React/TS, Tailwind + design system, shadcn/ui, roteamento com guards, `AuthContext`, `api.ts`/`apiClient.ts` e layout (Sidebar/Header/ProtectedRoute/PublicRoute).
-- A maior parte das **páginas funcionais é placeholder** (`PagePlaceholder`) e os **services** já espelham os endpoints de `api-rest.md`, mas ainda não estão ligados às telas.
-- O **backend é um scaffold NestJS vazio**: sem módulos de domínio, sem banco/ORM, sem autenticação.
-- O banco é relacional (PostgreSQL), com 14 tabelas documentadas em `banco.md`.
+- O **frontend** possui base implementada (SCRUM-37 a SCRUM-48): setup Vite/React/TS, Tailwind + design system, shadcn/ui, roteamento com guards, `AuthContext`, `api.ts`/`apiClient.ts`, layout (Sidebar/Header/ProtectedRoute/PublicRoute), componentes de estados globais (loading/empty/error) com Sonner (SCRUM-45), camada de mocks/fixtures por domínio com `VITE_USE_MOCKS` (SCRUM-46) e ESLint/Prettier (SCRUM-47/48).
+- A maior parte das **páginas funcionais é placeholder** (`PagePlaceholder`) e os **services** já espelham os endpoints de `api-rest.md` (com fallback para mocks), mas ainda não estão ligados às telas.
+- O **backend** recebeu a fundação (SCRUM-2 / MVP-S0-03): **Prisma + PostgreSQL** com migração inicial, os 13 módulos de domínio (a maioria com métodos `NotImplementedException`), `ConfigModule` com validação Joi, `ValidationPipe` global, prefixo `/api/v1`, CORS, guards `AuthGuard`/`RolesGuard`/`StateGuard`, interceptor de log e `prisma/seed.ts`. Já implementados: `POST /auth/login` e `POST /usuarios`.
+- O banco é relacional (PostgreSQL), modelado no `prisma/schema.prisma` (equivalente às 14 tabelas documentadas em `banco.md`).
 - As regras de negócio `RN-001` a `RN-031` são a fonte de verdade funcional.
 - As telas `T01` a `T40` de `wireframes-iniciais.md` definem o alvo de UI.
 
@@ -29,9 +29,10 @@ O NAVIR Interno é o sistema de gestão integrada do laboratório, cobrindo usu�
 |---|---|---|
 | Rota de cadastro | `/auth/cadastro` | `/cadastro`, `/cadastro/pesquisador`, `/cadastro/professor`, `/cadastro/interessado` |
 | Páginas citadas como “componentes-chave” | existentes | ainda são `PagePlaceholder` |
-| Backend | módulos por domínio | apenas `AppModule` padrão |
+| Estado de módulos backend | módulos “funcionais” | módulos existem, mas só `auth` e criação de usuário estão implementados; demais lançam `NotImplementedException` |
 
 O plano assume o **código como base de implementação** e a **documentação como contrato funcional**, ajustando os docs quando necessário (US-003).
+As divergências de ORM/modelo, formato de ID e contrato de `Projeto` foram resolvidas na **US-001b** (Prisma + UUID, frontend alinhado).
 
 ## 1.3 Não-objetivos desta entrega
 
@@ -61,38 +62,54 @@ O plano assume o **código como base de implementação** e a **documentação c
 Como equipe de desenvolvimento, quero a estrutura base do backend com banco configurado, para que os módulos de domínio possam ser implementados.
 
 - **Refs:** `arquitetura.md`, `backend.md`, `banco.md`
-- **Endpoint:** `GET /api/v1/health`
+- **Endpoint:** `GET /api/v1/health` (ainda não existe; hoje há apenas `GET /api/v1/`)
 - **Tabelas:** `usuarios`, `perfis`, `dados_academicos`, `curriculos`, `atualizacoes`, `projetos`, `tipos_projeto`, `agencias`, `habilidades`, `usuario_habilidades`, `dispositivos`, `acesso_laboratorio`, `notificacoes`
-- **Estado:** ⬜
+- **Estado:** 🟡 (fundação entregue no SCRUM-2; faltam Swagger, healthcheck e filtro de exceções)
 - **Critérios de aceite:**
-  - [ ] Projeto NestJS com módulos por domínio (auth, usuarios, perfis, dados-academicos, curriculos, historico, projetos, dispositivos, acesso-laboratorio, status-academico, dashboard, relatorios, notificacoes)
-  - [ ] Conexão PostgreSQL via TypeORM com migrações para as 14 tabelas de `banco.md`
-  - [ ] Índices e constraints de `banco.md` aplicados (email UNIQUE, mac_address UNIQUE, etc.)
-  - [ ] Prefixo global de rota `/api/v1` e `ValidationPipe` global
+  - [x] Projeto NestJS com módulos por domínio (auth, usuarios, perfis, dados-academicos, curriculos, historico, projetos, dispositivos, acesso-laboratorio, status-academico, dashboard, relatorios, notificacoes)
+  - [x] Banco PostgreSQL via **Prisma** com migração inicial (`prisma/migrations/20260522020235_init`) cobrindo as tabelas de `banco.md`
+  - [x] Índices e constraints de `banco.md` aplicados (email UNIQUE, mac_address UNIQUE, PK composta de `usuario_habilidades`)
+  - [x] Prefixo global de rota `/api/v1` e `ValidationPipe` global (`whitelist`, `forbidNonWhitelisted`, `transform`)
+  - [x] `ConfigModule` com validação Joi das variáveis de ambiente e `.env.example` documentado
+  - [x] CORS configurado por `CORS_ORIGIN` e interceptor global de log
   - [ ] Filtro de exceções padroniza erros 400/401/403/404 (seção 12 de `api-rest.md`)
-  - [ ] Swagger/OpenAPI disponível e `.env.example` documentado
-  - [ ] `npm run build` e `npm run test` verdes
+  - [ ] Swagger/OpenAPI disponível
+  - [ ] Endpoint de healthcheck dedicado
+
+### US-001b — Fundação do backend: alinhamento de dados e contratos
+Como equipe, quero alinhar modelo de dados e contratos entre backend e frontend, para evitar retrabalho de integração.
+
+- **Refs:** `banco.md`, `api-rest.md` | **Estado:** ✅ (resolvido: uuid mantido no backend e frontend alinhado)
+- **Critérios de aceite:**
+  - [x] Formato de IDs definido e documentado: **UUID `String`** no backend, refletido em `types/index.ts` e mocks
+  - [x] Contrato de `Projeto` alinhado (`usuario_id`, `tipo_projeto_id`, `agencia_id`, `codigo_projeto`, `professor_id`, `remunerado`), com relações opcionais para exibição
+  - [x] Entities-stub do backend alinhadas ao `schema.prisma` (snake_case + `String` + enums do Prisma)
+  - [x] `docs/banco.md`/`docs/backend.md` registram Prisma como ORM adotado
 
 ### US-002 — Seeds e CI do backend
 Como equipe, quero seeds iniciais e pipeline de qualidade, para viabilizar o desenvolvimento e evitar regressões.
 
 - **Refs:** `banco.md`
 - **Tabelas:** `tipos_projeto`, `agencias`, `habilidades`
-- **Estado:** ⬜
+- **Estado:** 🟡 (seed de tipos/agências e pipeline Sonar entregues no SCRUM-2; faltam habilidades e lint no CI)
 - **Critérios de aceite:**
-  - [ ] Seed de tipos de projeto incluindo **PIBIC** e **PIBIT**
-  - [ ] Seed de agências e habilidades base
-  - [ ] Script de seed executável em ambiente local
-  - [ ] Pipeline de CI roda `lint` e `test` do backend e frontend
+  - [x] Seed de tipos de projeto incluindo **PIBIC** e **PIBIT** (também `INDEPENDENTE`)
+  - [x] Seed de agências base (FAPEAM, CNPq, UFAM)
+  - [x] Script de seed executável (`prisma/seed.ts`, com admin via `ADMIN_EMAIL`/`ADMIN_PASSWORD`)
+  - [ ] Seed de **habilidades** base
+  - [x] Pipeline de CI (`.github/workflows/sonarqube.yml`) roda testes de backend e frontend com cobertura (`continue-on-error`)
+  - [ ] Pipeline executa `lint` (ESLint) de forma bloqueante
 
 ### US-003 — Contratos compartilhados e alinhamento de rotas
 Como desenvolvedor, quero tipos e roteamento alinhados aos contratos, para integrar telas e API sem ambiguidade.
 
 - **Refs:** `api-rest.md`, `frontend.md`
-- **Estado:** 🟡 (tipos e services já existem parcialmente)
+- **Estado:** 🟡 (tipos, services e mocks evoluíram no SCRUM-46; contratos ainda divergem)
 - **Critérios de aceite:**
-  - [ ] Tipos TS do frontend cobrem `UserType`, `UserState`, `AcademicStatus` e entidades de `banco.md`
-  - [ ] Services do frontend em `src/frontend/src/services` batem 1:1 com os endpoints de `api-rest.md`
+  - [x] Tipos TS do frontend cobrem `UserType`, `UserState`, `AcademicStatus`, `StatusProjeto`, dispositivos, acesso e dashboard
+  - [x] Services do frontend em `src/frontend/src/services` cobrem os endpoints de `api-rest.md`, com camada de mocks (`withMock` + `VITE_USE_MOCKS`)
+  - [x] Contrato de `Projeto` alinhado ao backend (`tipo_projeto_id`/`agencia_id`/`professor_id`/`codigo_projeto`/`remunerado`)
+  - [x] Tipo de ID alinhado (uuid `String` no backend e nos tipos/mocks do frontend)
   - [ ] Divergências de rota documentadas e resolvidas (cadastro, versão do Router)
   - [ ] `docs/frontend.md` e `docs/api-rest.md` atualizados conforme decisão
 
@@ -104,20 +121,20 @@ Como desenvolvedor, quero tipos e roteamento alinhados aos contratos, para integ
 Como usuário interno, quero autenticar com e-mail e senha, para acessar as funcionalidades do meu perfil.
 
 - **Refs:** RN-002, RN-027 | **Tela:** T01 | **Endpoint:** `POST /auth/login` | **Tabela:** `usuarios`
-- **Estado:** 🟡 (frontend pronto, backend pendente)
+- **Estado:** ✅ (implementado no SCRUM-2; backend + frontend integrados)
 - **Critérios de aceite:**
-  - [ ] Credenciais válidas retornam `token` + `usuario {id, tipo, estado}`
-  - [ ] Usuário **NEGADO** recebe **403** e não gera sessão, com tela de acesso negado
-  - [ ] Usuário **PENDENTE** autentica mas é redirecionado a `/aguardando-aprovacao`
-  - [ ] **INTERESSADO** não acessa área interna; recebe apenas a mensagem padrão de oportunidade
-  - [ ] Token persistido em `localStorage` e enviado em `Authorization: Bearer`
-  - [ ] Senha comparada via hash (`bcrypt`), nunca em texto puro
+  - [x] Credenciais válidas retornam `token` + `usuario {id, tipo, estado}`
+  - [x] Usuário **NEGADO** recebe **403** e não gera sessão, com tela de acesso negado
+  - [x] Usuário **PENDENTE** autentica mas é redirecionado a `/aguardando-aprovacao`
+  - [x] **INTERESSADO** não acessa área interna; recebe apenas a mensagem padrão de oportunidade
+  - [x] Token persistido em `localStorage` e enviado em `Authorization: Bearer`
+  - [x] Senha comparada via hash (`bcrypt`), nunca em texto puro
 
 ### US-005 — Refresh de token e logout
 Como usuário autenticado, quero manter/receber minha sessão de forma segura, para não ser desconectado indevidamente.
 
 - **Refs:** RN-027 | **Endpoints:** `POST /auth/refresh`, `POST /auth/logout`
-- **Estado:** 🟡 (`apiClient.ts` já tenta refresh; backend pendente)
+- **Estado:** 🟡 (apenas `POST /auth/login` existe no backend; `apiClient.ts` do frontend já tenta refresh)
 - **Critérios de aceite:**
   - [ ] `401` em rota protegida dispara tentativa única de refresh
   - [ ] Falha no refresh limpa a sessão e emite evento de não autorizado (`AUTH_UNAUTHORIZED_EVENT`)
@@ -127,11 +144,12 @@ Como usuário autenticado, quero manter/receber minha sessão de forma segura, p
 Como sistema, quero bloquear acessos indevidos por tipo e estado de usuário, para garantir a segurança (RN-027).
 
 - **Refs:** RN-008, RN-009, RN-010, RN-026, RN-027 | **Tabelas:** `usuarios`
-- **Estado:** 🟡 (guards de frontend prontos; backend pendente)
+- **Estado:** 🟡 (guards e testes criados no SCRUM-2 e guards de rota no frontend; falta aplicar a todas as rotas e integrar o recálculo no login)
 - **Critérios de aceite:**
-  - [ ] `AuthGuard` valida JWT em rotas protegidas
-  - [ ] `RoleGuard` restringe por tipo de usuário conforme permissões de `regras-de-negocio.md`
-  - [ ] `StateGuard` bloqueia usuário **NEGADO** (403)
+  - [x] `AuthGuard` valida JWT em rotas protegidas (implementado e com testes)
+  - [x] `RoleGuard` restringe por tipo de usuário (implementado, com decorator `@Roles`, e com testes)
+  - [x] `StateGuard` bloqueia usuário **NEGADO** (403) (implementado, com testes)
+  - [ ] Guards aplicados em todas as rotas privadas de todos os módulos
   - [ ] Ao fazer login, a classificação acadêmica é recalculada (RN-026)
   - [ ] `ROLE_PERMISSIONS` do frontend corresponde às permissões do backend
 
@@ -143,36 +161,38 @@ Como sistema, quero bloquear acessos indevidos por tipo e estado de usuário, pa
 Como candidato a pesquisador, quero me cadastrar com meus dados e histórico, para solicitar entrada no laboratório.
 
 - **Refs:** RN-005, RN-006 | **Telas:** T02, T03 | **Endpoint:** `POST /usuarios` | **Tabelas:** `usuarios`, `curriculos`, `atualizacoes`
-- **Estado:** ⬜ (página placeholder; service existe)
+- **Estado:** 🟡 (backend `POST /usuarios` implementado no SCRUM-2; página T02/T03 ainda placeholder e upload de histórico pendente)
 - **Critérios de aceite:**
-  - [ ] Campos obrigatórios: nome, e-mail institucional, senha+confirmação, **histórico (upload)**, link Lattes, aceite de termos
-  - [ ] Conta criada com `estado_usuario = PENDENTE`
-  - [ ] E-mail institucional validado quanto ao formato
+  - [x] Campos obrigatórios: nome, e-mail, senha, aceite de termos (validação de senha com mínimo de 8 caracteres)
+  - [ ] Campos obrigatórios: senha+confirmação, **histórico (upload)**, link Lattes
+  - [x] Conta criada com `estado_usuario = PENDENTE`
+  - [x] E-mail validado quanto ao formato e unicidade (409 em duplicidade)
   - [ ] Arquivo de histórico aceita apenas extensões permitidas (PDF no MVP)
-  - [ ] Após cadastro, exibe confirmação de envio para aprovação
+  - [ ] Após cadastro, exibe confirmação de envio para aprovação (T03)
   - [ ] ADMIN é notificado (ver US-033)
 
 ### US-008 — Cadastro de professor
 Como professor, quero me cadastrar sem enviar histórico, para solicitar entrada como orientador.
 
 - **Refs:** RN-005, RN-006 | **Telas:** T02, T04 | **Endpoint:** `POST /usuarios` | **Tabelas:** `usuarios`, `curriculos`
-- **Estado:** ⬜
+- **Estado:** 🟡 (backend aceita `tipo=PROFESSOR` sem histórico; página T04 ainda placeholder)
 - **Critérios de aceite:**
   - [ ] Campos obrigatórios: nome, e-mail institucional, senha+confirmação, link Lattes, aceite de termos
-  - [ ] **Histórico não é obrigatório** para professor
-  - [ ] Conta criada com `estado_usuario = PENDENTE`
+  - [x] **Histórico não é obrigatório** para professor
+  - [x] Conta criada com `estado_usuario = PENDENTE`
 
 ### US-009 — Cadastro de interessado
 Como interessado, quero me cadastrar no banco de talentos, para ser contatado quando surgir oportunidade.
 
 - **Refs:** RN-005, RN-007 | **Telas:** T02, T05 | **Endpoint:** `POST /usuarios` | **Tabelas:** `usuarios`, `perfis`, `habilidades`, `usuario_habilidades`
-- **Estado:** ⬜
+- **Estado:** 🟡 (backend cria `INTERESSADO` com estado `NULL`; página T05 e bio/habilidades pendentes)
 - **Critérios de aceite:**
-  - [ ] Campos obrigatórios: nome, e-mail, senha, histórico (upload), link Lattes, aceite de termos
+  - [x] Campos obrigatórios: nome, e-mail, senha, link Lattes (opcional no DTO atual), aceite de termos
+  - [ ] Campos obrigatórios: histórico (upload)
   - [ ] Campos opcionais: descrição/bio e habilidades
-  - [ ] Conta criada com `estado_usuario = NULL` e **sem aprovação**
-  - [ ] Sistema **não** envia e-mail automático
-  - [ ] Exibe a mensagem: “Entraremos em contato quando surgir uma oportunidade compatível com seu perfil.”
+  - [x] Conta criada com `estado_usuario = NULL` e **sem aprovação**
+  - [x] Sistema **não** envia e-mail automático
+  - [x] Exibe a mensagem: “Entraremos em contato quando surgir uma oportunidade compatível com seu perfil.”
   - [ ] ADMIN é notificado sobre o novo cadastro
 
 ### US-010 — Aprovar ou negar cadastro
@@ -201,7 +221,7 @@ Como ADMIN, quero converter um interessado em pesquisador, para aproveitar um pe
 ### US-012 — Telas de estado de acesso
 Como usuário, quero telas claras de estado, para entender minha situação no sistema.
 
-- **Refs:** RN-007 | **Telas:** T06, T40, acesso-negado | **Estado:** 🟡 (rotas existem; conteúdo placeholder)
+- **Refs:** RN-007 | **Telas:** T06, T40, acesso-negado | **Estado:** 🟡 (rotas existem e há componentes de estado global loading/empty/error (SCRUM-45); conteúdo das páginas ainda é placeholder)
 - **Critérios de aceite:**
   - [ ] T06 “Aguardando aprovação” para PESQUISADOR/PROFESSOR **PENDENTE**, com botão Sair
   - [ ] Tela de acesso negado para `NEGADO`
@@ -494,13 +514,41 @@ Como sistema, quero notificar usuários e administradores, para dar visibilidade
 Como equipe, quero cobertura de testes e revisão de segurança, para garantir confiabilidade e conformidade.
 
 - **Refs:** RN-027
-- **Estado:** 🟡 (há testes de frontend; backend e regras pendentes)
+- **Estado:** 🟡 (há testes de frontend e testes de guards/back-end; regras de negócio e lint bloqueante pendentes)
 - **Critérios de aceite:**
   - [ ] Regras críticas (RN-021 a RN-025, RN-014, RN-027) cobertas por testes
-  - [ ] Testes de guards por tipo/estado de usuário no backend
+  - [x] Testes de guards por tipo/estado de usuário no backend (`auth.guard.spec`, `roles.guard.spec`, `state.guard.spec`)
   - [ ] Matriz de permissões (`regras-de-negocio.md`) revisada por role
   - [ ] Pipeline Sonar sem security hotspots críticos
   - [ ] Padrão de resposta de erros 400/401/403/404 validado
+  - [x] ESLint + Prettier configurados no frontend (SCRUM-47/48)
+  - [ ] ESLint/Prettier configurados no backend e rodando de forma bloqueante no CI
+
+---
+
+## E13 — Fundação de Frontend (Mocks e Estados de UI)
+
+### US-035 — Camada de mocks/fixtures por domínio
+Como desenvolvedor de frontend, quero dados de exemplo por domínio com alternância via variável de ambiente, para desenvolver telas independentemente do backend.
+
+- **Refs:** `frontend.md` | **Estado:** ✅ (SCRUM-46)
+- **Critérios de aceite:**
+  - [x] Fixtures em `src/frontend/src/mocks` para usuários, projetos, dispositivos, dashboard, perfil, tipos de projeto, agências, habilidades e acesso ao laboratório
+  - [x] Helper `withMock` em `services/api.ts` controlado por `VITE_USE_MOCKS`
+  - [x] Services de domínio usam `withMock` com fallback para o dado mock
+  - [x] `.env.example` do frontend documenta `VITE_USE_MOCKS`
+  - [x] Fixtures refletem os contratos de `api-rest.md` e do `schema.prisma` (UUID, campos de Projeto) — ver US-001b
+
+### US-036 — Estados globais de UI e toasts
+Como usuário, quero feedback visual consistente (carregando, vazio, erro, sucesso), para entender o que está acontecendo em cada tela.
+
+- **Refs:** `wireframes-iniciais.md` (seção 9) | **Estado:** ✅ (SCRUM-45)
+- **Critérios de aceite:**
+  - [x] Componentes `LoadingState`, `EmptyState` e `ErrorState` disponíveis em `components/ui`
+  - [x] `Sonner` configurado para toasts de sucesso/erro
+  - [x] Tratamento padronizado de erro por status HTTP em `services/api.ts` (401/403/404/409/422/500)
+  - [x] Testes de cobertura dos componentes de feedback (`feedbackComponents.test.tsx`)
+  - [ ] Estados efetivamente usados em todas as páginas de domínio
 
 ---
 
@@ -523,21 +571,29 @@ Abordagem por **fatias verticais por domínio**: cada fase entrega backend + fro
 | 10 | Relatórios e notificações | US-032 a US-033 | T15 + eventos | Export CSV/PDF válido |
 | 11 | QA e hardening | US-034 | Suíte + Sonar | Cobertura + gate aprovados |
 
+### Progresso atual (após SCRUM-2 e SCRUM-45 a SCRUM-48)
+
+- **Fase 0 — em andamento (avançada):** US-001 entregue em grande parte (Prisma + migração + módulos + Config/validação + guards + interceptor + seed), faltando Swagger, healthcheck e filtro de exceções; US-002 parcial (faltam habilidades no seed e lint no CI); **US-001b concluída** (IDs UUID e contrato de Projeto alinhados entre backend e frontend).
+- **Fase 1 — em andamento:** US-004 concluída (login real ponta a ponta); US-006 avançada (guards + testes); US-005 pendente (refresh/logout).
+- **Fase 2 — em andamento:** criação de usuário (`POST /usuarios`) funcional no backend; demais endpoints de usuários ainda são `NotImplementedException`; telas de cadastro ainda placeholder.
+- **Transversal — concluída:** US-035 (mocks, SCRUM-46) e US-036 (estados de UI + toasts, SCRUM-45); ESLint/Prettier no frontend (SCRUM-47/48).
+- **Demais fases (3 a 11):** módulos scaffold criados, porém métodos lançam `NotImplementedException` — equivalem a ⬜ com esqueleto pronto.
+
 ## 4.1 Detalhamento por fase
 
 ### Fase 0 — Fundação backend + contratos
-- **Backend:** estrutura modular, TypeORM + migrações (14 tabelas), `ValidationPipe`, filtro de exceções, Swagger, healthcheck, `.env`, seeds.
-- **Frontend:** revisão de tipos e alinhamento de rotas/services aos contratos.
+- **Backend:** estrutura modular, **Prisma + migrações (PostgreSQL)**, `ValidationPipe`, filtro de exceções, Swagger, healthcheck, `@nestjs/config` + Joi, seeds. *(Maior parte entregue no SCRUM-2; ver US-001.)*
+- **Frontend:** revisão de tipos e alinhamento de rotas/services aos contratos (US-003).
 - **Testes:** smoke de boot da aplicação, migração e seed.
-- **Risco:** modelagem do parser de histórico e escolha de ORM.
+- **Risco:** modelagem do parser de histórico e alinhamento de contratos/IDs entre backend e mocks.
 
 ### Fase 1 — Autenticação end-to-end
-- **Backend:** `AuthModule` (login, refresh, logout), `@nestjs/jwt` + `passport-jwt` + `bcrypt`, guards Auth/Role/State, gancho de recálculo no login.
-- **Frontend:** ligar `LoginPage` ao serviço real (`authService.loginRequest`), manter fallback de mock para desenvolvimento, tratar 403/estado.
+- **Backend:** `AuthModule` (login **já implementado**; refresh/logout pendentes), `@nestjs/jwt` + `bcrypt`, guards Auth/Role/State (feitos), gancho de recálculo no login (pendente).
+- **Frontend:** `LoginPage` ligado a `authService.loginRequest` (feito), fallback de mock, tratamento 403/estado.
 - **Testes:** login por role, NEGADO (403), PENDENTE, INTERESSADO.
 
 ### Fase 2 — Cadastro, aprovação e talentos
-- **Backend:** `UsuariosModule` (`POST /usuarios`, `GET /usuarios`, `GET /usuarios/{id}`, `PATCH /usuarios/{id}/aprovacao`, `PATCH /usuarios/{id}/converter-para-pesquisador`) + upload de histórico inicial + evento `novo_interessado`.
+- **Backend:** `UsuariosModule` — `POST /usuarios` **já implementado**; `GET /usuarios`, `GET /usuarios/{id}`, `PATCH /usuarios/{id}/aprovacao`, `PATCH /usuarios/{id}/converter-para-pesquisador` + upload de histórico inicial + evento `novo_interessado` pendentes.
 - **Frontend:** telas T02/T03/T04/T05, T06, T40, T11, T12.
 - **Testes:** validação por tipo de cadastro, motivo obrigatório na negação, conversão preservando dados.
 
@@ -661,12 +717,14 @@ Abordagem por **fatias verticais por domínio**: cada fase entrega backend + fro
 
 | Tema | Decisão | Alternativa |
 |---|---|---|
-| ORM/banco | TypeORM + migrações (PostgreSQL) | Prisma |
-| Autenticação | `@nestjs/jwt` + `passport-jwt` + `bcrypt` | Sessão via cookie |
-| Validação | DTOs com `class-validator` | Zod no backend |
+| ORM/banco | **Prisma + PostgreSQL** (já adotado no SCRUM-2, `prisma/schema.prisma`) | TypeORM |
+| Autenticação | `@nestjs/jwt` + `bcrypt` (já implementado); `passport-jwt` opcional | Sessão via cookie |
+| Config/validação de ambiente | `@nestjs/config` + Joi (já implementado) | dotenv puro |
+| Validação de entrada | DTOs com `class-validator` (já implementado) | Zod no backend |
 | Upload/parsing | Multer + `pdf-parse`; persistir apenas dados extraídos | Armazenar o PDF |
 | Agendamento | `@nestjs/schedule` (cron diário) | Worker externo |
 | Relatórios | Geração de CSV nativa + PDF (`pdfkit`) | Puppeteer |
+| Mocks de frontend | `withMock` + `VITE_USE_MOCKS`, fixtures em `src/frontend/src/mocks` | MSW |
 | Frontend | Manter React 19 / Router v7 / React Query v5 / RHF+Zod / shadcn | — |
 
 ## 6.2 Riscos
@@ -674,16 +732,17 @@ Abordagem por **fatias verticais por domínio**: cada fase entrega backend + fro
 | Risco | Impacto | Mitigação |
 |---|---|---|
 | Parser de histórico depende de formato variável | Alto | Começar com 1 modelo de PDF e validar com amostras reais; fallback de edição manual |
-| Backend vazio concentra muito trabalho na Fase 0 | Alto | Priorizar fundação e auth antes de telas de domínio |
-| Divergências docs × código | Médio | US-003 alinha e atualiza docs |
+| Divergências docs × código | Médio | US-003 e US-001b alinham e atualizam docs |
 | Regras de inatividade/egresso têm exceções sutis | Alto | Testes unitários dedicados (US-018) |
 | Permissões por role no frontend e backend | Alto | Matriz única de permissões + testes de guards (US-034) |
-| Integração tardia de services ao frontend | Médio | Fatias verticais por domínio desde a Fase 1 |
+| Mocks divergindo novamente da API real | Médio | Fixtures alinhadas na US-001b/US-035; manter testes de contrato ao evoluir o schema |
+| Módulos backend scaffold com `NotImplementedException` | Médio | Substituir stub por implementação por fase, mantendo os testes de scaffolding verdes |
 
 ---
 
 ## Próximos passos
 
-1. Aprovar este documento e as decisões da seção 6.1.
-2. Criar as issues no GitHub usando `.github/ISSUE_TEMPLATE/task.yml`, uma por user story, referenciando `US-NNN`.
-3. Iniciar pela **Fase 0 (US-001 a US-003)**.
+1. Concluir a **Fase 0**: US-001 (Swagger, healthcheck, filtro de exceções) e US-002 (seed de habilidades, lint no CI). *(US-001b concluída.)*
+2. Fechar a **Fase 1**: implementar `POST /auth/refresh` e `POST /auth/logout` (US-005) e o recálculo de status no login (US-006).
+3. Avançar a **Fase 2**: completar `UsuariosModule` (aprovação, conversão) e telas T02–T06/T11/T12/T40.
+4. Criar/atualizar as issues no GitHub (`.github/ISSUE_TEMPLATE/task.yml`), referenciando `US-NNN`.

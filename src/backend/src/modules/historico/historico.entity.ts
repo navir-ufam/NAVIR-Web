@@ -1,4 +1,4 @@
 export class HistoricoPlaceholderEntity {
   id!: string;
-  usuarioId!: string;
+  usuario_id!: string;
 }

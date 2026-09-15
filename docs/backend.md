@@ -5,7 +5,7 @@ Backend desenvolvido com NestJS seguindo:
 - Arquitetura modular por dominio
 - Camadas (Controller, Service, Repository)
 - Regras centralizadas em services de dominio
-- Persistencia relacional em PostgreSQL
+- Persistencia relacional em PostgreSQL via **Prisma ORM**
 
 ---
 

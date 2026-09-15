@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { getNavItemsForUser } from '@/components/layout/Sidebar'
+import { MOCK_USER_IDS } from '@/mocks'
 import type { AuthUser } from '@/types'
 
-const adminUser: AuthUser = { id: 1, tipo: 'ADMIN', estado: 'ACEITO' }
-const pesquisadorUser: AuthUser = { id: 3, tipo: 'PESQUISADOR', estado: 'ACEITO' }
-const professorUser: AuthUser = { id: 2, tipo: 'PROFESSOR', estado: 'ACEITO' }
+const adminUser: AuthUser = { id: MOCK_USER_IDS.admin, tipo: 'ADMIN', estado: 'ACEITO' }
+const pesquisadorUser: AuthUser = { id: MOCK_USER_IDS.maria, tipo: 'PESQUISADOR', estado: 'ACEITO' }
+const professorUser: AuthUser = { id: MOCK_USER_IDS.carlos, tipo: 'PROFESSOR', estado: 'ACEITO' }
 
 describe('Sidebar Renderização por Role (Smoke Test)', () => {
   it('ADMIN e PESQUISADOR veem 6 itens, PROFESSOR vê 4 itens', () => {

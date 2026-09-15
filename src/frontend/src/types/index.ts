@@ -6,8 +6,6 @@ export type AcademicStatus = 'REGULAR' | 'FINALISTA' | 'INATIVO' | 'EGRESSO' | '
 
 export type StatusProjeto = 'ATIVO' | 'FINALIZADO'
 
-export type TipoProjeto = 'PIBIC' | 'PIBIT' | 'Independente' | 'Extensão' | 'Pesquisa Aplicada'
-
 export type StatusDispositivo = 'PENDENTE' | 'ATIVO' | 'INATIVO'
 
 export type TipoDispositivo = 'NOTEBOOK' | 'CELULAR' | 'TABLET' | 'OUTRO'
@@ -15,7 +13,7 @@ export type TipoDispositivo = 'NOTEBOOK' | 'CELULAR' | 'TABLET' | 'OUTRO'
 export type StatusAcessoLab = 'PENDENTE' | 'AUTORIZADO' | 'BLOQUEADO'
 
 export interface Usuario {
-  id: number
+  id: string
   nome: string
   email: string
   tipo: UserType
@@ -27,36 +25,56 @@ export interface Usuario {
 }
 
 export interface User {
-  id?: string | number
+  id?: string
   nome?: string
   email?: string
   tipo: UserType
   estado: UserState
 }
 
+export interface UsuarioResumo {
+  id: string
+  nome: string
+}
+
+export interface TipoProjetoResumo {
+  id: string
+  nome: string
+  sigla: string
+}
+
+export interface AgenciaResumo {
+  id: string
+  nome: string
+  sigla: string
+}
+
 export interface Projeto {
-  id: number
+  id: string
+  usuario_id: string
   titulo: string
-  descricao: string
-  tipo: TipoProjeto
-  agencia_fomento?: string
-  status: StatusProjeto
-  orientador_id: number
-  orientador_nome?: string
-  pesquisadores_ids: number[]
+  tipo_projeto_id: string
+  agencia_id: string | null
+  codigo_projeto: string | null
   data_inicio: string
-  data_fim?: string
+  data_fim: string | null
+  professor_id: string
+  remunerado: boolean | null
+  status: StatusProjeto
+  tipo_projeto?: TipoProjetoResumo
+  agencia?: AgenciaResumo | null
+  professor?: UsuarioResumo
+  usuario?: UsuarioResumo
 }
 
 export interface Dispositivo {
-  id: number
+  id: string
+  usuario_id: string
   nome: string
   tipo: TipoDispositivo
   mac_address: string
-  usuario_id: number
-  usuario_nome?: string
   status: StatusDispositivo
-  data_cadastro: string
+  usuario?: UsuarioResumo
 }
 
 export interface DashboardMetrics {
@@ -90,13 +108,12 @@ export interface PerfilPesquisador {
 }
 
 export interface AcessoLaboratorio {
-  id: number
-  usuario_id: number
-  usuario_nome: string
+  id: string
+  usuario_id: string
   status: StatusAcessoLab
   data_solicitacao: string
-  data_aprovacao?: string
-  horario_permitido?: string
+  data_atualizacao: string
+  usuario?: UsuarioResumo
 }
 
 export * from './auth'

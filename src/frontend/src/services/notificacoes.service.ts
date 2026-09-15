@@ -1,15 +1,11 @@
 import { api, withMock } from './api'
-
-const mockNotificacoesList = [
-  { id: 1, titulo: 'Projeto Aprovado', mensagem: 'Seu projeto PIBIT foi aprovado pela coordenação.', lida: false, data: '2026-08-25T14:30:00.000Z' },
-  { id: 2, titulo: 'Dispositivo Ativado', mensagem: 'O MacBook Pro M2 foi ativado no sistema.', lida: false, data: '2026-08-24T18:00:00.000Z' },
-]
+import { mockNotificacoes } from '@/mocks'
 
 export async function listar() {
-  return withMock(() => api.get('/notificacoes'), mockNotificacoesList)
+  return withMock(() => api.get('/notificacoes'), mockNotificacoes)
 }
 
-export async function marcarComoLida(id: string | number) {
+export async function marcarComoLida(id: string) {
   return withMock(
     () => api.patch(`/notificacoes/${id}/lida`),
     { success: true, id }

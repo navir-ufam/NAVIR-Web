@@ -3,7 +3,7 @@ import type { UserType, UserState } from './index'
 export type { UserType, UserState }
 
 export interface AuthUser {
-  id: string | number
+  id: string
   tipo: UserType
   estado: UserState
   nome?: string
@@ -27,8 +27,8 @@ export interface AuthContextType {
 }
 
 export interface JwtPayload {
-  sub?: string | number
-  id?: string | number
+  sub?: string
+  id?: string
   tipo?: UserType
   role?: UserType
   estado?: UserState

@@ -5,10 +5,12 @@ import {
   mockDispositivos,
   mockDashboardMetrics,
   mockPerfil,
-  mockTiposProjeto,
-  mockAgencias,
+  mockNotificacoes,
   mockHabilidades,
   mockAcessoLaboratorio,
+  MOCK_AGENCIAS,
+  MOCK_TIPOS_PROJETO,
+  MOCK_USER_IDS,
 } from '@/mocks'
 import {
   usuariosService,
@@ -58,9 +60,9 @@ describe('Mock Data Fixtures & Services Integration (SCRUM-46)', () => {
 
   it('contains consistent projetos mock data with varied types and statuses', () => {
     expect(mockProjetos).toHaveLength(5)
-    const pibic = mockProjetos.find((p) => p.tipo === 'PIBIC')
-    const pibit = mockProjetos.find((p) => p.tipo === 'PIBIT')
-    const independente = mockProjetos.find((p) => p.tipo === 'Independente')
+    const pibic = mockProjetos.find((p) => p.tipo_projeto?.sigla === 'PIBIC')
+    const pibit = mockProjetos.find((p) => p.tipo_projeto?.sigla === 'PIBIT')
+    const independente = mockProjetos.find((p) => p.tipo_projeto?.sigla === 'INDEPENDENTE')
 
     expect(pibic).toBeDefined()
     expect(pibit).toBeDefined()
@@ -71,6 +73,8 @@ describe('Mock Data Fixtures & Services Integration (SCRUM-46)', () => {
 
     expect(ativo).toBeDefined()
     expect(finalizado).toBeDefined()
+    expect(pibic?.codigo_projeto).toBeTruthy()
+    expect(mockProjetos.every((p) => typeof p.professor_id === 'string')).toBe(true)
   })
 
   it('contains consistent dispositivos mock data', () => {
@@ -92,12 +96,43 @@ describe('Mock Data Fixtures & Services Integration (SCRUM-46)', () => {
   })
 
   it('contains consistent perfil, agencias, habilidades and tipos-projeto fixtures', () => {
-    expect(mockPerfil.usuario.id).toBe(3)
+    expect(mockPerfil.usuario.id).toBe(MOCK_USER_IDS.maria)
     expect(mockPerfil.habilidades.length).toBeGreaterThan(0)
-    expect(mockTiposProjeto).toContain('PIBIC')
-    expect(mockAgencias).toContain('FAPEAM')
+    expect(MOCK_TIPOS_PROJETO.some((tipo) => tipo.sigla === 'PIBIC')).toBe(true)
+    expect(MOCK_AGENCIAS.some((agencia) => agencia.sigla === 'FAPEAM')).toBe(true)
     expect(mockHabilidades).toContain('Python')
     expect(mockAcessoLaboratorio.length).toBeGreaterThan(0)
+  })
+
+  it('keeps fixture ids as valid UUID v4 with referential integrity', () => {
+    const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+    const userIds = new Set(mockUsuarios.map((u) => u.id))
+    const tipoIds = new Set(MOCK_TIPOS_PROJETO.map((t) => t.id))
+    const agenciaIds = new Set(MOCK_AGENCIAS.map((a) => a.id))
+
+    for (const usuario of mockUsuarios) {
+      expect(usuario.id).toMatch(UUID_V4)
+    }
+
+    for (const projeto of mockProjetos) {
+      expect(projeto.id).toMatch(UUID_V4)
+      expect(userIds.has(projeto.usuario_id)).toBe(true)
+      expect(userIds.has(projeto.professor_id)).toBe(true)
+      expect(tipoIds.has(projeto.tipo_projeto_id)).toBe(true)
+      if (projeto.agencia_id) {
+        expect(agenciaIds.has(projeto.agencia_id)).toBe(true)
+      }
+    }
+
+    for (const dispositivo of mockDispositivos) {
+      expect(dispositivo.id).toMatch(UUID_V4)
+      expect(userIds.has(dispositivo.usuario_id)).toBe(true)
+    }
+
+    for (const acesso of mockAcessoLaboratorio) {
+      expect(acesso.id).toMatch(UUID_V4)
+      expect(userIds.has(acesso.usuario_id)).toBe(true)
+    }
   })
 
   it('withMock helper resolves mockData when VITE_USE_MOCKS is true', async () => {
@@ -112,16 +147,16 @@ describe('Mock Data Fixtures & Services Integration (SCRUM-46)', () => {
     const usuarios = await usuariosService.listar()
     expect(usuarios).toHaveLength(10)
 
-    const usuario = await usuariosService.buscarPorId(1)
+    const usuario = await usuariosService.buscarPorId(MOCK_USER_IDS.admin)
     expect(usuario.nome).toBe('Admin Silva')
 
-    const resAprovar = await usuariosService.aprovar(4)
+    const resAprovar = await usuariosService.aprovar(MOCK_USER_IDS.lucas)
     expect(resAprovar.success).toBe(true)
 
-    const resNegar = await usuariosService.negar(5, 'Documentação incompleta')
+    const resNegar = await usuariosService.negar(MOCK_USER_IDS.ana, 'Documentação incompleta')
     expect(resNegar.success).toBe(true)
 
-    const resConverter = await usuariosService.converter(6)
+    const resConverter = await usuariosService.converter(MOCK_USER_IDS.pedro)
     expect(resConverter.success).toBe(true)
   })
 
@@ -129,13 +164,14 @@ describe('Mock Data Fixtures & Services Integration (SCRUM-46)', () => {
     const projetos = await projetosService.listar()
     expect(projetos).toHaveLength(5)
 
-    const projeto = await projetosService.buscarPorId(101)
+    const projeto = await projetosService.buscarPorId(mockProjetos[0].id)
     expect(projeto.titulo).toContain('NAVIR')
 
-    const novoProjeto = await projetosService.criar({ titulo: 'Novo Teste', tipo: 'PIBIC' })
+    const novoProjeto = await projetosService.criar({ titulo: 'Novo Teste', tipo_projeto_id: mockProjetos[0].tipo_projeto_id })
     expect(novoProjeto.titulo).toBe('Novo Teste')
+    expect(typeof novoProjeto.id).toBe('string')
 
-    const resFinalizar = await projetosService.finalizar(101)
+    const resFinalizar = await projetosService.finalizar(mockProjetos[0].id)
     expect(resFinalizar.success).toBe(true)
 
     const dispositivos = await dispositivosService.listar()
@@ -144,10 +180,10 @@ describe('Mock Data Fixtures & Services Integration (SCRUM-46)', () => {
     const novoDisp = await dispositivosService.cadastrar({ nome: 'MacBook Teste' })
     expect(novoDisp.nome).toBe('MacBook Teste')
 
-    const resAtivar = await dispositivosService.ativar(203)
+    const resAtivar = await dispositivosService.ativar(mockDispositivos[2].id)
     expect(resAtivar.success).toBe(true)
 
-    const resInativar = await dispositivosService.inativar(201)
+    const resInativar = await dispositivosService.inativar(mockDispositivos[0].id)
     expect(resInativar.success).toBe(true)
 
     const metricas = await dashboardService.buscarMetricas()
@@ -167,13 +203,13 @@ describe('Mock Data Fixtures & Services Integration (SCRUM-46)', () => {
     const solAcesso = await acessoLaboratorioService.solicitar()
     expect(solAcesso.status).toBe('PENDENTE')
 
-    const decAcesso = await acessoLaboratorioService.decidir(4, 'AUTORIZADO')
+    const decAcesso = await acessoLaboratorioService.decidir(MOCK_USER_IDS.lucas, 'AUTORIZADO')
     expect(decAcesso.success).toBe(true)
 
     const notifs = await notificacoesService.listar()
     expect(notifs).toHaveLength(2)
 
-    const resLida = await notificacoesService.marcarComoLida(1)
+    const resLida = await notificacoesService.marcarComoLida(mockNotificacoes[0].id)
     expect(resLida.success).toBe(true)
 
     const countNaoLidas = await notificacoesService.contarNaoLidas()

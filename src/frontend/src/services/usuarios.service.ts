@@ -8,26 +8,26 @@ export async function listar(
   return withMock(() => api.get<Usuario[]>('/usuarios', filtros), mockUsuarios)
 }
 
-export async function buscarPorId(id: string | number): Promise<Usuario> {
+export async function buscarPorId(id: string): Promise<Usuario> {
   const mockItem = mockUsuarios.find((u) => String(u.id) === String(id)) || mockUsuarios[0]
   return withMock(() => api.get<Usuario>(`/usuarios/${id}`), mockItem)
 }
 
-export async function aprovar(id: string | number) {
+export async function aprovar(id: string) {
   return withMock(
     () => api.patch(`/usuarios/${id}/aprovacao`, { acao: 'ACEITAR' }),
     { success: true, mensagem: 'Usuário aprovado com sucesso.' }
   )
 }
 
-export async function negar(id: string | number, motivo: string) {
+export async function negar(id: string, motivo: string) {
   return withMock(
     () => api.patch(`/usuarios/${id}/aprovacao`, { acao: 'NEGAR', motivo }),
     { success: true, mensagem: 'Solicitação de acesso negada.' }
   )
 }
 
-export async function converter(id: string | number) {
+export async function converter(id: string) {
   return withMock(
     () => api.patch(`/usuarios/${id}/converter-para-pesquisador`),
     { success: true, mensagem: 'Usuário convertido em pesquisador com sucesso.' }
