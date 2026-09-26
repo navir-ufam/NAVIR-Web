@@ -62,9 +62,9 @@ As divergências de ORM/modelo, formato de ID e contrato de `Projeto` foram reso
 Como equipe de desenvolvimento, quero a estrutura base do backend com banco configurado, para que os módulos de domínio possam ser implementados.
 
 - **Refs:** `arquitetura.md`, `backend.md`, `banco.md`
-- **Endpoint:** `GET /api/v1/health` (ainda não existe; hoje há apenas `GET /api/v1/`)
+- **Endpoint:** `GET /api/v1/health`
 - **Tabelas:** `usuarios`, `perfis`, `dados_academicos`, `curriculos`, `atualizacoes`, `projetos`, `tipos_projeto`, `agencias`, `habilidades`, `usuario_habilidades`, `dispositivos`, `acesso_laboratorio`, `notificacoes`
-- **Estado:** 🟡 (fundação entregue no SCRUM-2; faltam Swagger, healthcheck e filtro de exceções)
+- **Estado:** ✅ (fundação entregue com Swagger em `/api/docs`, healthcheck em `/api/v1/health` e `HttpExceptionFilter` global)
 - **Critérios de aceite:**
   - [x] Projeto NestJS com módulos por domínio (auth, usuarios, perfis, dados-academicos, curriculos, historico, projetos, dispositivos, acesso-laboratorio, status-academico, dashboard, relatorios, notificacoes)
   - [x] Banco PostgreSQL via **Prisma** com migração inicial (`prisma/migrations/20260522020235_init`) cobrindo as tabelas de `banco.md`
@@ -72,9 +72,9 @@ Como equipe de desenvolvimento, quero a estrutura base do backend com banco conf
   - [x] Prefixo global de rota `/api/v1` e `ValidationPipe` global (`whitelist`, `forbidNonWhitelisted`, `transform`)
   - [x] `ConfigModule` com validação Joi das variáveis de ambiente e `.env.example` documentado
   - [x] CORS configurado por `CORS_ORIGIN` e interceptor global de log
-  - [ ] Filtro de exceções padroniza erros 400/401/403/404 (seção 12 de `api-rest.md`)
-  - [ ] Swagger/OpenAPI disponível
-  - [ ] Endpoint de healthcheck dedicado
+  - [x] Filtro de exceções padroniza erros 400/401/403/404 (seção 12 de `api-rest.md`)
+  - [x] Swagger/OpenAPI disponível
+  - [x] Endpoint de healthcheck dedicado
 
 ### US-001b — Fundação do backend: alinhamento de dados e contratos
 Como equipe, quero alinhar modelo de dados e contratos entre backend e frontend, para evitar retrabalho de integração.
@@ -573,7 +573,7 @@ Abordagem por **fatias verticais por domínio**: cada fase entrega backend + fro
 
 ### Progresso atual (após SCRUM-2 e SCRUM-45 a SCRUM-48)
 
-- **Fase 0 — em andamento (avançada):** US-001 entregue em grande parte (Prisma + migração + módulos + Config/validação + guards + interceptor + seed), faltando Swagger, healthcheck e filtro de exceções; **US-002 concluída** (seeds de tipos, agências, habilidades e lint bloqueante no CI); **US-001b concluída** (IDs UUID e contrato de Projeto alinhados entre backend e frontend); **US-003 concluída** (tipos, IDs, contratos de projeto e rotas do React Router v7 alinhados e documentados).
+- **Fase 0 — concluída:** **US-001 concluída** (Prisma + migração + módulos + Config/validação + guards + interceptor + seed + Swagger + healthcheck + filtro de exceções); **US-002 concluída** (seeds de tipos, agências, habilidades e lint bloqueante no CI); **US-001b concluída** (IDs UUID e contrato de Projeto alinhados entre backend e frontend); **US-003 concluída** (tipos, IDs, contratos de projeto e rotas do React Router v7 alinhados e documentados).
 - **Fase 1 — em andamento:** US-004 concluída (login real ponta a ponta); US-006 avançada (guards + testes); US-005 pendente (refresh/logout).
 - **Fase 2 — em andamento:** criação de usuário (`POST /usuarios`) funcional no backend; demais endpoints de usuários ainda são `NotImplementedException`; telas de cadastro ainda placeholder.
 - **Transversal — concluída:** US-035 (mocks, SCRUM-46) e US-036 (estados de UI + toasts, SCRUM-45); ESLint/Prettier no frontend (SCRUM-47/48).
