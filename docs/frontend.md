@@ -1,62 +1,73 @@
 # NAVIR - Frontend Architecture
 
-Frontend construido com:
+Frontend construído com:
 
-- React
+- React 19
 - TypeScript
 - Vite
-- Roteamento protegido por perfil
-- Consumo de API REST em /api/v1
+- React Router v7 (Data Router com `createBrowserRouter` e `<RouterProvider />`)
+- Roteamento protegido por perfil e estado (`ProtectedRoute`, `PublicRoute`, `AuthContext`)
+- Consumo de API REST em `/api/v1` com camada de mocks (`withMock` + `VITE_USE_MOCKS`)
 
 ---
 
 # Objetivos do Frontend
 
 - Permitir cadastro de pesquisador, professor e interessado
-- Exibir fluxo de aprovacao para perfis pendentes
-- Entregar area interna para admin, professor e pesquisador
-- Tratar login de interessado com mensagem de oportunidade
-- Exibir dashboard e relatorios conforme permissao
+- Exibir fluxo de aprovação para perfis pendentes (`/aguardando-aprovacao`)
+- Entregar área interna para admin, professor e pesquisador
+- Tratar login de interessado com mensagem de oportunidade (`/interessado-feedback`)
+- Exibir dashboard e relatórios conforme permissão
 
 ---
 
-# Estrutura Sugerida
+# Estrutura do Projeto
 
 ```
 src/
- ├── app/
- ├── pages/
- ├── components/
- ├── features/
- ├── services/
- ├── hooks/
- ├── context/
- ├── routes/
- ├── types/
- └── utils/
+ ├── app/         (App.tsx, queryClient.ts)
+ ├── pages/       (Telas agrupadas por domínio)
+ ├── components/  (ui, common, layout)
+ ├── features/    (Lógica específica por funcionalidade)
+ ├── services/    (Integração com API REST e mocks)
+ ├── hooks/       (Custom hooks)
+ ├── context/     (AuthContext, ThemeContext)
+ ├── routes/      (router.tsx com createBrowserRouter)
+ ├── types/       (Contratos TypeScript alinhados ao backend)
+ └── utils/       (Funções utilitárias)
 ```
 
 ---
 
-# Paginas Principais
+# Páginas e Mapeamento de Rotas
 
 ```
 pages/
- ├── auth/login/
- ├── auth/cadastro/
- ├── auth/interessado-feedback/
- ├── dashboard/
- ├── usuarios/
- ├── perfil/
- ├── projetos/
- ├── dispositivos/
- ├── acesso-laboratorio/
- └── relatorios/
+ ├── auth/
+ │    ├── login/                     -> /login
+ │    ├── cadastro/                  -> /cadastro (seleção de perfil)
+ │    │    ├── pesquisador/          -> /cadastro/pesquisador
+ │    │    ├── professor/            -> /cadastro/professor
+ │    │    └── interessado/          -> /cadastro/interessado
+ │    ├── interessado-feedback/      -> /interessado-feedback
+ │    ├── aguardando-aprovacao/      -> /aguardando-aprovacao
+ │    └── acesso-negado/             -> /acesso-negado
+ ├── dashboard/                      -> /dashboard
+ ├── usuarios/                       -> /usuarios e /usuarios/:id
+ ├── perfil/                         -> /perfil
+ ├── projetos/                       -> /projetos, /projetos/novo, /projetos/:id/editar
+ ├── dispositivos/                   -> /dispositivos
+ ├── acesso-laboratorio/             -> /acesso-laboratorio
+ ├── relatorios/                     -> /relatorios
+ ├── curriculo/                      -> /curriculo
+ ├── historico/                      -> /historico
+ ├── atualizacoes/                   -> /atualizacoes
+ └── configuracoes/                  -> /configuracoes
 ```
 
 ---
 
-# Rotas e Permissao
+# Rotas e Permissão
 
 Perfis internos:
 - ADMIN
@@ -64,9 +75,9 @@ Perfis internos:
 - PESQUISADOR
 
 Regras de roteamento:
-- NEGADO: bloqueia acesso e mostra erro de autorizacao.
-- PENDENTE (pesquisador/professor): acesso limitado a tela de aguardando aprovacao.
-- INTERESSADO: sempre redireciona para pagina de mensagem de oportunidade.
+- NEGADO: bloqueia acesso e redireciona para `/acesso-negado`.
+- PENDENTE (pesquisador/professor): acesso limitado à tela `/aguardando-aprovacao`.
+- INTERESSADO: sempre redireciona para a página `/interessado-feedback`.
 
 ---
 

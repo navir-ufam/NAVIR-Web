@@ -110,8 +110,8 @@ Como desenvolvedor, quero tipos e roteamento alinhados aos contratos, para integ
   - [x] Services do frontend em `src/frontend/src/services` cobrem os endpoints de `api-rest.md`, com camada de mocks (`withMock` + `VITE_USE_MOCKS`)
   - [x] Contrato de `Projeto` alinhado ao backend (`tipo_projeto_id`/`agencia_id`/`professor_id`/`codigo_projeto`/`remunerado`)
   - [x] Tipo de ID alinhado (uuid `String` no backend e nos tipos/mocks do frontend)
-  - [ ] Divergências de rota documentadas e resolvidas (cadastro, versão do Router)
-  - [ ] `docs/frontend.md` e `docs/api-rest.md` atualizados conforme decisão
+  - [x] Divergências de rota documentadas e resolvidas (cadastro, versão do Router)
+  - [x] `docs/frontend.md` e `docs/api-rest.md` atualizados conforme decisão
 
 ---
 
@@ -573,7 +573,7 @@ Abordagem por **fatias verticais por domínio**: cada fase entrega backend + fro
 
 ### Progresso atual (após SCRUM-2 e SCRUM-45 a SCRUM-48)
 
-- **Fase 0 — em andamento (avançada):** US-001 entregue em grande parte (Prisma + migração + módulos + Config/validação + guards + interceptor + seed), faltando Swagger, healthcheck e filtro de exceções; US-002 parcial (faltam habilidades no seed e lint no CI); **US-001b concluída** (IDs UUID e contrato de Projeto alinhados entre backend e frontend).
+- **Fase 0 — em andamento (avançada):** US-001 entregue em grande parte (Prisma + migração + módulos + Config/validação + guards + interceptor + seed), faltando Swagger, healthcheck e filtro de exceções; US-002 parcial (faltam habilidades no seed e lint no CI); **US-001b concluída** (IDs UUID e contrato de Projeto alinhados entre backend e frontend); **US-003 concluída** (tipos, IDs, contratos de projeto e rotas do React Router v7 alinhados e documentados).
 - **Fase 1 — em andamento:** US-004 concluída (login real ponta a ponta); US-006 avançada (guards + testes); US-005 pendente (refresh/logout).
 - **Fase 2 — em andamento:** criação de usuário (`POST /usuarios`) funcional no backend; demais endpoints de usuários ainda são `NotImplementedException`; telas de cadastro ainda placeholder.
 - **Transversal — concluída:** US-035 (mocks, SCRUM-46) e US-036 (estados de UI + toasts, SCRUM-45); ESLint/Prettier no frontend (SCRUM-47/48).
