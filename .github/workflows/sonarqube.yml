@@ -28,6 +28,10 @@ jobs:
         working-directory: src/backend
         run: npx prisma generate
 
+      - name: Run backend lint
+        working-directory: src/backend
+        run: npm run lint
+
       - name: Run backend tests with coverage
         working-directory: src/backend
         run: npm run test:cov
@@ -36,6 +40,10 @@ jobs:
       - name: Install frontend dependencies
         working-directory: src/frontend
         run: npm ci --ignore-scripts
+
+      - name: Run frontend lint
+        working-directory: src/frontend
+        run: npm run lint
 
       - name: Run frontend tests with coverage
         working-directory: src/frontend

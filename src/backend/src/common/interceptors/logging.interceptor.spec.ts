@@ -1,4 +1,9 @@
-import { ExecutionContext, CallHandler, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  ExecutionContext,
+  CallHandler,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { of, throwError } from 'rxjs';
 import { LoggingInterceptor } from './logging.interceptor';
 
@@ -9,7 +14,11 @@ describe('LoggingInterceptor', () => {
     interceptor = new LoggingInterceptor();
   });
 
-  const createMockContext = (method = 'GET', url = '/api/v1/test', statusCode = 200) => {
+  const createMockContext = (
+    method = 'GET',
+    url = '/api/v1/test',
+    statusCode = 200,
+  ) => {
     const request = { method, url };
     const response = { statusCode };
 

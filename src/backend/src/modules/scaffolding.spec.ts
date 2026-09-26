@@ -44,7 +44,9 @@ describe('Scaffolding Modules Unit Tests', () => {
     const controller = new DadosAcademicosController(service);
 
     expect(controller).toBeDefined();
-    expect(() => service.salvarDadosExtraidos()).toThrow(NotImplementedException);
+    expect(() => service.salvarDadosExtraidos()).toThrow(
+      NotImplementedException,
+    );
   });
 
   it('DashboardService & Controller', () => {
@@ -52,7 +54,9 @@ describe('Scaffolding Modules Unit Tests', () => {
     const controller = new DashboardController(service);
 
     expect(controller).toBeDefined();
-    expect(() => service.obterMetricasAgregadas()).toThrow(NotImplementedException);
+    expect(() => service.obterMetricasAgregadas()).toThrow(
+      NotImplementedException,
+    );
   });
 
   it('DispositivosService & Controller', () => {
@@ -78,7 +82,9 @@ describe('Scaffolding Modules Unit Tests', () => {
     const controller = new NotificacoesController(service);
 
     expect(controller).toBeDefined();
-    expect(() => service.dispararEventoInterno()).toThrow(NotImplementedException);
+    expect(() => service.dispararEventoInterno()).toThrow(
+      NotImplementedException,
+    );
   });
 
   it('PerfisService & Controller', () => {
@@ -112,6 +118,8 @@ describe('Scaffolding Modules Unit Tests', () => {
     const service = new StatusAcademicoService();
 
     expect(service).toBeDefined();
-    expect(() => service.executarClassificacaoAutomatica()).toThrow(NotImplementedException);
+    expect(() => service.executarClassificacaoAutomatica()).toThrow(
+      NotImplementedException,
+    );
   });
 });

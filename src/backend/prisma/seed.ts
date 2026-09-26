@@ -55,6 +55,26 @@ async function main() {
     ],
     skipDuplicates: true,
   });
+
+  const habilidadesBase = [
+    'Python',
+    'TypeScript',
+    'React',
+    'Node.js',
+    'NestJS',
+    'Inteligência Artificial',
+    'Machine Learning',
+    'IoT',
+    'PostgreSQL',
+    'Docker',
+  ];
+
+  for (const nome of habilidadesBase) {
+    const existe = await prisma.habilidade.findFirst({ where: { nome } });
+    if (!existe) {
+      await prisma.habilidade.create({ data: { nome } });
+    }
+  }
 }
 
 main()

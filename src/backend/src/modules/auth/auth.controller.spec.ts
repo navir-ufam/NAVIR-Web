@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method, @typescript-eslint/no-unsafe-argument */
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 

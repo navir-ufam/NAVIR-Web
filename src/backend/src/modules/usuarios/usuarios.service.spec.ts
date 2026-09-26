@@ -1,4 +1,8 @@
-import { BadRequestException, ConflictException, NotImplementedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotImplementedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { EstadoUsuario, TipoUsuario, Usuario } from '@prisma/client';
 import { UsuariosService } from './usuarios.service';
@@ -97,7 +101,9 @@ describe('UsuariosService', () => {
   });
 
   it('deve lançar ConflictException se o e-mail já existir', async () => {
-    (prisma.usuario.findUnique as jest.Mock).mockResolvedValue({ id: 10 } as Usuario);
+    (prisma.usuario.findUnique as jest.Mock).mockResolvedValue({
+      id: 10,
+    });
 
     const dto = {
       nome: 'Carlos',
@@ -122,6 +128,8 @@ describe('UsuariosService', () => {
     expect(() => service.listarTodos()).toThrow(NotImplementedException);
     expect(() => service.buscarPorId()).toThrow(NotImplementedException);
     expect(() => service.aprovadoOuNegado()).toThrow(NotImplementedException);
-    expect(() => service.converterInteressado()).toThrow(NotImplementedException);
+    expect(() => service.converterInteressado()).toThrow(
+      NotImplementedException,
+    );
   });
 });

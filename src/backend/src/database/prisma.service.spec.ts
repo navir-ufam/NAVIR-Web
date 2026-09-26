@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { PrismaService } from './prisma.service';
 
 describe('PrismaService', () => {

@@ -91,14 +91,14 @@ Como equipe, quero seeds iniciais e pipeline de qualidade, para viabilizar o des
 
 - **Refs:** `banco.md`
 - **Tabelas:** `tipos_projeto`, `agencias`, `habilidades`
-- **Estado:** 🟡 (seed de tipos/agências e pipeline Sonar entregues no SCRUM-2; faltam habilidades e lint no CI)
+- **Estado:** ✅ (seeds de tipos, agências, habilidades e admin configurados no Prisma; pipeline CI com testes e lint bloqueante)
 - **Critérios de aceite:**
   - [x] Seed de tipos de projeto incluindo **PIBIC** e **PIBIT** (também `INDEPENDENTE`)
   - [x] Seed de agências base (FAPEAM, CNPq, UFAM)
   - [x] Script de seed executável (`prisma/seed.ts`, com admin via `ADMIN_EMAIL`/`ADMIN_PASSWORD`)
-  - [ ] Seed de **habilidades** base
+  - [x] Seed de **habilidades** base
   - [x] Pipeline de CI (`.github/workflows/sonarqube.yml`) roda testes de backend e frontend com cobertura (`continue-on-error`)
-  - [ ] Pipeline executa `lint` (ESLint) de forma bloqueante
+  - [x] Pipeline executa `lint` (ESLint) de forma bloqueante
 
 ### US-003 — Contratos compartilhados e alinhamento de rotas
 Como desenvolvedor, quero tipos e roteamento alinhados aos contratos, para integrar telas e API sem ambiguidade.
@@ -573,7 +573,7 @@ Abordagem por **fatias verticais por domínio**: cada fase entrega backend + fro
 
 ### Progresso atual (após SCRUM-2 e SCRUM-45 a SCRUM-48)
 
-- **Fase 0 — em andamento (avançada):** US-001 entregue em grande parte (Prisma + migração + módulos + Config/validação + guards + interceptor + seed), faltando Swagger, healthcheck e filtro de exceções; US-002 parcial (faltam habilidades no seed e lint no CI); **US-001b concluída** (IDs UUID e contrato de Projeto alinhados entre backend e frontend); **US-003 concluída** (tipos, IDs, contratos de projeto e rotas do React Router v7 alinhados e documentados).
+- **Fase 0 — em andamento (avançada):** US-001 entregue em grande parte (Prisma + migração + módulos + Config/validação + guards + interceptor + seed), faltando Swagger, healthcheck e filtro de exceções; **US-002 concluída** (seeds de tipos, agências, habilidades e lint bloqueante no CI); **US-001b concluída** (IDs UUID e contrato de Projeto alinhados entre backend e frontend); **US-003 concluída** (tipos, IDs, contratos de projeto e rotas do React Router v7 alinhados e documentados).
 - **Fase 1 — em andamento:** US-004 concluída (login real ponta a ponta); US-006 avançada (guards + testes); US-005 pendente (refresh/logout).
 - **Fase 2 — em andamento:** criação de usuário (`POST /usuarios`) funcional no backend; demais endpoints de usuários ainda são `NotImplementedException`; telas de cadastro ainda placeholder.
 - **Transversal — concluída:** US-035 (mocks, SCRUM-46) e US-036 (estados de UI + toasts, SCRUM-45); ESLint/Prettier no frontend (SCRUM-47/48).

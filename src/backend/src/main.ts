@@ -42,4 +42,4 @@ async function bootstrap() {
     `\n\n\x1b[32m[Bootstrap] Aplicação rodando em ambiente de [${env}] na porta ${port}`,
   );
 }
-bootstrap();
+void bootstrap();
